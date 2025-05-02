@@ -1,29 +1,32 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Drawer } from 'expo-router/drawer';
+import { useContext } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+// custom imports
+import { ColorSchemeContext } from '@/context/ColorSchemeContext';
+import Colors from '@/constants/Colors';
+import DrawerContent from '@/components/sidebar/DrawerContent';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
-
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+	const { colorScheme } = useContext(ColorSchemeContext);
+	return (
+		<SafeAreaProvider>
+			<GestureHandlerRootView style={{ flex: 1 }}>
+				<Drawer
+					screenOptions={{
+						drawerStyle: {
+							backgroundColor:
+								colorScheme === 'light'
+									? Colors.light.primary
+									: Colors.dark.primary,
+						},
+						headerShown: false,
+						swipeEdgeWidth: 400,
+					}}
+					drawerContent={() => <DrawerContent />}
+				></Drawer>
+			</GestureHandlerRootView>
+		</SafeAreaProvider>
+	);
 }
