@@ -1,13 +1,15 @@
-import { StyleSheet, Text, View, TouchableNativeFeedback, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableNativeFeedback, ScrollView, Button } from 'react-native';
 import { useFonts } from 'expo-font';
 
 // custom imports
 import Colors from '@/constants/Colors';
-import { useContext } from 'react';
+import { useContext, useRef, useCallback } from 'react';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import NotebookListItem from '@/components/notePage/NotebookListItem';
+import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import BottomSheetContent from '@/components/general/BottomSheetContent'; // Adjust the import path
 
-export default function NotePage() {
+export default function NotebookPage() {
 	// Load the font
 	const [fontsLoaded] = useFonts({
 		AzeretMono: require('@/assets/fonts/AzeretMono-Variable.ttf'),
@@ -21,23 +23,50 @@ export default function NotePage() {
 	const title = 'Note Title';
 	const iconColor = '#6666ff';
 
+	// bottom sheet
+	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+	// points for the bottom sheet to snap to, expressed as percentages of the screen height
+	const snapPoints = ['25%', '50%', '90%'];
+
+	const handlePresentModalPress = useCallback(() => {
+		bottomSheetModalRef.current?.present();
+	}, []);
+
+	const handleClosePress = useCallback(() => {
+		bottomSheetModalRef.current?.dismiss();
+	}, []);
+
 	return (
-		<View style={styles.container}>
-			<View style={styles.notebooksContainer}>
-				<ScrollView
-					style={styles.notebooksScroller}
-					contentContainerStyle={{ paddingBottom: '150%', paddingTop: '10%' }}
-					showsVerticalScrollIndicator={false}
-				>
-					<NotebookListItem
-						id={`nb${1}`}
-						iconColor='#eee'
-						name='Notebook i.g'
-						iconName='book'
-					/>
-				</ScrollView>
+		<BottomSheetModalProvider>
+			<View style={styles.container}>
+				<View style={styles.notebooksContainer}>
+					<ScrollView
+						style={styles.notebooksScroller}
+						contentContainerStyle={{ paddingBottom: '150%', paddingTop: '10%' }}
+						showsVerticalScrollIndicator={false}
+					>
+						<NotebookListItem
+							id={`nb${1}`}
+							iconColor='#abffe5'
+							name='Notebook i.g etc name '
+							iconName='school'
+						/>
+						<Button title='Open Bottom Sheet' onPress={handlePresentModalPress} />
+
+						<BottomSheetModal
+							ref={bottomSheetModalRef}
+							index={1} // The initial snap point (index 1 is '50%')
+							snapPoints={snapPoints}
+							// Optional: Add backdrop for dimming the background
+							// backdropComponent={renderBackdrop}
+						>
+							<BottomSheetContent onClose={handleClosePress} />
+						</BottomSheetModal>
+					</ScrollView>
+				</View>
 			</View>
-		</View>
+		</BottomSheetModalProvider>
 	);
 }
 

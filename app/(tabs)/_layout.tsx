@@ -2,7 +2,6 @@ import { Tabs } from 'expo-router';
 import { useContext } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
-import { ColorSchemeProvider } from '@/context/ColorSchemeContext';
 
 // custom imports
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
@@ -12,7 +11,7 @@ export default function TabLayout() {
 	const { colorScheme } = useContext(ColorSchemeContext);
 
 	return (
-		<ColorSchemeProvider>
+		<>
 			<StatusBar style={colorScheme === 'light' ? 'dark' : 'light'} />
 			<Tabs
 				screenOptions={{
@@ -32,11 +31,6 @@ export default function TabLayout() {
 					options={{
 						title: 'NaraBook',
 						popToTopOnBlur: true,
-						// tabBarBadge: 2,
-						// tabBarBadgeStyle: {
-						// 	backgroundColor: Colors.red,
-						// 	color: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
-						// },
 						tabBarIcon: ({ color, size }) => (
 							<MaterialCommunityIcons size={size} name='text' color={color} />
 						),
@@ -76,6 +70,6 @@ export default function TabLayout() {
 					}}
 				/>
 			</Tabs>
-		</ColorSchemeProvider>
+		</>
 	);
 }

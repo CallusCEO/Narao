@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, TouchableNativeFeedback, ScrollView } from 'react-native';
+import {
+	StyleSheet,
+	Text,
+	View,
+	TouchableNativeFeedback,
+	ScrollView,
+	TextInput,
+} from 'react-native';
 import { useFonts } from 'expo-font';
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -8,7 +15,6 @@ import { useContext } from 'react';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import TitleContainer from '@/components/notePage/TitleContainer';
 import Rule from '@/components/general/Rule';
-import { TextInput } from 'react-native-gesture-handler';
 import { useLocalSearchParams } from 'expo-router';
 
 export default function NotePage() {
@@ -41,7 +47,6 @@ export default function NotePage() {
 						<TextInput
 							style={[styles.titleInput, styles.textXXXL, styles.Satoshi]}
 							multiline
-							scrollEnabled={false}
 							placeholder='New note'
 							maxLength={100}
 							placeholderTextColor={Colors.secondGray}
@@ -49,42 +54,8 @@ export default function NotePage() {
 					</View>
 					<Text style={[styles.Satoshi, styles.textS]}>
 						Here is the note screen Lorem ipsum dolor sit amet, consectetur adipiscing
-						elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-						enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-						aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-						voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-						occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-						anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing
-						elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-						enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-						aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-						voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-						occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-						anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing
-						elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-						enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-						aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-						voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-						occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
-						anim id est laborum.Here is the note screen Lorem ipsum dolor sit amet,
-						consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
-						dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-						ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-						dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-						pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-						officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet,
-						consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
-						dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-						ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-						dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-						pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-						officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet,
-						consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et
-						dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-						ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-						dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-						pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-						officia deserunt mollit anim id est laborum.
+						elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+						{/* Rest of the text content */}
 					</Text>
 				</ScrollView>
 			</View>
@@ -178,10 +149,6 @@ function createStyles(colorScheme: ColorScheme) {
 			paddingHorizontal: '5%',
 			display: 'flex',
 			flexDirection: 'column',
-
-			// borderColor: '#111',
-			// borderWidth: 1,
-			// borderStyle: 'solid',
 		},
 
 		noteScroller: {

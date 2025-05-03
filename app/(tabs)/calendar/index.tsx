@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 
 // custom imports
@@ -16,7 +15,7 @@ export default function TimerPage() {
 	const styles = createStyles();
 
 	return (
-		<SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.primary }}>
+		<View style={{ flex: 1, backgroundColor: Colors.light.primary }}>
 			<View
 				style={{
 					flex: 1,
@@ -26,7 +25,7 @@ export default function TimerPage() {
 			>
 				<Text style={styles.satoshi}>Here is the calendar screen</Text>
 			</View>
-		</SafeAreaView>
+		</View>
 	);
 }
 
