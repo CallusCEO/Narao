@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { StyleSheet, Text, View, TouchableNativeFeedback, ScrollView } from 'react-native';
 import { useFonts } from 'expo-font';
@@ -8,13 +8,16 @@ import Colors from '@/constants/Colors';
 import { useContext } from 'react';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { NotebookType } from '@/types/ContentType';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 interface Props extends NotebookType {
 	iconColor: string;
 	iconName: string;
 }
 
-const NotebookListItem = ({ iconColor, iconName, name, id, content }: Props) => {
+type Ref = BottomSheet;
+
+const NotebookListItem = forwardRef<Ref, Props>((props, ref) => {
 	// Load the font
 	const [fontsLoaded] = useFonts({
 		SatoshiRegular: require('@/assets/fonts/Satoshi-Regular.otf'),
@@ -34,12 +37,13 @@ const NotebookListItem = ({ iconColor, iconName, name, id, content }: Props) => 
 		<View style={styles.container}>
 			<TouchableNativeFeedback
 				background={TouchableNativeFeedback.Ripple(Colors.fourthGray, false)}
-				// onLongPress={}
+				{/*@ts-ignore */}
+				onLongPress={(e) => ref.current?.expand()}
 			>
 				<View style={styles.innerContainer}>
 					{/* @ts-ignore */}
-					<MaterialIcons name={iconName} size={28} color={iconColor} />
-					<Text style={[styles.textS, styles.title]}>{handleNameLength(name)}</Text>
+					<MaterialIcons name={props.iconName} size={28} color={props.iconColor} />
+					<Text style={[styles.textS, styles.title]}>{handleNameLength(props.name)}</Text>
 					<View style={styles.dropdownIconContainer}>
 						<MaterialIcons
 							name='keyboard-arrow-down'
@@ -51,7 +55,7 @@ const NotebookListItem = ({ iconColor, iconName, name, id, content }: Props) => 
 			</TouchableNativeFeedback>
 		</View>
 	);
-};
+});
 
 type ColorScheme = 'light' | 'dark' | undefined | null;
 
@@ -88,6 +92,7 @@ function createStyles(colorScheme: ColorScheme) {
 			borderStyle: 'solid',
 			overflow: 'hidden',
 			elevation: 10,
+			height: 48,
 		},
 
 		innerContainer: {

@@ -3,6 +3,9 @@ import { useFonts } from 'expo-font';
 
 // custom imports
 import Colors from '@/constants/Colors';
+import { useContext } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 
 export default function AiPage() {
 	// Load the font
@@ -11,25 +14,15 @@ export default function AiPage() {
 		Bespoke: require('@/assets/fonts/BespokeSans-Variable.ttf'),
 		Satoshi: require('@/assets/fonts/Satoshi-Variable.ttf'),
 	});
+	const { colorScheme } = useContext(ColorSchemeContext);
+	const styles = createStyles(colorScheme);
 
-	const styles = createStyles();
-
-	return (
-		<View style={{ flex: 1, backgroundColor: Colors.light.primary }}>
-			<View
-				style={{
-					flex: 1,
-					justifyContent: 'center',
-					alignItems: 'center',
-				}}
-			>
-				<Text style={styles.satoshi}>Here is the ai screen</Text>
-			</View>
-		</View>
-	);
+	return <GestureHandlerRootView style={styles.container}></GestureHandlerRootView>;
 }
 
-function createStyles() {
+type ColorScheme = 'light' | 'dark' | undefined | null;
+
+function createStyles(colorScheme: ColorScheme) {
 	return StyleSheet.create({
 		satoshi: {
 			fontFamily: 'Satoshi',
@@ -37,7 +30,8 @@ function createStyles() {
 			color: Colors.light.secondary,
 		},
 		container: {
-			backgroundColor: Colors.light.primary,
+			flex: 1,
+			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 		},
 	});
 }

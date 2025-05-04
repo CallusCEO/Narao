@@ -1,13 +1,15 @@
-import { StyleSheet, Text, View, TouchableNativeFeedback, ScrollView, Button } from 'react-native';
+// app/(tabs)/(notebooks)/index.tsx
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import { useFonts } from 'expo-font';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useContext, useRef, useState } from 'react';
 
 // custom imports
 import Colors from '@/constants/Colors';
-import { useContext, useRef, useCallback } from 'react';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import NotebookListItem from '@/components/notePage/NotebookListItem';
-import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import BottomSheetContent from '@/components/general/BottomSheetContent'; // Adjust the import path
+import BottomSheetComponent from '@/components/general/BottomSheetComponent';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 export default function NotebookPage() {
 	// Load the font
@@ -17,56 +19,34 @@ export default function NotebookPage() {
 		Satoshi: require('@/assets/fonts/Satoshi-Variable.ttf'),
 	});
 	const { colorScheme } = useContext(ColorSchemeContext);
-
 	const styles = createStyles(colorScheme);
-
-	const title = 'Note Title';
-	const iconColor = '#6666ff';
-
-	// bottom sheet
-	const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-	// points for the bottom sheet to snap to, expressed as percentages of the screen height
-	const snapPoints = ['25%', '50%', '90%'];
-
-	const handlePresentModalPress = useCallback(() => {
-		bottomSheetModalRef.current?.present();
-	}, []);
-
-	const handleClosePress = useCallback(() => {
-		bottomSheetModalRef.current?.dismiss();
-	}, []);
+	const [isOpen, setOpen] = useState(false);
+	const bottomSheetRef = useRef<BottomSheet>(null);
 
 	return (
-		<BottomSheetModalProvider>
-			<View style={styles.container}>
-				<View style={styles.notebooksContainer}>
-					<ScrollView
-						style={styles.notebooksScroller}
-						contentContainerStyle={{ paddingBottom: '150%', paddingTop: '10%' }}
-						showsVerticalScrollIndicator={false}
-					>
-						<NotebookListItem
-							id={`nb${1}`}
-							iconColor='#abffe5'
-							name='Notebook i.g etc name '
-							iconName='school'
-						/>
-						<Button title='Open Bottom Sheet' onPress={handlePresentModalPress} />
+		<GestureHandlerRootView style={styles.container}>
+			<View style={styles.notebooksContainer}>
+				{/* Reduce padding to make content more visible */}
+				<ScrollView
+					style={styles.notebooksScroller}
+					contentContainerStyle={{ paddingBottom: 100, paddingTop: 20 }}
+					showsVerticalScrollIndicator={true}
+				>
+					<Text style={[styles.Satoshi, styles.textXL, styles.header]}>
+						Your Notebooks
+					</Text>
 
-						<BottomSheetModal
-							ref={bottomSheetModalRef}
-							index={1} // The initial snap point (index 1 is '50%')
-							snapPoints={snapPoints}
-							// Optional: Add backdrop for dimming the background
-							// backdropComponent={renderBackdrop}
-						>
-							<BottomSheetContent onClose={handleClosePress} />
-						</BottomSheetModal>
-					</ScrollView>
-				</View>
+					<NotebookListItem
+						id={`nb${1}`}
+						iconColor='#abffe5'
+						name='Notebook i.g etc name '
+						iconName='school'
+						ref={bottomSheetRef}
+					/>
+				</ScrollView>
 			</View>
-		</BottomSheetModalProvider>
+			<BottomSheetComponent ref={bottomSheetRef} />
+		</GestureHandlerRootView>
 	);
 }
 
@@ -107,28 +87,43 @@ function createStyles(colorScheme: ColorScheme) {
 		textXXXXL: {
 			fontSize: 26,
 		},
-
+		header: {
+			marginBottom: 16,
+			fontWeight: 'bold',
+		},
 		container: {
 			flex: 1,
 			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 			paddingTop: 40,
 		},
-
 		notebooksContainer: {
 			width: '100%',
 			height: '100%',
 			paddingHorizontal: '5%',
 			display: 'flex',
 			flexDirection: 'column',
-
-			// borderColor: '#111',
-			// borderWidth: 1,
-			// borderStyle: 'solid',
 		},
-
 		notebooksScroller: {
 			width: '100%',
 			height: '100%',
+		},
+		buttonContainer: {
+			marginTop: 20,
+			alignItems: 'center',
+		},
+		button: {
+			backgroundColor: Colors.blue,
+			paddingVertical: 12,
+			paddingHorizontal: 24,
+			borderRadius: 8,
+			alignItems: 'center',
+			width: '70%',
+		},
+		buttonText: {
+			color: 'white',
+			fontFamily: 'Satoshi',
+			fontSize: 16,
+			fontWeight: 'bold',
 		},
 	});
 }

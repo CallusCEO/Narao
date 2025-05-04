@@ -3,7 +3,6 @@ import { Drawer } from 'expo-router/drawer';
 import { useContext } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ColorSchemeProvider } from '@/context/ColorSchemeContext';
-import { Stack } from 'expo-router';
 
 // custom imports
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
