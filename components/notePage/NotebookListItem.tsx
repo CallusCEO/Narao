@@ -1,14 +1,14 @@
-import React, { forwardRef } from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
-import { StyleSheet, Text, View, TouchableNativeFeedback, ScrollView } from 'react-native';
 import { useFonts } from 'expo-font';
+import React from 'react';
+import { StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
-import { useContext } from 'react';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { NotebookType } from '@/types/ContentType';
 import BottomSheet from '@gorhom/bottom-sheet';
+import { useContext } from 'react';
 
 interface Props extends NotebookType {
 	iconColor: string;
@@ -17,7 +17,13 @@ interface Props extends NotebookType {
 
 type Ref = BottomSheet;
 
-const NotebookListItem = forwardRef<Ref, Props>((props, ref) => {
+const NotebookListItem = ({
+	iconName,
+	iconColor,
+	name,
+	id,
+	content,
+}: Props) => {
 	// Load the font
 	const [fontsLoaded] = useFonts({
 		SatoshiRegular: require('@/assets/fonts/Satoshi-Regular.otf'),
@@ -30,20 +36,30 @@ const NotebookListItem = forwardRef<Ref, Props>((props, ref) => {
 
 	// functions :
 	const handleNameLength = (name: string): string => {
-		return name.trim().length < 17 ? name.trim() : name.slice(0, 17).trim() + '...';
+		return name.trim().length < 17
+			? name.trim()
+			: name.slice(0, 17).trim() + '...';
 	};
 
 	return (
 		<View style={styles.container}>
 			<TouchableNativeFeedback
-				background={TouchableNativeFeedback.Ripple(Colors.fourthGray, false)}
-				{/*@ts-ignore */}
-				onLongPress={(e) => ref.current?.expand()}
+				background={TouchableNativeFeedback.Ripple(
+					Colors.fourthGray,
+					false
+				)}
+				// onLongPress={(e) => ref.current?.expand()}
 			>
 				<View style={styles.innerContainer}>
-					{/* @ts-ignore */}
-					<MaterialIcons name={props.iconName} size={28} color={props.iconColor} />
-					<Text style={[styles.textS, styles.title]}>{handleNameLength(props.name)}</Text>
+					<MaterialIcons
+						/* @ts-ignore */
+						name={iconName}
+						size={28}
+						color={iconColor}
+					/>
+					<Text style={[styles.textS, styles.title]}>
+						{handleNameLength(name)}
+					</Text>
 					<View style={styles.dropdownIconContainer}>
 						<MaterialIcons
 							name='keyboard-arrow-down'
@@ -55,7 +71,7 @@ const NotebookListItem = forwardRef<Ref, Props>((props, ref) => {
 			</TouchableNativeFeedback>
 		</View>
 	);
-});
+};
 
 type ColorScheme = 'light' | 'dark' | undefined | null;
 
@@ -85,7 +101,10 @@ function createStyles(colorScheme: ColorScheme) {
 
 		container: {
 			width: '90%',
-			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
+			backgroundColor:
+				colorScheme === 'light'
+					? Colors.light.primary
+					: Colors.dark.primary,
 			borderRadius: 10,
 			borderColor: Colors.thirdGray,
 			borderWidth: 1,
@@ -110,7 +129,10 @@ function createStyles(colorScheme: ColorScheme) {
 			fontSize: 16,
 			marginLeft: 8,
 			fontFamily: 'SatoshiMedium',
-			color: colorScheme === 'light' ? Colors.dark.primary : Colors.light.primary,
+			color:
+				colorScheme === 'light'
+					? Colors.dark.primary
+					: Colors.light.primary,
 		},
 
 		dropdownIconContainer: {

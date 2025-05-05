@@ -1,15 +1,16 @@
 // app/(tabs)/(notebooks)/index.tsx
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import { useFonts } from 'expo-font';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useContext, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // custom imports
+import BottomSheetComponent from '@/components/general/BottomSheetComponent';
+import BottomSheetContentNotebook from '@/components/general/bottomPage/BottomSheetContentNotebook';
+import NotebookListItem from '@/components/notePage/NotebookListItem';
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
-import NotebookListItem from '@/components/notePage/NotebookListItem';
-import BottomSheetComponent from '@/components/general/BottomSheetComponent';
-import BottomSheet from '@gorhom/bottom-sheet';
+import BottomSheet, { TouchableWithoutFeedback } from '@gorhom/bottom-sheet';
 
 export default function NotebookPage() {
 	// Load the font
@@ -20,32 +21,60 @@ export default function NotebookPage() {
 	});
 	const { colorScheme } = useContext(ColorSchemeContext);
 	const styles = createStyles(colorScheme);
-	const [isOpen, setOpen] = useState(false);
 	const bottomSheetRef = useRef<BottomSheet>(null);
+	const [targerId, setTargetId] = useState<number>(0);
+
+	// sample data
+	const data = [
+		{
+			id: 0,
+			name: 'Notebook 1',
+			iconColor: '#6666ff',
+			iconName: 'school',
+		},
+	];
 
 	return (
 		<GestureHandlerRootView style={styles.container}>
 			<View style={styles.notebooksContainer}>
-				{/* Reduce padding to make content more visible */}
 				<ScrollView
 					style={styles.notebooksScroller}
-					contentContainerStyle={{ paddingBottom: 100, paddingTop: 20 }}
+					contentContainerStyle={{
+						paddingBottom: 100,
+						paddingTop: 20,
+					}}
 					showsVerticalScrollIndicator={true}
 				>
-					<Text style={[styles.Satoshi, styles.textXL, styles.header]}>
+					<Text
+						style={[styles.Satoshi, styles.textXL, styles.header]}
+					>
 						Your Notebooks
 					</Text>
-
-					<NotebookListItem
-						id={`nb${1}`}
-						iconColor='#abffe5'
-						name='Notebook i.g etc name '
-						iconName='school'
-						ref={bottomSheetRef}
-					/>
+					{data.map((notebook) => (
+						<TouchableWithoutFeedback
+							onLongPress={() => {
+								bottomSheetRef.current?.snapToIndex(0);
+								setTargetId(notebook.id);
+							}}
+							key={notebook.id}
+						>
+							<NotebookListItem
+								id={`nb${notebook.id}`}
+								iconColor={notebook.iconColor}
+								name={notebook.name}
+								iconName={notebook.iconName}
+							/>
+						</TouchableWithoutFeedback>
+					))}
 				</ScrollView>
 			</View>
-			<BottomSheetComponent ref={bottomSheetRef} />
+			<BottomSheetComponent ref={bottomSheetRef}>
+				<BottomSheetContentNotebook
+					title={data[targerId].name || 'Error not found'}
+					iconName={data[targerId].iconName || 'error-outline'}
+					iconColor={data[targerId].iconColor || Colors.red}
+				/>
+			</BottomSheetComponent>
 		</GestureHandlerRootView>
 	);
 }
@@ -56,15 +85,24 @@ function createStyles(colorScheme: ColorScheme) {
 	return StyleSheet.create({
 		Satoshi: {
 			fontFamily: 'Satoshi',
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+			color:
+				colorScheme === 'light'
+					? Colors.light.secondary
+					: Colors.dark.secondary,
 		},
 		AzeretMono: {
 			fontFamily: 'AzeretMono',
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+			color:
+				colorScheme === 'light'
+					? Colors.light.secondary
+					: Colors.dark.secondary,
 		},
 		Bespoke: {
 			fontFamily: 'Bespoke',
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+			color:
+				colorScheme === 'light'
+					? Colors.light.secondary
+					: Colors.dark.secondary,
 		},
 		textXS: {
 			fontSize: 14,
@@ -93,7 +131,10 @@ function createStyles(colorScheme: ColorScheme) {
 		},
 		container: {
 			flex: 1,
-			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
+			backgroundColor:
+				colorScheme === 'light'
+					? Colors.light.primary
+					: Colors.dark.primary,
 			paddingTop: 40,
 		},
 		notebooksContainer: {

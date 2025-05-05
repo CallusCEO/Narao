@@ -1,7 +1,16 @@
-import { View, Text, StyleSheet } from 'react-native';
-import React, { forwardRef, ReactNode, useCallback, useContext, useMemo, useRef } from 'react';
-import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, {
+	BottomSheetBackdrop,
+	BottomSheetView,
+} from '@gorhom/bottom-sheet';
 import { useFonts } from 'expo-font';
+import React, {
+	forwardRef,
+	ReactNode,
+	useCallback,
+	useContext,
+	useMemo,
+} from 'react';
+import { Dimensions, StyleSheet } from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
@@ -20,11 +29,12 @@ const BottomSheetComponent = forwardRef<Ref, Props>((props, ref) => {
 		Bespoke: require('@/assets/fonts/BespokeSans-Variable.ttf'),
 		Satoshi: require('@/assets/fonts/Satoshi-Variable.ttf'),
 	});
+	const width = Dimensions.get('window').width;
 	const { colorScheme } = useContext(ColorSchemeContext);
-	const styles = createStyles(colorScheme);
+	const styles = createStyles(colorScheme, width);
 
 	// bottom sheet config
-	const snapPoints = useMemo(() => ['50%', '90%'], []);
+	const snapPoints = useMemo(() => ['70%', '90%'], []);
 
 	const renderBackdrop = useCallback(
 		(props: any) => (
@@ -39,15 +49,27 @@ const BottomSheetComponent = forwardRef<Ref, Props>((props, ref) => {
 	return (
 		<BottomSheet
 			ref={ref}
+			index={-1}
 			snapPoints={snapPoints}
 			backgroundStyle={{
-				backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
+				backgroundColor:
+					colorScheme === 'light'
+						? Colors.light.primary
+						: Colors.firstGray,
+				borderRadius: 32,
 			}}
 			enablePanDownToClose={true}
 			backdropComponent={renderBackdrop}
+			handleIndicatorStyle={{
+				backgroundColor:
+					colorScheme === 'light'
+						? Colors.light.secondary
+						: Colors.dark.secondary,
+				width: 64,
+			}}
 		>
 			<BottomSheetView style={styles.container}>
-				<Text>Awesome 🎉</Text>
+				{props.children}
 			</BottomSheetView>
 		</BottomSheet>
 	);
@@ -55,7 +77,7 @@ const BottomSheetComponent = forwardRef<Ref, Props>((props, ref) => {
 
 type ColorScheme = 'light' | 'dark' | undefined | null;
 
-function createStyles(colorScheme: ColorScheme) {
+function createStyles(colorScheme: ColorScheme, width: number) {
 	return StyleSheet.create({
 		satoshi: {
 			fontFamily: 'Satoshi',
@@ -64,9 +86,8 @@ function createStyles(colorScheme: ColorScheme) {
 		},
 		container: {
 			flex: 1,
-			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
-			padding: 36,
-			alignItems: 'center',
+			paddingHorizontal: width > 450 ? 16 : 4,
+			paddingVertical: 16,
 		},
 	});
 }
