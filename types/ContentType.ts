@@ -1,21 +1,23 @@
 export interface NoteType {
 	name: string;
-	id: `nt${number}`;
+	id: number;
 }
 
 export interface FolderType {
 	name: string;
-	id: `fd${number}`;
-	content?: ContentType;
+	id: number;
+	content?: ContentType[];
 }
 
 export interface NotebookType {
 	name: string;
-	id: `nb${number}`;
-	content?: ContentType;
+	id: number;
+	content?: ContentType[];
+	iconColor: string;
+	iconName: string;
 }
 
 export interface ContentType {
-	folders?: FolderType[];
-	notes?: NoteType[];
+	folder?: FolderType;
+	note?: NoteType;
 }

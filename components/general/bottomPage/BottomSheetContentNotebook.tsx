@@ -42,6 +42,13 @@ const BottomSheetContentNotebook: React.FC<Props> = ({
 	const [editOpen, setEditOpen] = useState(false);
 	const [text, setText] = useState('');
 
+	// functions :
+	const handleNameLength = (name: string): string => {
+		return name.trim().length < 17
+			? name.trim()
+			: name.slice(0, 17).trim() + '...';
+	};
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.titleContainer}>
@@ -51,7 +58,7 @@ const BottomSheetContentNotebook: React.FC<Props> = ({
 					size={42}
 					color={iconColor}
 				/>
-				<Text style={styles.title}>{title}</Text>
+				<Text style={styles.title}>{handleNameLength(title)}</Text>
 			</View>
 			<Rule />
 			<View style={styles.settingsContainer}>
@@ -175,7 +182,7 @@ const BottomSheetContentNotebook: React.FC<Props> = ({
 						</TouchableNativeFeedback>
 					</View>
 				</View>
-				<View style={styles.settingItem}>
+				<View style={[styles.settingItem, styles.settingItemDelete]}>
 					<View style={styles.settingDesc}>
 						<Text
 							style={[
@@ -236,7 +243,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 
 		titleContainer: {
 			paddingBottom: 6,
-			paddingHorizontal: 12,
+			paddingHorizontal: 16,
 			display: 'flex',
 			flexDirection: 'row',
 			alignItems: 'center',
@@ -246,7 +253,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		title: {
 			marginLeft: 12,
 			fontFamily: 'SatoshiBold',
-			fontSize: 22,
+			fontSize: 24,
 			color:
 				colorScheme === 'light'
 					? Colors.light.secondary
@@ -275,6 +282,8 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 					: Colors.firstGray,
 			marginBottom: 12,
 		},
+
+		settingItemDelete: { borderBottomWidth: 0 },
 
 		settingDesc: {
 			flex: 1,
