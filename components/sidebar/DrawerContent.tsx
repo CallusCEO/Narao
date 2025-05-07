@@ -1,9 +1,12 @@
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
+import Rule from '../general/Rule';
+import NotebookContent from './NotebookContent';
+import NotebookTitle from './NotebookTitle';
 
 const DrawerContent = () => {
 	const { colorScheme } = useContext(ColorSchemeContext);
@@ -12,7 +15,9 @@ const DrawerContent = () => {
 
 	return (
 		<View style={styles.container}>
-			<Text>Hello There</Text>
+			<NotebookTitle id={0} />
+			<Rule />
+			<NotebookContent id={0} />
 		</View>
 	);
 };
@@ -22,11 +27,12 @@ type ColorScheme = 'light' | 'dark' | undefined | null;
 function createStyles(colorScheme: ColorScheme) {
 	return StyleSheet.create({
 		container: {
-			marginTop: 32,
+			paddingTop: 32,
+			paddingHorizontal: 12,
 			flex: 1,
 			width: '100%',
 			height: '100%',
-			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
+			backgroundColor: colorScheme === 'light' ? Colors.light.ternary : Colors.firstGray,
 		},
 	});
 }

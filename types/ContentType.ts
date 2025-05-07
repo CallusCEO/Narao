@@ -1,6 +1,12 @@
+interface TagType {
+	title: string;
+	color: `#${string}`;
+}
+
 export interface NoteType {
 	name: string;
 	id: number;
+	tags?: TagType[];
 }
 
 export interface FolderType {

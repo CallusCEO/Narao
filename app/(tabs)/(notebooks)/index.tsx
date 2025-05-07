@@ -6,13 +6,15 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // custom imports
 import BottomSheetComponent from '@/components/general/bottomPage/BottomSheetComponent';
-import BottomSheetContentNotebook from '@/components/general/bottomPage/BottomSheetContentNotebook';
+import BottomSheetContentNarabook from '@/components/general/bottomPage/BottomSheetContentNarabook';
 import PageHeader from '@/components/general/PageHeader';
 import FolderListItem from '@/components/notePage/FolderListItem';
 import NotebookListItem from '@/components/notePage/NotebookListItem';
+import NoteListItem from '@/components/notePage/NoteListIem';
 import Colors from '@/constants/Colors';
 import { data } from '@/constants/sampleNoteData';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
+import { ContentType } from '@/types/ContentType';
 import BottomSheet, { TouchableWithoutFeedback } from '@gorhom/bottom-sheet';
 
 export default function NotebookPage() {
@@ -26,7 +28,108 @@ export default function NotebookPage() {
 	const { colorScheme } = useContext(ColorSchemeContext);
 	const styles = createStyles(colorScheme, width);
 	const bottomSheetRef = useRef<BottomSheet>(null);
-	const [targerId, setTargetId] = useState<number>(0);
+	const [targetIdNotebook, setTargetIdNotebook] = useState<number | undefined>(undefined);
+	const [targetIdFolder, setTargetIdFolder] = useState<number | undefined>(undefined);
+	const [targetIdNote, setTargetIdNote] = useState<number | undefined>(undefined);
+	const [target, setTarget] = useState<'notebook' | 'folder' | 'note'>('notebook');
+
+	// functions :
+	const generateContentListNote = (
+		content: ContentType[] | undefined,
+		notebookId: number,
+		folderId: number
+	) => {
+		return content?.map((folder) => (
+			<TouchableWithoutFeedback
+				onLongPress={() => {
+					bottomSheetRef.current?.snapToIndex(0);
+					setTargetIdNote(folder.note?.id);
+					setTargetIdFolder(folderId);
+					setTargetIdNotebook(notebookId);
+					setTarget('note');
+				}}
+				key={`note${folder.note?.id}`}
+				style={{
+					marginBottom: 12,
+					display: 'flex',
+					flexDirection: 'row',
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}
+			>
+				<NoteListItem
+					id={folder.note?.id || 0}
+					name={folder.note?.name || 'Error not found'}
+					tags={folder.note?.tags}
+				></NoteListItem>
+			</TouchableWithoutFeedback>
+		));
+	};
+
+	const generateContentListFolder = (content: ContentType[] | undefined, notebookId: number) => {
+		return content?.map((notebook) => (
+			<TouchableWithoutFeedback
+				onLongPress={() => {
+					bottomSheetRef.current?.snapToIndex(0);
+					setTargetIdFolder(notebook.folder?.id);
+					setTargetIdNotebook(notebookId);
+					setTargetIdNote(undefined);
+					setTarget('folder');
+				}}
+				key={`folder${notebook.folder?.id}`}
+				style={{
+					marginBottom: 12,
+					display: 'flex',
+					flexDirection: 'row',
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}
+			>
+				<FolderListItem
+					id={notebook.folder?.id || 0}
+					name={notebook.folder?.name || 'Error not found'}
+					content={notebook.folder?.content}
+				>
+					{generateContentListNote(
+						notebook.folder?.content,
+						notebookId,
+						notebook.folder?.id || 0
+					)}
+				</FolderListItem>
+			</TouchableWithoutFeedback>
+		));
+	};
+
+	const generateContentListNotebook = () => {
+		return data.map((notebook) => (
+			<TouchableWithoutFeedback
+				onLongPress={() => {
+					bottomSheetRef.current?.snapToIndex(0);
+					setTargetIdNotebook(notebook.id);
+					setTargetIdNote(undefined);
+					setTargetIdFolder(undefined);
+					setTarget('notebook');
+				}}
+				key={notebook.id}
+				style={{
+					marginBottom: 12,
+					display: 'flex',
+					flexDirection: 'row',
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}
+			>
+				<NotebookListItem
+					id={notebook.id}
+					iconColor={notebook.iconColor}
+					name={notebook.name}
+					iconName={notebook.iconName}
+				>
+					{generateContentListFolder(notebook.content, notebook.id)}
+				</NotebookListItem>
+			</TouchableWithoutFeedback>
+		));
+	};
 
 	return (
 		<GestureHandlerRootView style={styles.container}>
@@ -38,61 +141,39 @@ export default function NotebookPage() {
 						paddingBottom: 100,
 						paddingTop: 20,
 					}}
-					showsVerticalScrollIndicator={true}
+					showsVerticalScrollIndicator={false}
 				>
-					{data.map((notebook) => (
-						<TouchableWithoutFeedback
-							onLongPress={() => {
-								bottomSheetRef.current?.snapToIndex(0);
-								setTargetId(notebook.id);
-							}}
-							key={notebook.id}
-							style={{
-								marginBottom: 12,
-								display: 'flex',
-								flexDirection: 'row',
-								alignItems: 'center',
-								justifyContent: 'center',
-							}}
-						>
-							<NotebookListItem
-								id={notebook.id}
-								iconColor={notebook.iconColor}
-								name={notebook.name}
-								iconName={notebook.iconName}
-								content={notebook.content}
-							/>
-						</TouchableWithoutFeedback>
-					))}
-					{data.map((notebook) => (
-						<TouchableWithoutFeedback
-							onLongPress={() => {
-								bottomSheetRef.current?.snapToIndex(0);
-								setTargetId(notebook.id);
-							}}
-							key={notebook.id}
-							style={{
-								marginBottom: 12,
-								display: 'flex',
-								flexDirection: 'row',
-								alignItems: 'center',
-								justifyContent: 'center',
-							}}
-						>
-							<FolderListItem
-								id={notebook.id}
-								name={notebook.name + ' folder'}
-								content={notebook.content}
-							/>
-						</TouchableWithoutFeedback>
-					))}
+					{generateContentListNotebook()}
 				</ScrollView>
 			</View>
 			<BottomSheetComponent ref={bottomSheetRef}>
-				<BottomSheetContentNotebook
-					title={data[targerId].name || 'Error not found'}
-					iconName={data[targerId].iconName || 'error-outline'}
-					iconColor={data[targerId].iconColor || Colors.red}
+				<BottomSheetContentNarabook
+					title={
+						targetIdFolder !== undefined
+							? targetIdNote !== undefined
+								? data[targetIdNotebook ?? 1]?.content?.[targetIdFolder ?? 1]
+										?.folder?.content?.[targetIdNote ?? 0]?.note?.name ||
+								  'Error not found'
+								: data[targetIdNotebook ?? 1]?.content?.[targetIdFolder ?? 1]
+										?.folder?.name || 'Error not found'
+							: data[targetIdNotebook ?? 0].name || 'Error not found'
+					}
+					/*@ts-ignore */
+					iconName={
+						targetIdFolder !== undefined
+							? targetIdNote !== undefined
+								? 'text'
+								: 'folder'
+							: data[targetIdNotebook ?? 0].iconName || 'error-outline'
+					}
+					iconColor={
+						targetIdFolder !== undefined
+							? colorScheme === 'light'
+								? Colors.light.secondary
+								: Colors.dark.secondary
+							: data[targetIdNotebook ?? 0].iconColor || Colors.red
+					}
+					target={target}
 				/>
 			</BottomSheetComponent>
 		</GestureHandlerRootView>
@@ -105,24 +186,15 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 	return StyleSheet.create({
 		Satoshi: {
 			fontFamily: 'Satoshi',
-			color:
-				colorScheme === 'light'
-					? Colors.light.secondary
-					: Colors.dark.secondary,
+			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
 		},
 		AzeretMono: {
 			fontFamily: 'AzeretMono',
-			color:
-				colorScheme === 'light'
-					? Colors.light.secondary
-					: Colors.dark.secondary,
+			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
 		},
 		Bespoke: {
 			fontFamily: 'Bespoke',
-			color:
-				colorScheme === 'light'
-					? Colors.light.secondary
-					: Colors.dark.secondary,
+			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
 		},
 		textXS: {
 			fontSize: 14,
@@ -153,10 +225,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 
 		container: {
 			flex: 1,
-			backgroundColor:
-				colorScheme === 'light'
-					? Colors.light.primary
-					: Colors.dark.primary,
+			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 			paddingTop: 40,
 		},
 

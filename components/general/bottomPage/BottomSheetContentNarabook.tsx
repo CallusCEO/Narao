@@ -1,17 +1,11 @@
 // components/general/BottomSheetContent.tsx
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import React, { useContext, useState } from 'react';
-import {
-	Dimensions,
-	StyleSheet,
-	Text,
-	TouchableNativeFeedback,
-	View,
-} from 'react-native';
+import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { useFonts } from 'expo-font';
 import Rule from '../Rule';
@@ -20,13 +14,10 @@ interface Props {
 	title: string;
 	iconName?: string;
 	iconColor?: string;
+	target: 'notebook' | 'folder' | 'note';
 }
 
-const BottomSheetContentNotebook: React.FC<Props> = ({
-	title,
-	iconName,
-	iconColor,
-}) => {
+const BottomSheetContentNarabook: React.FC<Props> = ({ title, iconName, iconColor, target }) => {
 	// Load the font
 	const [fontsLoaded] = useFonts({
 		SatoshiRegular: require('@/assets/fonts/Satoshi-Regular.otf'),
@@ -44,15 +35,13 @@ const BottomSheetContentNotebook: React.FC<Props> = ({
 
 	// functions :
 	const handleNameLength = (name: string): string => {
-		return name.trim().length < 17
-			? name.trim()
-			: name.slice(0, 17).trim() + '...';
+		return name.trim().length < 17 ? name.trim() : name.slice(0, 17).trim() + '...';
 	};
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.titleContainer}>
-				<MaterialIcons
+				<MaterialCommunityIcons
 					/* @ts-ignore */
 					name={iconName}
 					size={42}
@@ -65,16 +54,11 @@ const BottomSheetContentNotebook: React.FC<Props> = ({
 				<View style={styles.settingItem}>
 					<View style={styles.settingDesc}>
 						<Text style={styles.settingDescTitle}>Rename</Text>
-						<Text style={styles.settingDescText}>
-							Change the name of you notebook.
-						</Text>
+						<Text style={styles.settingDescText}>Change the name of you {target}.</Text>
 					</View>
 					<View style={styles.settingButtonContainer}>
 						<TouchableNativeFeedback
-							background={TouchableNativeFeedback.Ripple(
-								Colors.blueDistilled,
-								false
-							)}
+							background={TouchableNativeFeedback.Ripple(Colors.blueDistilled, false)}
 							onPress={() => setEditOpen(!editOpen)}
 						>
 							<View style={styles.settingButton}>
@@ -109,119 +93,96 @@ const BottomSheetContentNotebook: React.FC<Props> = ({
 									Colors.greenDistilled,
 									false
 								)}
-								onPress={() =>
-									text.length && setEditOpen(false)
-								}
+								onPress={() => text.length && setEditOpen(false)}
 							>
 								<View style={styles.settingButton}>
-									<MaterialIcons
-										name='check'
-										size={28}
-										color={Colors.green}
-									/>
+									<MaterialIcons name='check' size={28} color={Colors.green} />
 								</View>
 							</TouchableNativeFeedback>
 						</View>
 					</View>
 				)}
-				<View style={styles.settingItem}>
-					<View style={styles.settingDesc}>
-						<Text style={styles.settingDescTitle}>Change icon</Text>
-						<Text style={styles.settingDescText}>
-							Select a new icon for your notebook.
-						</Text>
-					</View>
-					<View style={styles.settingButtonContainer}>
-						<TouchableNativeFeedback
-							background={TouchableNativeFeedback.Ripple(
-								Colors.blueDistilled,
-								false
-							)}
-						>
-							<View style={styles.settingButton}>
-								<MaterialIcons
-									name='add-reaction'
-									size={28}
-									color={
-										colorScheme === 'light'
-											? Colors.firstGray
-											: Colors.dark.secondary
-									}
-								/>
+				{target !== 'folder' && target !== 'note' && (
+					<>
+						<View style={styles.settingItem}>
+							<View style={styles.settingDesc}>
+								<Text style={styles.settingDescTitle}>Change icon</Text>
+								<Text style={styles.settingDescText}>
+									Select a new icon for your {target}.
+								</Text>
 							</View>
-						</TouchableNativeFeedback>
-					</View>
-				</View>
-				<View style={styles.settingItem}>
-					<View style={styles.settingDesc}>
-						<Text style={styles.settingDescTitle}>
-							Change Icon Color
-						</Text>
-						<Text style={styles.settingDescText}>
-							Choose a new color for your notebook icon.
-						</Text>
-					</View>
-					<View style={styles.settingButtonContainer}>
-						<TouchableNativeFeedback
-							background={TouchableNativeFeedback.Ripple(
-								Colors.blueDistilled,
-								false
-							)}
-						>
-							<View style={styles.settingButton}>
-								<MaterialIcons
-									name='color-lens'
-									size={28}
-									color={
-										colorScheme === 'light'
-											? Colors.firstGray
-											: Colors.dark.secondary
-									}
-								/>
+							<View style={styles.settingButtonContainer}>
+								<TouchableNativeFeedback
+									background={TouchableNativeFeedback.Ripple(
+										Colors.blueDistilled,
+										false
+									)}
+								>
+									<View style={styles.settingButton}>
+										<MaterialIcons
+											name='add-reaction'
+											size={28}
+											color={
+												colorScheme === 'light'
+													? Colors.firstGray
+													: Colors.dark.secondary
+											}
+										/>
+									</View>
+								</TouchableNativeFeedback>
 							</View>
-						</TouchableNativeFeedback>
-					</View>
-				</View>
+						</View>
+
+						<View style={styles.settingItem}>
+							<View style={styles.settingDesc}>
+								<Text style={styles.settingDescTitle}>Change Icon Color</Text>
+								<Text style={styles.settingDescText}>
+									Choose a new color for your {target} icon.
+								</Text>
+							</View>
+							<View style={styles.settingButtonContainer}>
+								<TouchableNativeFeedback
+									background={TouchableNativeFeedback.Ripple(
+										Colors.blueDistilled,
+										false
+									)}
+								>
+									<View style={styles.settingButton}>
+										<MaterialIcons
+											name='color-lens'
+											size={28}
+											color={
+												colorScheme === 'light'
+													? Colors.firstGray
+													: Colors.dark.secondary
+											}
+										/>
+									</View>
+								</TouchableNativeFeedback>
+							</View>
+						</View>
+					</>
+				)}
 				<View style={[styles.settingItem, styles.settingItemDelete]}>
 					<View style={styles.settingDesc}>
-						<Text
-							style={[
-								styles.settingDescTitle,
-								styles.settingDescTitleDelete,
-							]}
-						>
+						<Text style={[styles.settingDescTitle, styles.settingDescTitleDelete]}>
 							Delete
 						</Text>
-						<Text
-							style={[
-								styles.settingDescText,
-								styles.settingDescTextDelete,
-							]}
-						>
+						<Text style={[styles.settingDescText, styles.settingDescTextDelete]}>
 							This action will be irreversible.
 						</Text>
 					</View>
 					<View
-						style={[
-							styles.settingButtonContainer,
-							styles.settingButtonContainerDelete,
-						]}
+						style={[styles.settingButtonContainer, styles.settingButtonContainerDelete]}
 					>
 						<TouchableNativeFeedback
-							background={TouchableNativeFeedback.Ripple(
-								Colors.redDistilled,
-								false
-							)}
+							background={TouchableNativeFeedback.Ripple(Colors.redDistilled, false)}
 						>
 							<View style={styles.settingButton}>
 								<MaterialIcons
 									name='delete'
 									size={28}
-									color={
-										colorScheme === 'light'
-											? Colors.red
-											: Colors.red
-									}
+									color={colorScheme === 'light' ? Colors.red : Colors.red}
 								/>
 							</View>
 						</TouchableNativeFeedback>
@@ -254,10 +215,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			marginLeft: 12,
 			fontFamily: 'SatoshiBold',
 			fontSize: 24,
-			color:
-				colorScheme === 'light'
-					? Colors.light.secondary
-					: Colors.dark.secondary,
+			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
 		},
 
 		settingsContainer: {
@@ -276,10 +234,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			borderBottomWidth: 1,
 			borderBottomColor: Colors.thirdGray,
 			height: 80,
-			backgroundColor:
-				colorScheme === 'light'
-					? Colors.light.primary
-					: Colors.firstGray,
+			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
 			marginBottom: 12,
 		},
 
@@ -296,10 +251,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		settingDescTitle: {
 			fontFamily: 'SatoshiBold',
 			fontSize: 18,
-			color:
-				colorScheme === 'light'
-					? Colors.light.secondary
-					: Colors.dark.secondary,
+			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
 		},
 
 		settingDescTitleDelete: {
@@ -309,10 +261,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		settingDescText: {
 			fontFamily: 'SatoshiRegular',
 			fontSize: 16,
-			color:
-				colorScheme === 'light'
-					? Colors.light.secondary
-					: Colors.dark.secondary,
+			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
 			opacity: 0.8,
 		},
 
@@ -362,14 +311,11 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 
 		settingTextInput: {
 			flex: 1,
-			color:
-				colorScheme === 'light'
-					? Colors.light.secondary
-					: Colors.dark.secondary,
+			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
 			fontFamily: 'SatoshiRegular',
 			fontSize: 16,
 		},
 	});
 }
 
-export default BottomSheetContentNotebook;
+export default BottomSheetContentNarabook;

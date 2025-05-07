@@ -1,11 +1,11 @@
-import { Tabs } from 'expo-router';
-import { useContext } from 'react';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useContext } from 'react';
 
 // custom imports
-import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import Colors from '@/constants/Colors';
+import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 
 export default function TabLayout() {
 	const { colorScheme } = useContext(ColorSchemeContext);
@@ -42,8 +42,12 @@ export default function TabLayout() {
 					options={{
 						title: 'Timer',
 						popToTopOnBlur: true,
-						tabBarIcon: ({ color, size }) => (
-							<MaterialCommunityIcons size={size} name='timer-sand' color={color} />
+						tabBarIcon: ({ color, size, focused }) => (
+							<MaterialCommunityIcons
+								size={size}
+								name={focused ? 'timer-sand-complete' : 'timer-sand'}
+								color={color}
+							/>
 						),
 					}}
 				/>
@@ -53,8 +57,12 @@ export default function TabLayout() {
 					options={{
 						title: 'Calendar',
 						popToTopOnBlur: true,
-						tabBarIcon: ({ color, size }) => (
-							<MaterialCommunityIcons size={size} name='calendar' color={color} />
+						tabBarIcon: ({ color, size, focused }) => (
+							<MaterialCommunityIcons
+								size={size}
+								name={focused ? 'calendar-multiple' : 'calendar'}
+								color={color}
+							/>
 						),
 					}}
 				/>
@@ -65,7 +73,7 @@ export default function TabLayout() {
 						title: 'Llucas',
 						popToTopOnBlur: true,
 						tabBarIcon: ({ color, size }) => (
-							<MaterialCommunityIcons size={size} name='asterisk' color={color} />
+							<MaterialCommunityIcons size={size} name='assistant' color={color} />
 						),
 					}}
 				/>

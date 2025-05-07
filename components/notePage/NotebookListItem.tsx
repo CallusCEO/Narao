@@ -1,33 +1,20 @@
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
-import { useContext, useState } from 'react';
-import {
-	Dimensions,
-	StyleSheet,
-	Text,
-	TouchableNativeFeedback,
-	View,
-} from 'react-native';
+import { ReactNode, useContext, useState } from 'react';
+import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { NotebookType } from '@/types/ContentType';
-import { TouchableWithoutFeedback } from '@gorhom/bottom-sheet';
-import FolderListItem from './FolderListItem';
 
 interface Props extends NotebookType {
 	iconColor: string;
 	iconName: string;
+	children?: ReactNode;
 }
 
-const NotebookListItem = ({
-	iconName,
-	iconColor,
-	name,
-	id,
-	content,
-}: Props) => {
+const NotebookListItem = ({ iconName, iconColor, name, id, content, children }: Props) => {
 	// Load the font
 	const [fontsLoaded] = useFonts({
 		SatoshiRegular: require('@/assets/fonts/Satoshi-Regular.otf'),
@@ -44,31 +31,31 @@ const NotebookListItem = ({
 
 	// functions :
 	const handleNameLength = (name: string): string => {
-		return name.trim().length < 17
-			? name.trim()
-			: name.slice(0, 17).trim() + '...';
+		return name.trim().length < 17 ? name.trim() : name.slice(0, 17).trim() + '...';
+	};
+
+	const handleChildrenVoidTitle = () => {
+		return children === undefined ? '(Empty)' : null;
 	};
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.notebookContainer}>
 				<TouchableNativeFeedback
-					background={TouchableNativeFeedback.Ripple(
-						Colors.fourthGray,
-						false
-					)}
+					background={TouchableNativeFeedback.Ripple(Colors.fourthGray, false)}
 					onPress={() => setIsOpen(!isOpen)}
 					// onLongPress={(e) => ref.current?.expand()}
 				>
 					<View style={styles.innerContainer}>
-						<MaterialIcons
+						<MaterialCommunityIcons
 							/* @ts-ignore */
 							name={iconName}
 							size={28}
 							color={iconColor}
 						/>
-						<Text style={[styles.textS, styles.title]}>
-							{handleNameLength(name)}
+						<Text style={[styles.textS, styles.title]}>{handleNameLength(name)}</Text>
+						<Text style={[styles.textXS, styles.voidNotebookTitle]}>
+							{handleChildrenVoidTitle()}
 						</Text>
 						<View style={styles.dropdownIconContainer}>
 							<MaterialIcons
@@ -80,30 +67,8 @@ const NotebookListItem = ({
 					</View>
 				</TouchableNativeFeedback>
 			</View>
-			{isOpen && (
-				<View style={styles.contentContainer}>
-					{content?.map((folder) => (
-						<TouchableWithoutFeedback
-							// onLongPress={() => {
-							// 	bottomSheetRef.current?.snapToIndex(0);
-							// }}
-							key={folder.folder?.id}
-							style={{
-								marginBottom: 12,
-								display: 'flex',
-								flexDirection: 'row',
-								alignItems: 'center',
-								justifyContent: 'center',
-							}}
-						>
-							<FolderListItem
-								id={folder.folder?.id || 0}
-								name={folder.folder?.name || 'Error not found'}
-								content={folder.folder?.content}
-							/>
-						</TouchableWithoutFeedback>
-					))}
-				</View>
+			{isOpen && children !== undefined && (
+				<View style={styles.contentContainer}>{children}</View>
 			)}
 		</View>
 	);
@@ -136,13 +101,9 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 
 		notebookContainer: {
 			width: '100%',
-			backgroundColor:
-				colorScheme === 'light'
-					? Colors.light.primary
-					: Colors.firstGray,
+			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
 			borderRadius: 10,
-			borderColor:
-				colorScheme === 'light' ? Colors.thirdGray : Colors.firstGray,
+			borderColor: colorScheme === 'light' ? Colors.thirdGray : Colors.firstGray,
 			borderWidth: 1,
 			borderStyle: 'solid',
 			overflow: 'hidden',
@@ -157,8 +118,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			paddingLeft: 16,
 			width: '95%',
 			borderLeftWidth: 1,
-			borderLeftColor:
-				colorScheme === 'light' ? Colors.thirdGray : Colors.secondGray,
+			borderLeftColor: colorScheme === 'light' ? Colors.thirdGray : Colors.secondGray,
 		},
 
 		innerContainer: {
@@ -173,13 +133,16 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		},
 
 		title: {
-			fontSize: 16,
 			marginLeft: 8,
 			fontFamily: 'SatoshiMedium',
-			color:
-				colorScheme === 'light'
-					? Colors.dark.primary
-					: Colors.light.primary,
+			color: colorScheme === 'light' ? Colors.dark.primary : Colors.light.primary,
+		},
+
+		voidNotebookTitle: {
+			marginLeft: 12,
+			fontFamily: 'SatoshiMedium',
+			color: colorScheme === 'light' ? Colors.firstGray : Colors.thirdGray,
+			fontStyle: 'italic',
 		},
 
 		dropdownIconContainer: {
