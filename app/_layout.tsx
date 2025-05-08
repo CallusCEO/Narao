@@ -7,15 +7,21 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 // custom imports
 import DrawerContent from '@/components/sidebar/DrawerContent';
 import Colors from '@/constants/Colors';
+import { ChatDrawerOpenProvider } from '@/context/ChatDrawerOpenContext';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
+import { NotebookOpenProvider } from '@/context/NotebookOpenContext';
 
 export default function RootLayout() {
 	return (
 		<ColorSchemeProvider>
 			<SafeAreaProvider>
-				<GestureHandlerRootView style={{ flex: 1 }}>
-					<RootLayoutNav />
-				</GestureHandlerRootView>
+				<ChatDrawerOpenProvider>
+					<NotebookOpenProvider>
+						<GestureHandlerRootView style={{ flex: 1 }}>
+							<RootLayoutNav />
+						</GestureHandlerRootView>
+					</NotebookOpenProvider>
+				</ChatDrawerOpenProvider>
 			</SafeAreaProvider>
 		</ColorSchemeProvider>
 	);

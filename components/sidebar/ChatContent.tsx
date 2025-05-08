@@ -4,23 +4,18 @@ import { StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
-import { data } from '@/constants/sampleNoteData';
 import { ChatDrawerOpenContext } from '@/context/ChatDrawerOpenContext';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { NotebookOpenContext } from '@/context/NotebookOpenContext';
-import { ContentType } from '@/types/ContentType';
 import { MaterialIcons } from '@expo/vector-icons';
-import { TouchableWithoutFeedback } from '@gorhom/bottom-sheet';
-import { ScrollView } from 'react-native-gesture-handler';
 import Rule from '../general/Rule';
-import FolderDrawerListItem from './FolderDrawerListItem';
-import NoteDrawerListItem from './NoteDrawerListItem';
+import ChatDrawerListItem from './ChatDrawerListItem';
 
 interface Props {
-	notebookId: number;
+	id: number;
 }
 
-const NotebookContent = ({ notebookId }: Props) => {
+const NotebookContent = ({ id }: Props) => {
 	// Load the font
 	const [fontsLoaded] = useFonts({
 		SatoshiRegular: require('@/assets/fonts/Satoshi-Regular.otf'),
@@ -34,56 +29,17 @@ const NotebookContent = ({ notebookId }: Props) => {
 	const styles = createStyles(colorScheme); // Assuming 'light' for demonstration
 
 	// functions :
-
-	const generateContentListNote = (
-		content: ContentType[] | undefined,
-		notebookId: number,
-		folderId: number
-	) => {
-		return content?.map((folder) => (
-			<TouchableWithoutFeedback
-				key={`note${folder.note?.id}`}
-				style={{
-					marginBottom: 4,
-					display: 'flex',
-					flexDirection: 'row',
-					alignItems: 'center',
-					justifyContent: 'center',
-				}}
-			>
-				<NoteDrawerListItem
-					id={folder.note?.id || 0}
-					name={folder.note?.name || 'Error not found'}
-					tags={folder.note?.tags}
-				></NoteDrawerListItem>
-			</TouchableWithoutFeedback>
-		));
-	};
-
-	const generateFolders = () => {
-		return data[notebookId]?.content?.map((notebook, index) => (
-			<TouchableWithoutFeedback key={index}>
-				<FolderDrawerListItem
-					name={notebook.folder?.name || 'Error not found'}
-					id={notebook.folder?.id || 0}
-				>
-					{generateContentListNote(
-						notebook.folder?.content,
-						notebookId,
-						notebook.folder?.id || 0
-					)}
-				</FolderDrawerListItem>
-			</TouchableWithoutFeedback>
-		));
+	const handleNameLength = (name: string): string => {
+		return name.trim().length < 17 ? name.trim() : name.slice(0, 17).trim() + '...';
 	};
 
 	return (
-		<View style={[styles.container, { height: isNotebookOpen ? 'auto' : 30 }]}>
+		<View style={[styles.container, { height: isChatDrawerOpen ? 'auto' : 30 }]}>
 			<TouchableNativeFeedback
 				background={TouchableNativeFeedback.Ripple(Colors.thirdGray, false)}
 				onPress={() => {
-					setNotebookOpen(!isNotebookOpen);
-					setChatDrawerOpen(false);
+					setChatDrawerOpen(!isChatDrawerOpen);
+					setNotebookOpen(false);
 				}}
 			>
 				<View style={styles.dropdown}>
@@ -93,14 +49,16 @@ const NotebookContent = ({ notebookId }: Props) => {
 							colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary
 						}
 						size={28}
-						style={{ transform: [{ rotate: isNotebookOpen ? '0deg' : '-90deg' }] }}
+						style={{ transform: [{ rotate: isChatDrawerOpen ? '0deg' : '-90deg' }] }}
 					/>
-					<Text style={styles.text}>Notes & Folders</Text>
+					<Text style={styles.text}>Chats</Text>
 				</View>
 			</TouchableNativeFeedback>
-			{isNotebookOpen && <Rule />}
-			{isNotebookOpen && (
-				<ScrollView style={styles.innerContainer}>{generateFolders()}</ScrollView>
+			{isChatDrawerOpen && <Rule />}
+			{isChatDrawerOpen && (
+				<View style={styles.innerContainer}>
+					<ChatDrawerListItem name='Chat 1' id={0} />
+				</View>
 			)}
 		</View>
 	);

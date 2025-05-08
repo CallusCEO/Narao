@@ -5,19 +5,20 @@ import { StyleSheet, View } from 'react-native';
 // custom imports
 import Colors from '@/constants/Colors';
 import Rule from '../general/Rule';
+import ChatContent from './ChatContent';
 import NotebookContent from './NotebookContent';
 import NotebookTitle from './NotebookTitle';
 
 const DrawerContent = () => {
 	const { colorScheme } = useContext(ColorSchemeContext);
-
 	const styles = createStyles(colorScheme); // Assuming 'light' for demonstration
 
 	return (
 		<View style={styles.container}>
 			<NotebookTitle id={0} />
 			<Rule />
-			<NotebookContent id={0} />
+			<NotebookContent notebookId={0} />
+			<ChatContent id={0} />
 		</View>
 	);
 };
