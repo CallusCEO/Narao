@@ -10,7 +10,6 @@ import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { NotebookOpenContext } from '@/context/NotebookOpenContext';
 import { ContentType } from '@/types/ContentType';
 import { MaterialIcons } from '@expo/vector-icons';
-import { TouchableWithoutFeedback } from '@gorhom/bottom-sheet';
 import { ScrollView } from 'react-native-gesture-handler';
 import Rule from '../general/Rule';
 import FolderDrawerListItem from './FolderDrawerListItem';
@@ -35,46 +34,44 @@ const NotebookContent = ({ notebookId }: Props) => {
 
 	// functions :
 
-	const generateContentListNote = (
-		content: ContentType[] | undefined,
-		notebookId: number,
-		folderId: number
-	) => {
-		return content?.map((folder) => (
-			<TouchableWithoutFeedback
-				key={`note${folder.note?.id}`}
-				style={{
-					marginBottom: 4,
-					display: 'flex',
-					flexDirection: 'row',
-					alignItems: 'center',
-					justifyContent: 'center',
-				}}
-			>
-				<NoteDrawerListItem
-					id={folder.note?.id || 0}
-					name={folder.note?.name || 'Error not found'}
-					tags={folder.note?.tags}
-				></NoteDrawerListItem>
-			</TouchableWithoutFeedback>
-		));
-	};
+	const renderContent = (maxTextLength: number, items?: ContentType[]) => {
+		if (!items) return null;
+		console.log(maxTextLength);
 
-	const generateFolders = () => {
-		return data[notebookId]?.content?.map((notebook, index) => (
-			<TouchableWithoutFeedback key={index}>
-				<FolderDrawerListItem
-					name={notebook.folder?.name || 'Error not found'}
-					id={notebook.folder?.id || 0}
-				>
-					{generateContentListNote(
-						notebook.folder?.content,
-						notebookId,
-						notebook.folder?.id || 0
-					)}
-				</FolderDrawerListItem>
-			</TouchableWithoutFeedback>
-		));
+		return items.map((item) => {
+			// Folder case
+			if (item.folder) {
+				const { id, name, content } = item.folder;
+				return (
+					<FolderDrawerListItem
+						key={`folder-${id}`}
+						name={name}
+						id={id}
+						maxTextLength={maxTextLength}
+					>
+						{/* recurse into this folder’s content */}
+						{renderContent(maxTextLength - 4, content)}
+					</FolderDrawerListItem>
+				);
+			}
+
+			// Note case
+			if (item.note) {
+				const { id, name, tags } = item.note;
+				return (
+					<NoteDrawerListItem
+						key={`note-${id}`}
+						id={id}
+						name={name}
+						tags={tags}
+						maxTextLength={maxTextLength}
+					/>
+				);
+			}
+
+			// Fallback
+			return null;
+		});
 	};
 
 	return (
@@ -95,12 +92,14 @@ const NotebookContent = ({ notebookId }: Props) => {
 						size={28}
 						style={{ transform: [{ rotate: isNotebookOpen ? '0deg' : '-90deg' }] }}
 					/>
-					<Text style={styles.text}>Notes & Folders</Text>
+					<Text style={styles.text}>Notes</Text>
 				</View>
 			</TouchableNativeFeedback>
 			{isNotebookOpen && <Rule />}
 			{isNotebookOpen && (
-				<ScrollView style={styles.innerContainer}>{generateFolders()}</ScrollView>
+				<ScrollView contentContainerStyle={styles.innerContainer}>
+					{renderContent(20, data[notebookId]?.content)}
+				</ScrollView>
 			)}
 		</View>
 	);

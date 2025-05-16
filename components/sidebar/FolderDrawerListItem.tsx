@@ -10,9 +10,10 @@ import { FolderType } from '@/types/ContentType';
 
 interface Props extends FolderType {
 	children?: ReactNode | undefined;
+	maxTextLength: number;
 }
 
-const FolderDrawerListItem = ({ name, id, children }: Props) => {
+const FolderDrawerListItem = ({ name, id, children, maxTextLength }: Props) => {
 	// Load the font
 	const [fontsLoaded] = useFonts({
 		SatoshiRegular: require('@/assets/fonts/Satoshi-Regular.otf'),
@@ -29,12 +30,14 @@ const FolderDrawerListItem = ({ name, id, children }: Props) => {
 
 	// functions :
 	const handleNameLength = (name: string): string => {
-		return name.trim().length < 17 ? name.trim() : name.slice(0, 17).trim() + '...';
+		return name.trim().length < maxTextLength
+			? name.trim()
+			: name.slice(0, maxTextLength).trim() + '...';
 	};
 
 	const handleChildrenVoidTitle = () => {
 		const childrenCount = React.Children.count(children);
-		return childrenCount === 0 ? '(Empty)' : null;
+		return childrenCount === 0 ? 'folder-hidden' : isOpen ? 'folder-open' : 'folder';
 	};
 
 	return (
@@ -42,11 +45,13 @@ const FolderDrawerListItem = ({ name, id, children }: Props) => {
 			<View style={styles.folderContainer}>
 				<TouchableNativeFeedback
 					background={TouchableNativeFeedback.Ripple(Colors.firstGray, false)}
-					onPress={() => setIsOpen(!isOpen)}
+					onPress={() =>
+						React.Children.count(children) === 0 ? null : setIsOpen(!isOpen)
+					}
 				>
 					<View style={styles.innerContainer}>
 						<MaterialCommunityIcons
-							name='folder'
+							name={handleChildrenVoidTitle()}
 							size={20}
 							color={
 								colorScheme === 'light'
@@ -55,9 +60,6 @@ const FolderDrawerListItem = ({ name, id, children }: Props) => {
 							}
 						/>
 						<Text style={[styles.textXS, styles.title]}>{handleNameLength(name)}</Text>
-						<Text style={[styles.textXS, styles.voidNotebookTitle]}>
-							{handleChildrenVoidTitle()}
-						</Text>
 						<View style={styles.dropdownIconContainer}>
 							<MaterialIcons
 								name='keyboard-arrow-down'

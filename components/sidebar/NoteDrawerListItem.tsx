@@ -14,9 +14,10 @@ interface TagType {
 }
 interface Props extends NoteType {
 	tags?: TagType[];
+	maxTextLength: number;
 }
 
-const NoteDrawerListItem = ({ name, id, tags }: Props) => {
+const NoteDrawerListItem = ({ name, id, tags, maxTextLength }: Props) => {
 	// Load the font
 	const [fontsLoaded] = useFonts({
 		SatoshiRegular: require('@/assets/fonts/Satoshi-Regular.otf'),
@@ -33,7 +34,9 @@ const NoteDrawerListItem = ({ name, id, tags }: Props) => {
 
 	// functions :
 	const handleNameLength = (name: string): string => {
-		return name.trim().length < 17 ? name.trim() : name.slice(0, 17).trim() + '...';
+		return name.trim().length < maxTextLength
+			? name.trim()
+			: name.slice(0, maxTextLength).trim() + '...';
 	};
 
 	const handleTagTitle = (title: string, index: number) => {
@@ -116,9 +119,9 @@ const NoteDrawerListItem = ({ name, id, tags }: Props) => {
 										</Text>
 									</View>
 								))}
-							{tags?.length ?? 0 >= 3 ? (
+							{!!tags?.length && tags.length >= 3 && (
 								<Text style={styles.tagMore}>...</Text>
-							) : null}
+							)}
 						</View>
 					</View>
 				</TouchableNativeFeedback>

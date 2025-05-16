@@ -31,7 +31,7 @@ export default function NotebookTitle({ id }: Props) {
 	return (
 		<View style={styles.container}>
 			<TouchableNativeFeedback
-				background={TouchableNativeFeedback.Ripple(Colors.secondGray, false)}
+				background={TouchableNativeFeedback.Ripple(Colors.thirdGray, false)}
 			>
 				<View style={styles.innerContainer}>
 					<MaterialCommunityIcons

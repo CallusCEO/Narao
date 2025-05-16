@@ -10,7 +10,7 @@ import BottomSheetContentNarabook from '@/components/general/bottomPage/BottomSh
 import PageHeader from '@/components/general/PageHeader';
 import FolderListItem from '@/components/notePage/FolderListItem';
 import NotebookListItem from '@/components/notePage/NotebookListItem';
-import NoteListItem from '@/components/notePage/NoteListIem';
+import NoteListItem from '@/components/notePage/NoteListItem';
 import Colors from '@/constants/Colors';
 import { data } from '@/constants/sampleNoteData';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
@@ -33,102 +33,79 @@ export default function NotebookPage() {
 	const [targetIdNote, setTargetIdNote] = useState<number | undefined>(undefined);
 	const [target, setTarget] = useState<'notebook' | 'folder' | 'note'>('notebook');
 
-	// functions :
-	const generateContentListNote = (
-		content: ContentType[] | undefined,
-		notebookId: number,
-		folderId: number
-	) => {
-		return content?.map((folder) => (
-			<TouchableWithoutFeedback
-				onLongPress={() => {
-					bottomSheetRef.current?.snapToIndex(0);
-					setTargetIdNote(folder.note?.id);
-					setTargetIdFolder(folderId);
-					setTargetIdNotebook(notebookId);
-					setTarget('note');
-				}}
-				key={`note${folder.note?.id}`}
-				style={{
-					marginBottom: 12,
-					display: 'flex',
-					flexDirection: 'row',
-					alignItems: 'center',
-					justifyContent: 'center',
-				}}
-			>
-				<NoteListItem
-					id={folder.note?.id || 0}
-					name={folder.note?.name || 'Error not found'}
-					tags={folder.note?.tags}
-				></NoteListItem>
-			</TouchableWithoutFeedback>
-		));
-	};
+	// Recursive renderer types
+	type TargetSetter = (id?: number) => void;
+	interface RenderContext {
+		notebookId: number;
+		parentFolderId?: number;
+		setTargetNotebook: TargetSetter;
+		setTargetFolder: TargetSetter;
+		setTargetNote: TargetSetter;
+		setTargetType: (t: 'notebook' | 'folder' | 'note') => void;
+		bottomSheetRef: React.RefObject<BottomSheet | null>;
+	}
 
-	const generateContentListFolder = (content: ContentType[] | undefined, notebookId: number) => {
-		return content?.map((notebook) => (
-			<TouchableWithoutFeedback
-				onLongPress={() => {
-					bottomSheetRef.current?.snapToIndex(0);
-					setTargetIdFolder(notebook.folder?.id);
-					setTargetIdNotebook(notebookId);
-					setTargetIdNote(undefined);
-					setTarget('folder');
-				}}
-				key={`folder${notebook.folder?.id}`}
-				style={{
-					marginBottom: 12,
-					display: 'flex',
-					flexDirection: 'row',
-					alignItems: 'center',
-					justifyContent: 'center',
-				}}
-			>
-				<FolderListItem
-					id={notebook.folder?.id || 0}
-					name={notebook.folder?.name || 'Error not found'}
-					content={notebook.folder?.content}
-				>
-					{generateContentListNote(
-						notebook.folder?.content,
-						notebookId,
-						notebook.folder?.id || 0
-					)}
-				</FolderListItem>
-			</TouchableWithoutFeedback>
-		));
-	};
+	// Recursive render function
+	const renderTree = (
+		items: ContentType[] | undefined,
+		ctx: RenderContext,
+		maxTextLength: number
+	): React.ReactNode => {
+		if (!items) return null;
 
-	const generateContentListNotebook = () => {
-		return data.map((notebook) => (
-			<TouchableWithoutFeedback
-				onLongPress={() => {
-					bottomSheetRef.current?.snapToIndex(0);
-					setTargetIdNotebook(notebook.id);
-					setTargetIdNote(undefined);
-					setTargetIdFolder(undefined);
-					setTarget('notebook');
-				}}
-				key={notebook.id}
-				style={{
-					marginBottom: 12,
-					display: 'flex',
-					flexDirection: 'row',
-					alignItems: 'center',
-					justifyContent: 'center',
-				}}
-			>
-				<NotebookListItem
-					id={notebook.id}
-					iconColor={notebook.iconColor}
-					name={notebook.name}
-					iconName={notebook.iconName}
-				>
-					{generateContentListFolder(notebook.content, notebook.id)}
-				</NotebookListItem>
-			</TouchableWithoutFeedback>
-		));
+		return items.map((item) => {
+			if (item.folder) {
+				const { id, name, content } = item.folder;
+				return (
+					<TouchableWithoutFeedback
+						key={`folder-${ctx.notebookId}-${id}`}
+						onLongPress={() => {
+							ctx.bottomSheetRef.current?.snapToIndex(0);
+							ctx.setTargetNotebook(ctx.notebookId);
+							ctx.setTargetFolder(id);
+							ctx.setTargetNote(undefined);
+							ctx.setTargetType('folder');
+						}}
+						style={styles.row}
+					>
+						<FolderListItem
+							id={id}
+							name={name}
+							content={content}
+							maxTextLength={maxTextLength}
+						>
+							{renderTree(content, { ...ctx, parentFolderId: id }, maxTextLength - 4)}
+						</FolderListItem>
+					</TouchableWithoutFeedback>
+				);
+			}
+
+			if (item.note) {
+				const { id, name, tags } = item.note;
+				return (
+					<TouchableWithoutFeedback
+						key={`note-${ctx.notebookId}-${ctx.parentFolderId}-${id}`}
+						onLongPress={() => {
+							ctx.bottomSheetRef.current?.snapToIndex(0);
+							ctx.setTargetNotebook(ctx.notebookId);
+							ctx.setTargetFolder(ctx.parentFolderId);
+							ctx.setTargetNote(id);
+							ctx.setTargetType('note');
+						}}
+						style={styles.row}
+					>
+						<NoteListItem
+							id={id}
+							name={name}
+							tags={tags}
+							maxTextLength={maxTextLength}
+						/>
+					</TouchableWithoutFeedback>
+				);
+			}
+
+			return null;
+		});
 	};
 
 	return (
@@ -137,13 +114,43 @@ export default function NotebookPage() {
 			<View style={styles.notebooksContainer}>
 				<ScrollView
 					style={styles.notebooksScroller}
-					contentContainerStyle={{
-						paddingBottom: 100,
-						paddingTop: 20,
-					}}
+					contentContainerStyle={{ paddingBottom: 100, paddingTop: 20 }}
 					showsVerticalScrollIndicator={false}
 				>
-					{generateContentListNotebook()}
+					{data.map((notebook) => (
+						<TouchableWithoutFeedback
+							key={notebook.id}
+							onLongPress={() => {
+								bottomSheetRef.current?.snapToIndex(0);
+								setTargetIdNotebook(notebook.id);
+								setTargetIdFolder(undefined);
+								setTargetIdNote(undefined);
+								setTarget('notebook');
+							}}
+							style={styles.row}
+						>
+							<NotebookListItem
+								id={notebook.id}
+								name={notebook.name}
+								iconName={notebook.iconName}
+								iconColor={notebook.iconColor}
+							>
+								{renderTree(
+									notebook.content,
+									{
+										notebookId: notebook.id,
+										parentFolderId: undefined,
+										bottomSheetRef,
+										setTargetNotebook: setTargetIdNotebook,
+										setTargetFolder: setTargetIdFolder,
+										setTargetNote: setTargetIdNote,
+										setTargetType: setTarget,
+									},
+									20
+								)}
+							</NotebookListItem>
+						</TouchableWithoutFeedback>
+					))}
 				</ScrollView>
 			</View>
 			<BottomSheetComponent ref={bottomSheetRef}>
@@ -151,10 +158,10 @@ export default function NotebookPage() {
 					title={
 						targetIdFolder !== undefined
 							? targetIdNote !== undefined
-								? data[targetIdNotebook ?? 1]?.content?.[targetIdFolder ?? 1]
+								? data[targetIdNotebook ?? 0]?.content?.[targetIdFolder ?? 0]
 										?.folder?.content?.[targetIdNote ?? 0]?.note?.name ||
 								  'Error not found'
-								: data[targetIdNotebook ?? 1]?.content?.[targetIdFolder ?? 1]
+								: data[targetIdNotebook ?? 0]?.content?.[targetIdFolder ?? 0]
 										?.folder?.name || 'Error not found'
 							: data[targetIdNotebook ?? 0].name || 'Error not found'
 					}
@@ -184,84 +191,27 @@ type ColorScheme = 'light' | 'dark' | undefined | null;
 
 function createStyles(colorScheme: ColorScheme, width: number) {
 	return StyleSheet.create({
-		Satoshi: {
-			fontFamily: 'Satoshi',
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+		row: {
+			marginBottom: 12,
+			display: 'flex',
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyContent: 'center',
 		},
-		AzeretMono: {
-			fontFamily: 'AzeretMono',
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
-		},
-		Bespoke: {
-			fontFamily: 'Bespoke',
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
-		},
-		textXS: {
-			fontSize: 14,
-		},
-		textS: {
-			fontSize: 16,
-		},
-		textM: {
-			fontSize: 18,
-		},
-		textXL: {
-			fontSize: 20,
-		},
-		textXXL: {
-			fontSize: 22,
-		},
-		textXXXL: {
-			fontSize: 24,
-		},
-		textXXXXL: {
-			fontSize: 26,
-		},
-
-		header: {
-			marginBottom: 16,
-			fontWeight: 'bold',
-		},
-
 		container: {
 			flex: 1,
 			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 			paddingTop: 40,
 		},
-
 		notebooksContainer: {
 			width: '100%',
 			height: '100%',
 			paddingHorizontal: '5%',
-			display: 'flex',
-			flexDirection: 'column',
 		},
-
 		notebooksScroller: {
 			marginHorizontal: 'auto',
 			width: '95%',
 			height: '100%',
-		},
-
-		buttonContainer: {
-			marginTop: 20,
-			alignItems: 'center',
-		},
-
-		button: {
-			backgroundColor: Colors.blue,
-			paddingVertical: 12,
-			paddingHorizontal: 24,
-			borderRadius: 8,
-			alignItems: 'center',
-			width: '70%',
-		},
-
-		buttonText: {
-			color: 'white',
-			fontFamily: 'Satoshi',
-			fontSize: 16,
-			fontWeight: 'bold',
 		},
 	});
 }

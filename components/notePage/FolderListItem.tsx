@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
-import { ReactNode, useContext, useState } from 'react';
+import React, { ReactNode, useContext, useState } from 'react';
 import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 
 // custom imports
@@ -10,9 +10,10 @@ import { FolderType } from '@/types/ContentType';
 
 interface Props extends FolderType {
 	children?: ReactNode | undefined;
+	maxTextLength: number;
 }
 
-const FolderListItem = ({ name, id, children }: Props) => {
+const FolderListItem = ({ name, id, children, maxTextLength }: Props) => {
 	// Load the font
 	const [fontsLoaded] = useFonts({
 		SatoshiRegular: require('@/assets/fonts/Satoshi-Regular.otf'),
@@ -29,11 +30,14 @@ const FolderListItem = ({ name, id, children }: Props) => {
 
 	// functions :
 	const handleNameLength = (name: string): string => {
-		return name.trim().length < 17 ? name.trim() : name.slice(0, 17).trim() + '...';
+		return name.trim().length < maxTextLength
+			? name.trim()
+			: name.slice(0, maxTextLength).trim() + '...';
 	};
 
 	const handleChildrenVoidTitle = () => {
-		return children === undefined ? '(Empty)' : null;
+		const childrenCount = React.Children.count(children);
+		return childrenCount === 0 ? 'folder-hidden' : isOpen ? 'folder-open' : 'folder';
 	};
 
 	return (
@@ -41,11 +45,13 @@ const FolderListItem = ({ name, id, children }: Props) => {
 			<View style={styles.folderContainer}>
 				<TouchableNativeFeedback
 					background={TouchableNativeFeedback.Ripple(Colors.secondGray, false)}
-					onPress={() => setIsOpen(!isOpen)}
+					onPress={() =>
+						React.Children.count(children) === 0 ? null : setIsOpen(!isOpen)
+					}
 				>
 					<View style={styles.innerContainer}>
 						<MaterialCommunityIcons
-							name='folder'
+							name={handleChildrenVoidTitle()}
 							size={28}
 							color={
 								colorScheme === 'light'
@@ -54,9 +60,6 @@ const FolderListItem = ({ name, id, children }: Props) => {
 							}
 						/>
 						<Text style={[styles.textS, styles.title]}>{handleNameLength(name)}</Text>
-						<Text style={[styles.textXS, styles.voidNotebookTitle]}>
-							{handleChildrenVoidTitle()}
-						</Text>
 						<View style={styles.dropdownIconContainer}>
 							<MaterialIcons
 								name='keyboard-arrow-down'
