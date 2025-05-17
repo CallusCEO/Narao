@@ -36,7 +36,10 @@ const NotebookContent = ({ id }: Props) => {
 	return (
 		<View style={[styles.container, { height: isChatDrawerOpen ? 'auto' : 30 }]}>
 			<TouchableNativeFeedback
-				background={TouchableNativeFeedback.Ripple(Colors.thirdGray, false)}
+				background={TouchableNativeFeedback.Ripple(
+					colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+					false
+				)}
 				onPress={() => {
 					setChatDrawerOpen(!isChatDrawerOpen);
 					setNotebookOpen(false);
@@ -72,10 +75,12 @@ function createStyles(colorScheme: ColorScheme) {
 			maxHeight: '50%',
 			display: 'flex',
 			width: '100%',
-			backgroundColor: Colors.secondGray,
+			backgroundColor: colorScheme === 'light' ? 'transparent' : Colors.secondGray,
 			marginTop: 12,
 			borderRadius: 10,
 			overflow: 'hidden',
+			borderWidth: colorScheme === 'light' ? 1 : 0,
+			borderColor: colorScheme === 'light' ? Colors.secondGray : 'transparent',
 		},
 
 		dropdown: {
@@ -89,7 +94,7 @@ function createStyles(colorScheme: ColorScheme) {
 		innerContainer: {
 			paddingVertical: 8,
 			paddingHorizontal: 12,
-			backgroundColor: Colors.secondGray,
+			backgroundColor: colorScheme === 'light' ? 'transparent' : Colors.secondGray,
 		},
 
 		text: {

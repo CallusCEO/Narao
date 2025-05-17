@@ -79,9 +79,12 @@ const NoteDrawerListItem = ({ name, id, tags, maxTextLength }: Props) => {
 
 	return (
 		<View style={styles.container}>
-			<View style={styles.folderContainer}>
+			<View style={styles.noteContainer}>
 				<TouchableNativeFeedback
-					background={TouchableNativeFeedback.Ripple(Colors.firstGray, false)}
+					background={TouchableNativeFeedback.Ripple(
+						colorScheme === 'light' ? Colors.fifthGray : Colors.firstGray,
+						false
+					)}
 					onPress={() => setIsOpen(!isOpen)}
 				>
 					<View style={styles.innerContainer}>
@@ -141,11 +144,12 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		container: {
 			width: '100%',
 			overflow: 'hidden',
+			marginVertical: 6,
 		},
 
-		folderContainer: {
+		noteContainer: {
 			width: '100%',
-			backgroundColor: colorScheme === 'light' ? Colors.light.primary : undefined,
+			backgroundColor: undefined,
 			borderRadius: 50,
 			overflow: 'hidden',
 			height: 32,

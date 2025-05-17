@@ -105,12 +105,15 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		folderContainer: {
 			width: '100%',
 			backgroundColor: colorScheme === 'light' ? Colors.light.primary : undefined,
-			borderRadius: 10,
+			borderRadius: 20,
 			borderColor: colorScheme === 'light' ? Colors.thirdGray : Colors.firstGray,
 			borderWidth: 1,
 			borderStyle: 'solid',
 			overflow: 'hidden',
-			height: 48,
+			height: 42,
+			display: 'flex',
+			flexDirection: 'row',
+			alignContent: 'center',
 		},
 
 		contentContainer: {
@@ -126,7 +129,6 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		innerContainer: {
 			width: '100%',
 			height: '100%',
-			paddingVertical: 8,
 			paddingHorizontal: 16,
 			display: 'flex',
 			flexDirection: 'row',

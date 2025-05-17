@@ -101,14 +101,11 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 
 		notebookContainer: {
 			width: '100%',
-			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
-			borderRadius: 10,
-			borderColor: colorScheme === 'light' ? Colors.thirdGray : Colors.firstGray,
-			borderWidth: 1,
+			borderBottomColor: colorScheme === 'light' ? Colors.thirdGray : Colors.firstGray,
+			borderBottomWidth: 1,
 			borderStyle: 'solid',
 			overflow: 'hidden',
-			elevation: colorScheme === 'light' ? 5 : 10,
-			height: 48,
+			height: 54,
 		},
 
 		contentContainer: {
@@ -124,7 +121,6 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		innerContainer: {
 			width: '100%',
 			height: '100%',
-			paddingVertical: 8,
 			paddingHorizontal: 16,
 			display: 'flex',
 			flexDirection: 'row',

@@ -36,7 +36,6 @@ const NotebookContent = ({ notebookId }: Props) => {
 
 	const renderContent = (maxTextLength: number, items?: ContentType[]) => {
 		if (!items) return null;
-		console.log(maxTextLength);
 
 		return items.map((item) => {
 			// Folder case
@@ -50,7 +49,7 @@ const NotebookContent = ({ notebookId }: Props) => {
 						maxTextLength={maxTextLength}
 					>
 						{/* recurse into this folder’s content */}
-						{renderContent(maxTextLength - 4, content)}
+						{renderContent(Math.round(maxTextLength / 2), content)}
 					</FolderDrawerListItem>
 				);
 			}
@@ -77,7 +76,10 @@ const NotebookContent = ({ notebookId }: Props) => {
 	return (
 		<View style={[styles.container, { height: isNotebookOpen ? 'auto' : 30 }]}>
 			<TouchableNativeFeedback
-				background={TouchableNativeFeedback.Ripple(Colors.thirdGray, false)}
+				background={TouchableNativeFeedback.Ripple(
+					colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+					false
+				)}
 				onPress={() => {
 					setNotebookOpen(!isNotebookOpen);
 					setChatDrawerOpen(false);
@@ -113,10 +115,12 @@ function createStyles(colorScheme: ColorScheme) {
 			maxHeight: '50%',
 			display: 'flex',
 			width: '100%',
-			backgroundColor: Colors.secondGray,
+			backgroundColor: colorScheme === 'light' ? 'transparent' : Colors.secondGray,
 			marginTop: 12,
 			borderRadius: 10,
 			overflow: 'hidden',
+			borderWidth: colorScheme === 'light' ? 1 : 0,
+			borderColor: colorScheme === 'light' ? Colors.secondGray : 'transparent',
 		},
 
 		dropdown: {
@@ -130,7 +134,7 @@ function createStyles(colorScheme: ColorScheme) {
 		innerContainer: {
 			paddingVertical: 8,
 			paddingHorizontal: 12,
-			backgroundColor: Colors.secondGray,
+			backgroundColor: colorScheme === 'light' ? 'transparent' : Colors.secondGray,
 		},
 
 		text: {

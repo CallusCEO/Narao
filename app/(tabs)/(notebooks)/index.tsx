@@ -48,8 +48,8 @@ export default function NotebookPage() {
 	// Recursive render function
 	const renderTree = (
 		items: ContentType[] | undefined,
-		ctx: RenderContext,
-		maxTextLength: number
+		maxTextLength: number,
+		ctx: RenderContext
 	): React.ReactNode => {
 		if (!items) return null;
 
@@ -74,7 +74,10 @@ export default function NotebookPage() {
 							content={content}
 							maxTextLength={maxTextLength}
 						>
-							{renderTree(content, { ...ctx, parentFolderId: id }, maxTextLength - 4)}
+							{renderTree(content, Math.round(maxTextLength / 1.5), {
+								...ctx,
+								parentFolderId: id,
+							})}
 						</FolderListItem>
 					</TouchableWithoutFeedback>
 				);
@@ -112,32 +115,30 @@ export default function NotebookPage() {
 		<GestureHandlerRootView style={styles.container}>
 			<PageHeader title='NaraBook' />
 			<View style={styles.notebooksContainer}>
-				<ScrollView
-					style={styles.notebooksScroller}
-					contentContainerStyle={{ paddingBottom: 100, paddingTop: 20 }}
-					showsVerticalScrollIndicator={false}
-				>
-					{data.map((notebook) => (
-						<TouchableWithoutFeedback
-							key={notebook.id}
-							onLongPress={() => {
-								bottomSheetRef.current?.snapToIndex(0);
-								setTargetIdNotebook(notebook.id);
-								setTargetIdFolder(undefined);
-								setTargetIdNote(undefined);
-								setTarget('notebook');
-							}}
-							style={styles.row}
-						>
-							<NotebookListItem
-								id={notebook.id}
-								name={notebook.name}
-								iconName={notebook.iconName}
-								iconColor={notebook.iconColor}
+				<View style={styles.notebooksScrollerContainer}>
+					<ScrollView
+						style={styles.notebooksScroller}
+						showsVerticalScrollIndicator={false}
+					>
+						{data.map((notebook) => (
+							<TouchableWithoutFeedback
+								key={notebook.id}
+								onLongPress={() => {
+									bottomSheetRef.current?.snapToIndex(0);
+									setTargetIdNotebook(notebook.id);
+									setTargetIdFolder(undefined);
+									setTargetIdNote(undefined);
+									setTarget('notebook');
+								}}
+								style={styles.rowNotebook}
 							>
-								{renderTree(
-									notebook.content,
-									{
+								<NotebookListItem
+									id={notebook.id}
+									name={notebook.name}
+									iconName={notebook.iconName}
+									iconColor={notebook.iconColor}
+								>
+									{renderTree(notebook.content, 15, {
 										notebookId: notebook.id,
 										parentFolderId: undefined,
 										bottomSheetRef,
@@ -145,13 +146,12 @@ export default function NotebookPage() {
 										setTargetFolder: setTargetIdFolder,
 										setTargetNote: setTargetIdNote,
 										setTargetType: setTarget,
-									},
-									20
-								)}
-							</NotebookListItem>
-						</TouchableWithoutFeedback>
-					))}
-				</ScrollView>
+									})}
+								</NotebookListItem>
+							</TouchableWithoutFeedback>
+						))}
+					</ScrollView>
+				</View>
 			</View>
 			<BottomSheetComponent ref={bottomSheetRef}>
 				<BottomSheetContentNarabook
@@ -198,20 +198,36 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			alignItems: 'center',
 			justifyContent: 'center',
 		},
+
+		rowNotebook: {
+			display: 'flex',
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyContent: 'center',
+		},
+
 		container: {
 			flex: 1,
 			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 			paddingTop: 40,
 		},
+
 		notebooksContainer: {
 			width: '100%',
 			height: '100%',
 			paddingHorizontal: '5%',
 		},
-		notebooksScroller: {
-			marginHorizontal: 'auto',
-			width: '95%',
-			height: '100%',
+
+		notebooksScroller: {},
+
+		notebooksScrollerContainer: {
+			height: 'auto',
+			maxHeight: '50%',
+			borderColor: colorScheme === 'light' ? Colors.secondGray : Colors.firstGray,
+			borderWidth: 1,
+			overflow: 'hidden',
+			borderRadius: 20,
+			width: '100%',
 		},
 	});
 }

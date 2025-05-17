@@ -74,7 +74,7 @@ const NoteListItem = ({ name, id, tags, maxTextLength }: Props) => {
 		// multiply score by 3 if there were only 3 characters :
 		score = rawColor.length === 3 ? score * 2 : score;
 
-		return score > 45 ? Colors.dark.primary : Colors.light.primary;
+		return score > 35 ? Colors.dark.primary : Colors.light.primary;
 	};
 
 	return (

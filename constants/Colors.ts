@@ -13,6 +13,7 @@ const Colors = {
 	secondGray: '#444',
 	thirdGray: '#666',
 	fourthGray: '#888',
+	fifthGray: '#999',
 	blue: '#6666ff',
 	blueDistilled: 'rgba(102, 102, 255, 0.7)',
 	red: '#ff6666',

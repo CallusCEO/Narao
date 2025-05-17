@@ -39,7 +39,10 @@ const ChatDrawerListItem = ({ name, id, tags }: Props) => {
 		<View style={styles.container}>
 			<View style={styles.chatContainer}>
 				<TouchableNativeFeedback
-					background={TouchableNativeFeedback.Ripple(Colors.firstGray, false)}
+					background={TouchableNativeFeedback.Ripple(
+						colorScheme === 'light' ? Colors.thirdGray : Colors.firstGray,
+						false
+					)}
 					// onPress={() => setIsOpen(!isOpen)}
 				>
 					<View style={styles.innerContainer}>
@@ -71,7 +74,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 
 		chatContainer: {
 			width: '100%',
-			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.thirdGray,
+			backgroundColor: colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
 			borderRadius: 50,
 			overflow: 'hidden',
 			height: 32,

@@ -44,7 +44,10 @@ const FolderDrawerListItem = ({ name, id, children, maxTextLength }: Props) => {
 		<View style={styles.container}>
 			<View style={styles.folderContainer}>
 				<TouchableNativeFeedback
-					background={TouchableNativeFeedback.Ripple(Colors.firstGray, false)}
+					background={TouchableNativeFeedback.Ripple(
+						colorScheme === 'light' ? Colors.fifthGray : Colors.firstGray,
+						false
+					)}
 					onPress={() =>
 						React.Children.count(children) === 0 ? null : setIsOpen(!isOpen)
 					}
@@ -96,7 +99,7 @@ function createStyles(colorScheme: ColorScheme) {
 
 		folderContainer: {
 			width: '100%',
-			backgroundColor: colorScheme === 'light' ? Colors.light.primary : undefined,
+			backgroundColor: undefined,
 			borderRadius: 10,
 			borderColor: colorScheme === 'light' ? Colors.thirdGray : Colors.firstGray,
 			borderWidth: 1,
