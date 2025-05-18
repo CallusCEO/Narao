@@ -49,7 +49,7 @@ const NotebookContent = ({ notebookId }: Props) => {
 						maxTextLength={maxTextLength}
 					>
 						{/* recurse into this folder’s content */}
-						{renderContent(Math.round(maxTextLength / 2), content)}
+						{renderContent(Math.round(maxTextLength / 1.8), content)}
 					</FolderDrawerListItem>
 				);
 			}

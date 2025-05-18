@@ -113,6 +113,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			marginTop: 8,
 			paddingTop: 8,
 			paddingLeft: 16,
+			paddingRight: 4,
 			width: '95%',
 			borderLeftWidth: 1,
 			borderLeftColor: colorScheme === 'light' ? Colors.thirdGray : Colors.secondGray,

@@ -40,7 +40,7 @@ const ChatDrawerListItem = ({ name, id, tags }: Props) => {
 			<View style={styles.chatContainer}>
 				<TouchableNativeFeedback
 					background={TouchableNativeFeedback.Ripple(
-						colorScheme === 'light' ? Colors.thirdGray : Colors.firstGray,
+						colorScheme === 'light' ? Colors.thirdGray : Colors.secondGray,
 						false
 					)}
 					// onPress={() => setIsOpen(!isOpen)}

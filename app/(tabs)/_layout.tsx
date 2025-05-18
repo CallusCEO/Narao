@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useContext } from 'react';
@@ -32,7 +32,7 @@ export default function TabLayout() {
 						title: 'NaraBook',
 						popToTopOnBlur: true,
 						tabBarIcon: ({ color, size }) => (
-							<MaterialCommunityIcons size={size} name='text' color={color} />
+							<MaterialCommunityIcons size={size} name='notebook' color={color} />
 						),
 					}}
 				/>
@@ -73,7 +73,7 @@ export default function TabLayout() {
 						title: 'Llucas',
 						popToTopOnBlur: true,
 						tabBarIcon: ({ color, size }) => (
-							<MaterialCommunityIcons size={size} name='assistant' color={color} />
+							<Ionicons size={size} name='sparkles-sharp' color={color} />
 						),
 					}}
 				/>

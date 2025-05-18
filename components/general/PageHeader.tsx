@@ -1,17 +1,11 @@
+import { Feather } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import React, { useContext } from 'react';
-import {
-	Dimensions,
-	StyleSheet,
-	Text,
-	TouchableNativeFeedback,
-	View,
-} from 'react-native';
+import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { DrawerActions } from '@react-navigation/native';
 import { useNavigation } from 'expo-router';
 
@@ -36,19 +30,15 @@ const PageHeader = ({ title }: Props) => {
 			<View style={styles.drawerIconContainer}>
 				<TouchableNativeFeedback
 					background={TouchableNativeFeedback.Ripple(
-						colorScheme === 'light'
-							? Colors.fourthGray
-							: Colors.thirdGray,
+						colorScheme === 'light' ? Colors.fourthGray : Colors.thirdGray,
 						false
 					)}
-					onPress={() =>
-						navigation.dispatch(DrawerActions.openDrawer())
-					}
+					onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
 				>
 					<View style={styles.drawerIcon}>
-						<MaterialCommunityIcons
-							name='menu'
-							size={width > 450 ? 42 : 36}
+						<Feather
+							name='sidebar'
+							size={width > 450 ? 36 : 28}
 							color={
 								colorScheme === 'light'
 									? Colors.light.secondary
@@ -76,20 +66,19 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			paddingVertical: 12,
 			paddingHorizontal: width > 450 ? 26 : 20,
 			height: width > 450 ? 64 : 56,
+			borderBottomWidth: 1,
+			borderBottomColor: colorScheme === 'light' ? Colors.fifthGray : Colors.firstGray,
 		},
 
 		titleContainer: {
 			flex: 1,
-			marginLeft: 16,
+			marginLeft: 12,
 		},
 
 		title: {
 			fontFamily: 'SatoshiBold',
 			fontSize: 22,
-			color:
-				colorScheme === 'light'
-					? Colors.light.secondary
-					: Colors.dark.secondary,
+			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
 		},
 
 		drawerIconContainer: {
@@ -97,6 +86,9 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			height: width > 450 ? 54 : 48,
 			borderRadius: 30,
 			overflow: 'hidden',
+			display: 'flex',
+			flexDirection: 'row',
+			alignItems: 'center',
 		},
 
 		drawerIcon: {

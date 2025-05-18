@@ -38,7 +38,7 @@ function RootLayoutNav() {
 						colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 				},
 				headerShown: false,
-				swipeEdgeWidth: 400,
+				swipeEdgeWidth: 100,
 			}}
 			drawerContent={() => <DrawerContent />}
 		></Drawer>

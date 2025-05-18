@@ -11,6 +11,7 @@ import PageHeader from '@/components/general/PageHeader';
 import FolderListItem from '@/components/notePage/FolderListItem';
 import NotebookListItem from '@/components/notePage/NotebookListItem';
 import NoteListItem from '@/components/notePage/NoteListItem';
+import Recommendations from '@/components/notePage/Recommendations';
 import Colors from '@/constants/Colors';
 import { data } from '@/constants/sampleNoteData';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
@@ -114,6 +115,7 @@ export default function NotebookPage() {
 	return (
 		<GestureHandlerRootView style={styles.container}>
 			<PageHeader title='NaraBook' />
+			<Recommendations />
 			<View style={styles.notebooksContainer}>
 				<View style={styles.notebooksScrollerContainer}>
 					<ScrollView
@@ -216,6 +218,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			width: '100%',
 			height: '100%',
 			paddingHorizontal: '5%',
+			paddingTop: 12,
 		},
 
 		notebooksScroller: {},

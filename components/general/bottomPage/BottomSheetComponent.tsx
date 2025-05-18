@@ -25,7 +25,7 @@ const BottomSheetComponent = forwardRef<Ref, Props>((props, ref) => {
 	const styles = createStyles(colorScheme, width);
 
 	// bottom sheet config
-	const snapPoints = useMemo(() => ['70%', '90%'], []);
+	const snapPoints = useMemo(() => ['55%', '90%'], []);
 
 	const renderBackdrop = useCallback(
 		(props: any) => (
@@ -44,7 +44,7 @@ const BottomSheetComponent = forwardRef<Ref, Props>((props, ref) => {
 			snapPoints={snapPoints}
 			backgroundStyle={{
 				backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
-				borderRadius: 20,
+				borderRadius: 10,
 			}}
 			enablePanDownToClose={true}
 			backdropComponent={renderBackdrop}

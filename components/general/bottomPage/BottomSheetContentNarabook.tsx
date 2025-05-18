@@ -5,8 +5,7 @@ import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'rea
 
 // custom imports
 import Colors from '@/constants/Colors';
-import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import Rule from '../Rule';
 
@@ -41,20 +40,21 @@ const BottomSheetContentNarabook: React.FC<Props> = ({ title, iconName, iconColo
 	return (
 		<View style={styles.container}>
 			<View style={styles.titleContainer}>
-				<MaterialCommunityIcons
-					/* @ts-ignore */
-					name={iconName}
-					size={42}
-					color={iconColor}
-				/>
+				<View style={styles.IconContainer}>
+					<MaterialCommunityIcons
+						/* @ts-ignore */
+						name={iconName}
+						size={28}
+						color={iconColor}
+					/>
+				</View>
 				<Text style={styles.title}>{handleNameLength(title)}</Text>
 			</View>
 			<Rule />
 			<View style={styles.settingsContainer}>
-				<View style={styles.settingItem}>
+				{/* <View style={styles.settingItem}>
 					<View style={styles.settingDesc}>
 						<Text style={styles.settingDescTitle}>Rename</Text>
-						<Text style={styles.settingDescText}>Change the name of you {target}.</Text>
 					</View>
 					<View style={styles.settingButtonContainer}>
 						<TouchableNativeFeedback
@@ -107,9 +107,6 @@ const BottomSheetContentNarabook: React.FC<Props> = ({ title, iconName, iconColo
 						<View style={styles.settingItem}>
 							<View style={styles.settingDesc}>
 								<Text style={styles.settingDescTitle}>Change icon</Text>
-								<Text style={styles.settingDescText}>
-									Select a new icon for your {target}.
-								</Text>
 							</View>
 							<View style={styles.settingButtonContainer}>
 								<TouchableNativeFeedback
@@ -136,9 +133,6 @@ const BottomSheetContentNarabook: React.FC<Props> = ({ title, iconName, iconColo
 						<View style={styles.settingItem}>
 							<View style={styles.settingDesc}>
 								<Text style={styles.settingDescTitle}>Change Icon Color</Text>
-								<Text style={styles.settingDescText}>
-									Choose a new color for your {target} icon.
-								</Text>
 							</View>
 							<View style={styles.settingButtonContainer}>
 								<TouchableNativeFeedback
@@ -162,31 +156,102 @@ const BottomSheetContentNarabook: React.FC<Props> = ({ title, iconName, iconColo
 							</View>
 						</View>
 					</>
-				)}
-				<View style={[styles.settingItem, styles.settingItemDelete]}>
-					<View style={styles.settingDesc}>
-						<Text style={[styles.settingDescTitle, styles.settingDescTitleDelete]}>
-							Delete
-						</Text>
-						<Text style={[styles.settingDescText, styles.settingDescTextDelete]}>
-							This action will be irreversible.
-						</Text>
-					</View>
-					<View
-						style={[styles.settingButtonContainer, styles.settingButtonContainerDelete]}
+				)} */}
+				<View style={[styles.settingItem]}>
+					<TouchableNativeFeedback
+						background={TouchableNativeFeedback.Ripple(
+							colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+							false
+						)}
 					>
-						<TouchableNativeFeedback
-							background={TouchableNativeFeedback.Ripple(Colors.redDistilled, false)}
-						>
-							<View style={styles.settingButton}>
+						<View style={styles.innerContainer}>
+							<View>
+								<MaterialIcons
+									name='drive-file-rename-outline'
+									size={28}
+									color={
+										colorScheme === 'light'
+											? Colors.light.secondary
+											: Colors.dark.secondary
+									}
+								/>
+							</View>
+
+							<Text style={[styles.settingTitle]}>Rename</Text>
+						</View>
+					</TouchableNativeFeedback>
+				</View>
+				<View style={[styles.settingItem]}>
+					<TouchableNativeFeedback
+						background={TouchableNativeFeedback.Ripple(
+							colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+							false
+						)}
+					>
+						<View style={styles.innerContainer}>
+							<View>
+								<MaterialIcons
+									name='insert-emoticon'
+									size={28}
+									color={
+										colorScheme === 'light'
+											? Colors.light.secondary
+											: Colors.dark.secondary
+									}
+								/>
+							</View>
+
+							<Text style={[styles.settingTitle]}>Change Icon</Text>
+						</View>
+					</TouchableNativeFeedback>
+				</View>
+				<View style={[styles.settingItem]}>
+					<TouchableNativeFeedback
+						background={TouchableNativeFeedback.Ripple(
+							colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+							false
+						)}
+					>
+						<View style={styles.innerContainer}>
+							<View>
+								<Ionicons
+									name='color-palette-outline'
+									size={28}
+									color={
+										colorScheme === 'light'
+											? Colors.light.secondary
+											: Colors.dark.secondary
+									}
+								/>
+							</View>
+
+							<Text style={[styles.settingTitle]}>Change Icon Color</Text>
+						</View>
+					</TouchableNativeFeedback>
+				</View>
+				<View style={[styles.settingItem]}>
+					<TouchableNativeFeedback
+						background={TouchableNativeFeedback.Ripple(
+							colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+							false
+						)}
+					>
+						<View style={styles.innerContainer}>
+							<View>
 								<MaterialIcons
 									name='delete'
 									size={28}
-									color={colorScheme === 'light' ? Colors.red : Colors.red}
+									color={
+										colorScheme === 'light'
+											? Colors.light.secondary
+											: Colors.dark.secondary
+									}
 								/>
 							</View>
-						</TouchableNativeFeedback>
-					</View>
+
+							<Text style={[styles.settingTitle]}>Delete</Text>
+						</View>
+					</TouchableNativeFeedback>
 				</View>
 			</View>
 		</View>
@@ -211,16 +276,26 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			marginBottom: 8,
 		},
 
+		IconContainer: {
+			padding: 4,
+			borderRadius: 10,
+			display: 'flex',
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyContent: 'center',
+			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.secondGray,
+		},
+
 		title: {
 			marginLeft: 12,
 			fontFamily: 'SatoshiBold',
-			fontSize: 24,
+			fontSize: 20,
 			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
 		},
 
 		settingsContainer: {
 			flex: 1,
-			paddingTop: 16,
+			paddingTop: 12,
 			paddingHorizontal: width > 450 ? 16 : 8,
 		},
 
@@ -228,92 +303,30 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			display: 'flex',
 			flexDirection: 'row',
 			alignItems: 'center',
-			paddingLeft: width > 450 ? 12 : 4,
-			paddingRight: width > 450 ? 16 : 12,
-			paddingBottom: 12,
-			borderBottomWidth: 1,
-			borderBottomColor: Colors.thirdGray,
-			height: 80,
-			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
+			justifyContent: 'flex-start',
+			height: 54,
 			marginBottom: 12,
-		},
-
-		settingItemDelete: { borderBottomWidth: 0 },
-
-		settingDesc: {
-			flex: 1,
-			display: 'flex',
-			flexDirection: 'column',
-			justifyContent: 'center',
-			paddingLeft: 12,
-		},
-
-		settingDescTitle: {
-			fontFamily: 'SatoshiBold',
-			fontSize: 18,
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
-		},
-
-		settingDescTitleDelete: {
-			color: Colors.red,
-		},
-
-		settingDescText: {
-			fontFamily: 'SatoshiRegular',
-			fontSize: 16,
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
-			opacity: 0.8,
-		},
-
-		settingDescTextDelete: { color: Colors.red, opacity: 0.7 },
-
-		settingButtonContainer: {
-			display: 'flex',
-			justifyContent: 'center',
-			alignItems: 'center',
-			width: 64,
-			height: 48,
-			borderRadius: 10,
-			backgroundColor: 'rgba(50, 50, 50, 0.5)',
-			overflow: 'hidden',
-			borderColor: Colors.thirdGray,
+			borderRadius: 20,
+			borderColor: colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
 			borderWidth: 1,
+			overflow: 'hidden',
 		},
 
-		settingButtonContainerDelete: {
-			borderColor: Colors.red,
-			backgroundColor: 'rgba(50, 50, 50, 0.3)',
-		},
-
-		settingButton: {
-			width: '100%',
-			height: '100%',
-			display: 'flex',
-			justifyContent: 'center',
-			alignItems: 'center',
-		},
-
-		// additional styles for settings
-
-		editcontainer: {
-			width: '100%',
-			height: 64,
+		innerContainer: {
+			flex: 1,
 			display: 'flex',
 			flexDirection: 'row',
 			alignItems: 'center',
-			paddingLeft: width > 450 ? 16 : 8,
-			paddingRight: width > 450 ? 16 : 12,
-			marginBottom: 56,
-			marginTop: 8,
-			borderRadius: 10,
-			backgroundColor: Colors.secondGray,
+			height: 54,
+			paddingHorizontal: 12,
 		},
 
-		settingTextInput: {
-			flex: 1,
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
-			fontFamily: 'SatoshiRegular',
+		settingTitle: {
+			marginLeft: 8,
+			fontFamily: 'SatoshiBold',
 			fontSize: 16,
+			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+			letterSpacing: 1,
 		},
 	});
 }
