@@ -1,12 +1,19 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import { useContext } from 'react';
-import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
+import {
+	Dimensions,
+	StyleSheet,
+	Text,
+	TouchableNativeFeedback,
+	View,
+} from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { NoteType } from '@/types/ContentType';
+import handleTextLength from '@/utils/handleTextLength';
 
 interface TagType {
 	title: string;
@@ -30,17 +37,14 @@ const ChatDrawerListItem = ({ name, id, tags }: Props) => {
 
 	// states :
 
-	// functions :
-	const handleNameLength = (name: string): string => {
-		return name.trim().length < 25 ? name.trim() : name.slice(0, 25).trim() + '...';
-	};
-
 	return (
 		<View style={styles.container}>
 			<View style={styles.chatContainer}>
 				<TouchableNativeFeedback
 					background={TouchableNativeFeedback.Ripple(
-						colorScheme === 'light' ? Colors.thirdGray : Colors.secondGray,
+						colorScheme === 'light'
+							? Colors.thirdGray
+							: Colors.secondGray,
 						false
 					)}
 					// onPress={() => setIsOpen(!isOpen)}
@@ -49,9 +53,15 @@ const ChatDrawerListItem = ({ name, id, tags }: Props) => {
 						<MaterialCommunityIcons
 							name='asterisk'
 							size={20}
-							color={colorScheme === 'light' ? Colors.redDistilled : Colors.red}
+							color={
+								colorScheme === 'light'
+									? Colors.redDistilled
+									: Colors.red
+							}
 						/>
-						<Text style={[styles.textS, styles.title]}>{handleNameLength(name)}</Text>
+						<Text style={[styles.textS, styles.title]}>
+							{handleTextLength(name, 25)}
+						</Text>
 					</View>
 				</TouchableNativeFeedback>
 			</View>
@@ -74,7 +84,8 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 
 		chatContainer: {
 			width: '100%',
-			backgroundColor: colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+			backgroundColor:
+				colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
 			borderRadius: 50,
 			overflow: 'hidden',
 			height: 32,
@@ -93,7 +104,10 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		title: {
 			marginLeft: 8,
 			fontFamily: 'SatoshiMedium',
-			color: colorScheme === 'light' ? Colors.dark.primary : Colors.light.primary,
+			color:
+				colorScheme === 'light'
+					? Colors.dark.primary
+					: Colors.light.primary,
 		},
 	});
 }

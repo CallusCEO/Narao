@@ -1,12 +1,19 @@
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import { ReactNode, useContext, useState } from 'react';
-import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
+import {
+	Dimensions,
+	StyleSheet,
+	Text,
+	TouchableNativeFeedback,
+	View,
+} from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { NotebookType } from '@/types/ContentType';
+import handleTextLength from '@/utils/handleTextLength';
 
 interface Props extends NotebookType {
 	iconColor: string;
@@ -14,7 +21,14 @@ interface Props extends NotebookType {
 	children?: ReactNode;
 }
 
-const NotebookListItem = ({ iconName, iconColor, name, id, content, children }: Props) => {
+const NotebookListItem = ({
+	iconName,
+	iconColor,
+	name,
+	id,
+	content,
+	children,
+}: Props) => {
 	// Load the font
 	const [fontsLoaded] = useFonts({
 		SatoshiRegular: require('@/assets/fonts/Satoshi-Regular.otf'),
@@ -30,10 +44,6 @@ const NotebookListItem = ({ iconName, iconColor, name, id, content, children }: 
 	const [isOpen, setIsOpen] = useState(false);
 
 	// functions :
-	const handleNameLength = (name: string): string => {
-		return name.trim().length < 17 ? name.trim() : name.slice(0, 17).trim() + '...';
-	};
-
 	const handleChildrenVoidTitle = () => {
 		return children === undefined ? '(Empty)' : null;
 	};
@@ -42,7 +52,10 @@ const NotebookListItem = ({ iconName, iconColor, name, id, content, children }: 
 		<View style={styles.container}>
 			<View style={styles.notebookContainer}>
 				<TouchableNativeFeedback
-					background={TouchableNativeFeedback.Ripple(Colors.fourthGray, false)}
+					background={TouchableNativeFeedback.Ripple(
+						Colors.fourthGray,
+						false
+					)}
 					onPress={() => setIsOpen(!isOpen)}
 					// onLongPress={(e) => ref.current?.expand()}
 				>
@@ -53,7 +66,9 @@ const NotebookListItem = ({ iconName, iconColor, name, id, content, children }: 
 							size={28}
 							color={iconColor}
 						/>
-						<Text style={[styles.textS, styles.title]}>{handleNameLength(name)}</Text>
+						<Text style={[styles.textS, styles.title]}>
+							{handleTextLength(name, 17)}
+						</Text>
 						<Text style={[styles.textXS, styles.voidNotebookTitle]}>
 							{handleChildrenVoidTitle()}
 						</Text>
@@ -101,7 +116,8 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 
 		notebookContainer: {
 			width: '100%',
-			borderBottomColor: colorScheme === 'light' ? Colors.thirdGray : Colors.firstGray,
+			borderBottomColor:
+				colorScheme === 'light' ? Colors.thirdGray : Colors.firstGray,
 			borderBottomWidth: 1,
 			borderStyle: 'solid',
 			overflow: 'hidden',
@@ -116,7 +132,8 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			paddingRight: 4,
 			width: '95%',
 			borderLeftWidth: 1,
-			borderLeftColor: colorScheme === 'light' ? Colors.thirdGray : Colors.secondGray,
+			borderLeftColor:
+				colorScheme === 'light' ? Colors.thirdGray : Colors.secondGray,
 		},
 
 		innerContainer: {
@@ -132,13 +149,17 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		title: {
 			marginLeft: 8,
 			fontFamily: 'SatoshiMedium',
-			color: colorScheme === 'light' ? Colors.dark.primary : Colors.light.primary,
+			color:
+				colorScheme === 'light'
+					? Colors.dark.primary
+					: Colors.light.primary,
 		},
 
 		voidNotebookTitle: {
 			marginLeft: 12,
 			fontFamily: 'SatoshiMedium',
-			color: colorScheme === 'light' ? Colors.firstGray : Colors.thirdGray,
+			color:
+				colorScheme === 'light' ? Colors.firstGray : Colors.thirdGray,
 			fontStyle: 'italic',
 		},
 

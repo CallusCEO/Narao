@@ -1,12 +1,19 @@
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import React, { ReactNode, useContext, useState } from 'react';
-import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
+import {
+	Dimensions,
+	StyleSheet,
+	Text,
+	TouchableNativeFeedback,
+	View,
+} from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { FolderType } from '@/types/ContentType';
+import handleTextLength from '@/utils/handleTextLength';
 
 interface Props extends FolderType {
 	children?: ReactNode | undefined;
@@ -29,15 +36,13 @@ const FolderDrawerListItem = ({ name, id, children, maxTextLength }: Props) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	// functions :
-	const handleNameLength = (name: string): string => {
-		return name.trim().length < maxTextLength
-			? name.trim()
-			: name.slice(0, maxTextLength).trim() + '...';
-	};
-
 	const handleChildrenVoidTitle = () => {
 		const childrenCount = React.Children.count(children);
-		return childrenCount === 0 ? 'folder-hidden' : isOpen ? 'folder-open' : 'folder';
+		return childrenCount === 0
+			? 'folder-hidden'
+			: isOpen
+			? 'folder-open'
+			: 'folder';
 	};
 
 	return (
@@ -45,11 +50,15 @@ const FolderDrawerListItem = ({ name, id, children, maxTextLength }: Props) => {
 			<View style={styles.folderContainer}>
 				<TouchableNativeFeedback
 					background={TouchableNativeFeedback.Ripple(
-						colorScheme === 'light' ? Colors.fifthGray : Colors.firstGray,
+						colorScheme === 'light'
+							? Colors.fifthGray
+							: Colors.firstGray,
 						false
 					)}
 					onPress={() =>
-						React.Children.count(children) === 0 ? null : setIsOpen(!isOpen)
+						React.Children.count(children) === 0
+							? null
+							: setIsOpen(!isOpen)
 					}
 				>
 					<View style={styles.innerContainer}>
@@ -62,7 +71,9 @@ const FolderDrawerListItem = ({ name, id, children, maxTextLength }: Props) => {
 									: Colors.dark.secondary
 							}
 						/>
-						<Text style={[styles.textXS, styles.title]}>{handleNameLength(name)}</Text>
+						<Text style={[styles.textXS, styles.title]}>
+							{handleTextLength(name, maxTextLength + 2)}
+						</Text>
 						<View style={styles.dropdownIconContainer}>
 							<MaterialIcons
 								name='keyboard-arrow-down'
@@ -101,7 +112,8 @@ function createStyles(colorScheme: ColorScheme) {
 			width: '100%',
 			backgroundColor: undefined,
 			borderRadius: 10,
-			borderColor: colorScheme === 'light' ? Colors.thirdGray : Colors.firstGray,
+			borderColor:
+				colorScheme === 'light' ? Colors.thirdGray : Colors.firstGray,
 			borderWidth: 1,
 			borderStyle: 'solid',
 			overflow: 'hidden',
@@ -115,7 +127,8 @@ function createStyles(colorScheme: ColorScheme) {
 			paddingLeft: 16,
 			width: '95%',
 			borderLeftWidth: 1,
-			borderLeftColor: colorScheme === 'light' ? Colors.firstGray : Colors.firstGray,
+			borderLeftColor:
+				colorScheme === 'light' ? Colors.firstGray : Colors.firstGray,
 		},
 
 		innerContainer: {
@@ -132,13 +145,17 @@ function createStyles(colorScheme: ColorScheme) {
 			fontSize: 16,
 			marginLeft: 8,
 			fontFamily: 'SatoshiMedium',
-			color: colorScheme === 'light' ? Colors.dark.primary : Colors.light.primary,
+			color:
+				colorScheme === 'light'
+					? Colors.dark.primary
+					: Colors.light.primary,
 		},
 
 		voidNotebookTitle: {
 			marginLeft: 12,
 			fontFamily: 'SatoshiMedium',
-			color: colorScheme === 'light' ? Colors.firstGray : Colors.thirdGray,
+			color:
+				colorScheme === 'light' ? Colors.firstGray : Colors.thirdGray,
 			fontStyle: 'italic',
 		},
 

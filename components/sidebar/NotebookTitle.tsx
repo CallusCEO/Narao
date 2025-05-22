@@ -7,6 +7,7 @@ import { StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 import Colors from '@/constants/Colors';
 import { data } from '@/constants/sampleNoteData';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
+import handleTextLength from '@/utils/handleTextLength';
 
 interface Props {
 	id: number;
@@ -23,15 +24,13 @@ export default function NotebookTitle({ id }: Props) {
 	const { colorScheme } = useContext(ColorSchemeContext);
 	const styles = createStyles(colorScheme); // Assuming 'light' for demonstration
 
-	// functions :
-	const handleNameLength = (name: string): string => {
-		return name.trim().length < 17 ? name.trim() : name.slice(0, 17).trim() + '...';
-	};
-
 	return (
 		<View style={styles.container}>
 			<TouchableNativeFeedback
-				background={TouchableNativeFeedback.Ripple(Colors.thirdGray, false)}
+				background={TouchableNativeFeedback.Ripple(
+					Colors.thirdGray,
+					false
+				)}
 			>
 				<View style={styles.innerContainer}>
 					<MaterialCommunityIcons
@@ -40,7 +39,9 @@ export default function NotebookTitle({ id }: Props) {
 						size={36}
 						color={data[id].iconColor}
 					/>
-					<Text style={styles.title}>{handleNameLength(data[id].name)}</Text>
+					<Text style={styles.title}>
+						{handleTextLength(data[id].name, 17)}
+					</Text>
 					<View style={styles.dropdownIconContainer}>
 						<MaterialIcons
 							name='keyboard-arrow-down'
@@ -81,7 +82,10 @@ function createStyles(colorScheme: ColorScheme) {
 			fontSize: 22,
 			marginLeft: 8,
 			fontFamily: 'SatoshiBold',
-			color: colorScheme === 'light' ? Colors.dark.primary : Colors.light.primary,
+			color:
+				colorScheme === 'light'
+					? Colors.dark.primary
+					: Colors.light.primary,
 		},
 
 		dropdownIconContainer: {

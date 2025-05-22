@@ -1,12 +1,19 @@
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import React, { ReactNode, useContext, useState } from 'react';
-import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
+import {
+	Dimensions,
+	StyleSheet,
+	Text,
+	TouchableNativeFeedback,
+	View,
+} from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { FolderType } from '@/types/ContentType';
+import handleTextLength from '@/utils/handleTextLength';
 
 interface Props extends FolderType {
 	children?: ReactNode | undefined;
@@ -29,24 +36,28 @@ const FolderListItem = ({ name, id, children, maxTextLength }: Props) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	// functions :
-	const handleNameLength = (name: string): string => {
-		return name.trim().length < maxTextLength
-			? name.trim()
-			: name.slice(0, maxTextLength).trim() + '...';
-	};
 
 	const handleChildrenVoidTitle = () => {
 		const childrenCount = React.Children.count(children);
-		return childrenCount === 0 ? 'folder-hidden' : isOpen ? 'folder-open' : 'folder';
+		return childrenCount === 0
+			? 'folder-hidden'
+			: isOpen
+			? 'folder-open'
+			: 'folder';
 	};
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.folderContainer}>
 				<TouchableNativeFeedback
-					background={TouchableNativeFeedback.Ripple(Colors.secondGray, false)}
+					background={TouchableNativeFeedback.Ripple(
+						Colors.secondGray,
+						false
+					)}
 					onPress={() =>
-						React.Children.count(children) === 0 ? null : setIsOpen(!isOpen)
+						React.Children.count(children) === 0
+							? null
+							: setIsOpen(!isOpen)
 					}
 				>
 					<View style={styles.innerContainer}>
@@ -59,7 +70,9 @@ const FolderListItem = ({ name, id, children, maxTextLength }: Props) => {
 									: Colors.dark.secondary
 							}
 						/>
-						<Text style={[styles.textS, styles.title]}>{handleNameLength(name)}</Text>
+						<Text style={[styles.textS, styles.title]}>
+							{handleTextLength(name, maxTextLength + 8)}
+						</Text>
 						<View style={styles.dropdownIconContainer}>
 							<MaterialIcons
 								name='keyboard-arrow-down'
@@ -104,9 +117,11 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 
 		folderContainer: {
 			width: '100%',
-			backgroundColor: colorScheme === 'light' ? Colors.light.primary : undefined,
+			backgroundColor:
+				colorScheme === 'light' ? Colors.light.primary : undefined,
 			borderRadius: 20,
-			borderColor: colorScheme === 'light' ? Colors.thirdGray : Colors.firstGray,
+			borderColor:
+				colorScheme === 'light' ? Colors.thirdGray : Colors.firstGray,
 			borderWidth: 1,
 			borderStyle: 'solid',
 			overflow: 'hidden',
@@ -123,7 +138,8 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			paddingLeft: 16,
 			width: '95%',
 			borderLeftWidth: 1,
-			borderLeftColor: colorScheme === 'light' ? Colors.thirdGray : Colors.secondGray,
+			borderLeftColor:
+				colorScheme === 'light' ? Colors.thirdGray : Colors.secondGray,
 		},
 
 		innerContainer: {
@@ -140,13 +156,17 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			fontSize: 16,
 			marginLeft: 8,
 			fontFamily: 'SatoshiMedium',
-			color: colorScheme === 'light' ? Colors.dark.primary : Colors.light.primary,
+			color:
+				colorScheme === 'light'
+					? Colors.dark.primary
+					: Colors.light.primary,
 		},
 
 		voidNotebookTitle: {
 			marginLeft: 12,
 			fontFamily: 'SatoshiMedium',
-			color: colorScheme === 'light' ? Colors.firstGray : Colors.thirdGray,
+			color:
+				colorScheme === 'light' ? Colors.firstGray : Colors.thirdGray,
 			fontStyle: 'italic',
 		},
 

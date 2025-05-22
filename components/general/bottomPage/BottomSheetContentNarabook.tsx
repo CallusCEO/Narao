@@ -1,11 +1,22 @@
 // components/general/BottomSheetContent.tsx
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import React, { useContext, useState } from 'react';
-import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
+import {
+	Dimensions,
+	StyleSheet,
+	Text,
+	TouchableNativeFeedback,
+	View,
+} from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import handleTextLength from '@/utils/handleTextLength';
+import {
+	Ionicons,
+	MaterialCommunityIcons,
+	MaterialIcons,
+} from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import Rule from '../Rule';
 
@@ -16,7 +27,12 @@ interface Props {
 	target: 'notebook' | 'folder' | 'note';
 }
 
-const BottomSheetContentNarabook: React.FC<Props> = ({ title, iconName, iconColor, target }) => {
+const BottomSheetContentNarabook: React.FC<Props> = ({
+	title,
+	iconName,
+	iconColor,
+	target,
+}) => {
 	// Load the font
 	const [fontsLoaded] = useFonts({
 		SatoshiRegular: require('@/assets/fonts/Satoshi-Regular.otf'),
@@ -32,11 +48,6 @@ const BottomSheetContentNarabook: React.FC<Props> = ({ title, iconName, iconColo
 	const [editOpen, setEditOpen] = useState(false);
 	const [text, setText] = useState('');
 
-	// functions :
-	const handleNameLength = (name: string): string => {
-		return name.trim().length < 17 ? name.trim() : name.slice(0, 17).trim() + '...';
-	};
-
 	return (
 		<View style={styles.container}>
 			<View style={styles.titleContainer}>
@@ -48,7 +59,7 @@ const BottomSheetContentNarabook: React.FC<Props> = ({ title, iconName, iconColo
 						color={iconColor}
 					/>
 				</View>
-				<Text style={styles.title}>{handleNameLength(title)}</Text>
+				<Text style={styles.title}>{handleTextLength(title, 17)}</Text>
 			</View>
 			<Rule />
 			<View style={styles.settingsContainer}>
@@ -160,7 +171,9 @@ const BottomSheetContentNarabook: React.FC<Props> = ({ title, iconName, iconColo
 				<View style={[styles.settingItem]}>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+							colorScheme === 'light'
+								? Colors.fifthGray
+								: Colors.thirdGray,
 							false
 						)}
 					>
@@ -184,7 +197,9 @@ const BottomSheetContentNarabook: React.FC<Props> = ({ title, iconName, iconColo
 				<View style={[styles.settingItem]}>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+							colorScheme === 'light'
+								? Colors.fifthGray
+								: Colors.thirdGray,
 							false
 						)}
 					>
@@ -201,14 +216,18 @@ const BottomSheetContentNarabook: React.FC<Props> = ({ title, iconName, iconColo
 								/>
 							</View>
 
-							<Text style={[styles.settingTitle]}>Change Icon</Text>
+							<Text style={[styles.settingTitle]}>
+								Change Icon
+							</Text>
 						</View>
 					</TouchableNativeFeedback>
 				</View>
 				<View style={[styles.settingItem]}>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+							colorScheme === 'light'
+								? Colors.fifthGray
+								: Colors.thirdGray,
 							false
 						)}
 					>
@@ -225,14 +244,18 @@ const BottomSheetContentNarabook: React.FC<Props> = ({ title, iconName, iconColo
 								/>
 							</View>
 
-							<Text style={[styles.settingTitle]}>Change Icon Color</Text>
+							<Text style={[styles.settingTitle]}>
+								Change Icon Color
+							</Text>
 						</View>
 					</TouchableNativeFeedback>
 				</View>
 				<View style={[styles.settingItem]}>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+							colorScheme === 'light'
+								? Colors.fifthGray
+								: Colors.thirdGray,
 							false
 						)}
 					>
@@ -283,14 +306,18 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			flexDirection: 'row',
 			alignItems: 'center',
 			justifyContent: 'center',
-			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.secondGray,
+			backgroundColor:
+				colorScheme === 'light' ? Colors.sixthGray : Colors.secondGray,
 		},
 
 		title: {
 			marginLeft: 12,
 			fontFamily: 'SatoshiBold',
 			fontSize: 20,
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+			color:
+				colorScheme === 'light'
+					? Colors.light.secondary
+					: Colors.dark.secondary,
 		},
 
 		settingsContainer: {
@@ -307,7 +334,8 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			height: 54,
 			marginBottom: 12,
 			borderRadius: 20,
-			borderColor: colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+			borderColor:
+				colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
 			borderWidth: 1,
 			overflow: 'hidden',
 		},
@@ -325,7 +353,10 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			marginLeft: 8,
 			fontFamily: 'SatoshiBold',
 			fontSize: 16,
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+			color:
+				colorScheme === 'light'
+					? Colors.light.secondary
+					: Colors.dark.secondary,
 			letterSpacing: 1,
 		},
 	});

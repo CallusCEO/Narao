@@ -1,6 +1,15 @@
-import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, {
+	BottomSheetBackdrop,
+	BottomSheetView,
+} from '@gorhom/bottom-sheet';
 import { useFonts } from 'expo-font';
-import React, { forwardRef, ReactNode, useCallback, useContext, useMemo } from 'react';
+import React, {
+	forwardRef,
+	ReactNode,
+	useCallback,
+	useContext,
+	useMemo,
+} from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 
 // custom imports
@@ -43,19 +52,25 @@ const BottomSheetComponent = forwardRef<Ref, Props>((props, ref) => {
 			index={-1}
 			snapPoints={snapPoints}
 			backgroundStyle={{
-				backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
+				backgroundColor:
+					colorScheme === 'light'
+						? Colors.light.primary
+						: Colors.firstGray,
 				borderRadius: 10,
 			}}
 			enablePanDownToClose={true}
 			backdropComponent={renderBackdrop}
 			handleIndicatorStyle={{
 				backgroundColor:
-					colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+					colorScheme === 'light'
+						? Colors.light.secondary
+						: Colors.dark.secondary,
 				width: 64,
 			}}
-			enableContentPanningGesture
 		>
-			<BottomSheetView style={styles.container}>{props.children}</BottomSheetView>
+			<BottomSheetView style={styles.container}>
+				{props.children}
+			</BottomSheetView>
 		</BottomSheet>
 	);
 });
