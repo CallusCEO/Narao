@@ -2,7 +2,7 @@ import { NotebookType } from '@/types/ContentType';
 
 export const data: NotebookType[] = [
 	{
-		id: 2,
+		id: 0,
 		name: 'Project Atlas',
 		iconColor: '#22ff7f',
 		iconName: 'map',
@@ -173,7 +173,7 @@ export const data: NotebookType[] = [
 		],
 	},
 	{
-		id: 0,
+		id: 1,
 		name: 'NaraBook n°1',
 		iconColor: '#6666ff',
 		iconName: 'school',
@@ -277,7 +277,7 @@ export const data: NotebookType[] = [
 		],
 	},
 	{
-		id: 3,
+		id: 2,
 		name: 'Ideas Vault',
 		iconColor: '#ff6666',
 		iconName: 'lightbulb',
@@ -340,7 +340,7 @@ export const data: NotebookType[] = [
 		],
 	},
 	{
-		id: 1,
+		id: 3,
 		name: 'NaraBook n°2',
 		iconColor: '#f2f940',
 		iconName: 'book',

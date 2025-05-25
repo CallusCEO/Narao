@@ -112,7 +112,7 @@ type ColorScheme = 'light' | 'dark' | undefined | null;
 function createStyles(colorScheme: ColorScheme) {
 	return StyleSheet.create({
 		container: {
-			maxHeight: '50%',
+			maxHeight: '60%',
 			display: 'flex',
 			width: '100%',
 			backgroundColor: colorScheme === 'light' ? 'transparent' : Colors.secondGray,

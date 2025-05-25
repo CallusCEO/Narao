@@ -1,16 +1,11 @@
 import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import { ReactNode, useContext, useState } from 'react';
-import {
-	Dimensions,
-	StyleSheet,
-	Text,
-	TouchableNativeFeedback,
-	View,
-} from 'react-native';
+import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
+import { data } from '@/constants/sampleNoteData';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { NotebookType } from '@/types/ContentType';
 import handleTextLength from '@/utils/handleTextLength';
@@ -21,14 +16,7 @@ interface Props extends NotebookType {
 	children?: ReactNode;
 }
 
-const NotebookListItem = ({
-	iconName,
-	iconColor,
-	name,
-	id,
-	content,
-	children,
-}: Props) => {
+const NotebookListItem = ({ iconName, iconColor, name, id, content, children }: Props) => {
 	// Load the font
 	const [fontsLoaded] = useFonts({
 		SatoshiRegular: require('@/assets/fonts/Satoshi-Regular.otf'),
@@ -38,7 +26,7 @@ const NotebookListItem = ({
 	});
 	const width = Dimensions.get('window').width;
 	const { colorScheme } = useContext(ColorSchemeContext);
-	const styles = createStyles(colorScheme, width);
+	const styles = createStyles(colorScheme, width, id);
 
 	// states :
 	const [isOpen, setIsOpen] = useState(false);
@@ -52,10 +40,7 @@ const NotebookListItem = ({
 		<View style={styles.container}>
 			<View style={styles.notebookContainer}>
 				<TouchableNativeFeedback
-					background={TouchableNativeFeedback.Ripple(
-						Colors.fourthGray,
-						false
-					)}
+					background={TouchableNativeFeedback.Ripple(Colors.fourthGray, false)}
 					onPress={() => setIsOpen(!isOpen)}
 					// onLongPress={(e) => ref.current?.expand()}
 				>
@@ -91,7 +76,7 @@ const NotebookListItem = ({
 
 type ColorScheme = 'light' | 'dark' | undefined | null;
 
-function createStyles(colorScheme: ColorScheme, width: number) {
+function createStyles(colorScheme: ColorScheme, width: number, id: number) {
 	return StyleSheet.create({
 		textXS: {
 			fontSize: 14,
@@ -117,9 +102,11 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		notebookContainer: {
 			width: '100%',
 			borderBottomColor:
-				colorScheme === 'light' ? Colors.thirdGray : Colors.firstGray,
-			borderBottomWidth: 1,
-			borderStyle: 'solid',
+				data[data.length - 1].id !== id && colorScheme === 'light'
+					? Colors.thirdGray
+					: Colors.firstGray,
+			borderBottomWidth: data[data.length - 1].id !== id ? 1 : undefined,
+			borderStyle: data[data.length - 1].id !== id ? 'solid' : undefined,
 			overflow: 'hidden',
 			height: 54,
 		},
@@ -132,8 +119,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			paddingRight: 4,
 			width: '95%',
 			borderLeftWidth: 1,
-			borderLeftColor:
-				colorScheme === 'light' ? Colors.thirdGray : Colors.secondGray,
+			borderLeftColor: colorScheme === 'light' ? Colors.thirdGray : Colors.secondGray,
 		},
 
 		innerContainer: {
@@ -149,17 +135,13 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		title: {
 			marginLeft: 8,
 			fontFamily: 'SatoshiMedium',
-			color:
-				colorScheme === 'light'
-					? Colors.dark.primary
-					: Colors.light.primary,
+			color: colorScheme === 'light' ? Colors.dark.primary : Colors.light.primary,
 		},
 
 		voidNotebookTitle: {
 			marginLeft: 12,
 			fontFamily: 'SatoshiMedium',
-			color:
-				colorScheme === 'light' ? Colors.firstGray : Colors.thirdGray,
+			color: colorScheme === 'light' ? Colors.firstGray : Colors.thirdGray,
 			fontStyle: 'italic',
 		},
 

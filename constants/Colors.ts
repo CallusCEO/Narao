@@ -1,12 +1,12 @@
 const Colors = {
 	light: {
-		primary: '#fff',
+		primary: '#f5f5f5',
 		secondary: '#10100e',
 		ternary: '#fff',
 	},
 	dark: {
 		primary: '#10100e',
-		secondary: '#fff',
+		secondary: '#f5f5f5',
 		ternary: '#fff',
 	},
 	firstGray: '#222',

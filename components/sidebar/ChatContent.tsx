@@ -28,11 +28,6 @@ const NotebookContent = ({ id }: Props) => {
 	const { isChatDrawerOpen, setChatDrawerOpen } = useContext(ChatDrawerOpenContext);
 	const styles = createStyles(colorScheme); // Assuming 'light' for demonstration
 
-	// functions :
-	const handleNameLength = (name: string): string => {
-		return name.trim().length < 17 ? name.trim() : name.slice(0, 17).trim() + '...';
-	};
-
 	return (
 		<View style={[styles.container, { height: isChatDrawerOpen ? 'auto' : 30 }]}>
 			<TouchableNativeFeedback
@@ -72,7 +67,7 @@ type ColorScheme = 'light' | 'dark' | undefined | null;
 function createStyles(colorScheme: ColorScheme) {
 	return StyleSheet.create({
 		container: {
-			maxHeight: '50%',
+			maxHeight: '60%',
 			display: 'flex',
 			width: '100%',
 			backgroundColor: colorScheme === 'light' ? 'transparent' : Colors.secondGray,

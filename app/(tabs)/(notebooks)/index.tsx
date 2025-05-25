@@ -1,13 +1,14 @@
 // app/(tabs)/(notebooks)/index.tsx
 import { useFonts } from 'expo-font';
 import { useContext, useRef, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // custom imports
 import BottomSheetComponent from '@/components/general/bottomPage/BottomSheetComponent';
 import BottomSheetContentNarabook from '@/components/general/bottomPage/BottomSheetContentNarabook';
 import PageHeader from '@/components/general/PageHeader';
+import CreateNote from '@/components/notePage/CreateNote';
 import FolderListItem from '@/components/notePage/FolderListItem';
 import NotebookListItem from '@/components/notePage/NotebookListItem';
 import NoteListItem from '@/components/notePage/NoteListItem';
@@ -116,12 +117,10 @@ export default function NotebookPage() {
 		<GestureHandlerRootView style={styles.container}>
 			<PageHeader title='NaraBook' />
 			<Recommendations />
+			<Text style={styles.title}>Your notebooks</Text>
 			<View style={styles.notebooksContainer}>
 				<View style={styles.notebooksScrollerContainer}>
-					<ScrollView
-						style={styles.notebooksScroller}
-						showsVerticalScrollIndicator={false}
-					>
+					<ScrollView showsVerticalScrollIndicator={false}>
 						{data.map((notebook) => (
 							<TouchableWithoutFeedback
 								key={notebook.id}
@@ -154,6 +153,7 @@ export default function NotebookPage() {
 						))}
 					</ScrollView>
 				</View>
+				<CreateNote />
 			</View>
 			<BottomSheetComponent ref={bottomSheetRef}>
 				<BottomSheetContentNarabook
@@ -221,11 +221,17 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			paddingTop: 12,
 		},
 
-		notebooksScroller: {},
+		title: {
+			color: colorScheme === 'light' ? Colors.fourthGray : Colors.thirdGray,
+			fontSize: 16,
+			marginVertical: 4,
+			marginLeft: 20,
+			fontFamily: 'SatoshiMedium',
+		},
 
 		notebooksScrollerContainer: {
 			height: 'auto',
-			maxHeight: '50%',
+			maxHeight: '45%',
 			borderColor: colorScheme === 'light' ? Colors.secondGray : Colors.firstGray,
 			borderWidth: 1,
 			overflow: 'hidden',

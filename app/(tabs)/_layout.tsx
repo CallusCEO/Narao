@@ -20,7 +20,7 @@ export default function TabLayout() {
 						backgroundColor:
 							colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 						elevation: 0,
-						height: 62,
+						height: 92,
 					},
 					tabBarActiveTintColor: Colors.blue,
 				}}

@@ -28,7 +28,7 @@ const Recommendations: () => ReactNode = () => {
 		SatoshiBold: require('@/assets/fonts/Satoshi-Bold.otf'),
 		SatoshiBlack: require('@/assets/fonts/Satoshi-Black.otf'),
 	});
-	if (!fontsLoaded) return null;
+
 	const width = Dimensions.get('window').width;
 	const { colorScheme } = useContext(ColorSchemeContext);
 	const styles = createStyles(colorScheme, width);
@@ -67,46 +67,37 @@ const Recommendations: () => ReactNode = () => {
 
 		return score > 45 ? Colors.dark.primary : Colors.light.primary;
 	};
-
+	if (!fontsLoaded) return null;
 	return (
 		<View style={styles.container}>
+			<Text style={styles.title}>Jump back in</Text>
 			<ScrollView
 				horizontal
 				scrollEnabled
 				showsHorizontalScrollIndicator={false}
-				contentContainerStyle={{ flexDirection: 'row', paddingLeft: 8 }}
+				contentContainerStyle={{ flexDirection: 'row', paddingHorizontal: 8 }}
 			>
 				{dataHistory.map((note) => (
 					<View style={styles.boxContainer} key={note.id}>
 						<TouchableNativeFeedback
 							background={TouchableNativeFeedback.Ripple(
-								colorScheme === 'light'
-									? Colors.fifthGray
-									: Colors.thirdGray,
+								colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
 								false
 							)}
 						>
 							<View style={styles.boxInnerContainer}>
 								<View style={styles.detailsContainer}>
-									<Text style={styles.words}>
-										{`${note.words} words`}
-									</Text>
-									<Text style={styles.lastEdited}>
-										{note.lastEdited}
-									</Text>
+									<Text style={styles.words}>{`${note.words} words`}</Text>
+									<Text style={styles.lastEdited}>{note.lastEdited}</Text>
 								</View>
 								<Text
 									style={[
 										styles.name,
 										{
 											color: calculateDarkLightText(
-												typeof note.tags?.[0]?.color ===
-													'string' &&
-													note.tags[0]?.color.startsWith(
-														'#'
-													)
-													? (note.tags[0]
-															.color as `#${string}`)
+												typeof note.tags?.[0]?.color === 'string' &&
+													note.tags[0]?.color.startsWith('#')
+													? (note.tags[0].color as `#${string}`)
 													: (Colors.fifthGray as `#${string}`)
 											),
 										},
@@ -119,13 +110,9 @@ const Recommendations: () => ReactNode = () => {
 										styles.notebookParent,
 										{
 											color: calculateDarkLightText(
-												typeof note.tags?.[0]?.color ===
-													'string' &&
-													note.tags[0]?.color.startsWith(
-														'#'
-													)
-													? (note.tags[0]
-															.color as `#${string}`)
+												typeof note.tags?.[0]?.color === 'string' &&
+													note.tags[0]?.color.startsWith('#')
+													? (note.tags[0].color as `#${string}`)
 													: (Colors.fifthGray as `#${string}`)
 											),
 										},
@@ -138,8 +125,7 @@ const Recommendations: () => ReactNode = () => {
 										styles.banner,
 										{
 											backgroundColor:
-												note.tags &&
-												typeof note.tags[0]?.color
+												note.tags && typeof note.tags[0]?.color
 													? note.tags[0]?.color
 													: Colors.fifthGray,
 										},
@@ -153,9 +139,7 @@ const Recommendations: () => ReactNode = () => {
 			<LinearGradient
 				colors={[
 					'transparent',
-					colorScheme === 'light'
-						? Colors.light.primary
-						: Colors.dark.primary,
+					colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 				]}
 				start={{ x: 0, y: 0 }} // left
 				end={{ x: 1, y: 0 }} // right
@@ -170,27 +154,33 @@ type ColorScheme = 'light' | 'dark' | undefined | null;
 function createStyles(colorScheme: ColorScheme, width: number) {
 	return StyleSheet.create({
 		container: {
-			height: 164,
+			height: 188,
 			width: '100%',
 			display: 'flex',
-			flexDirection: 'row',
-			alignItems: 'center',
+			flexDirection: 'column',
 			position: 'relative',
 			elevation: 5,
+		},
+
+		title: {
+			color: colorScheme === 'light' ? Colors.fourthGray : Colors.thirdGray,
+			fontSize: 16,
+			marginVertical: 16,
+			marginLeft: 20,
+			fontFamily: 'SatoshiMedium',
 		},
 
 		fade: {
 			position: 'absolute',
 			right: 0,
 			width: 20,
-			height: 164,
+			height: 188,
 		},
 
 		boxContainer: {
 			width: 180,
 			height: 124,
-			backgroundColor:
-				colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
+			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
 			borderRadius: 20,
 			overflow: 'hidden',
 			borderWidth: colorScheme === 'light' ? 1 : 0,
@@ -233,14 +223,12 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		},
 
 		words: {
-			color:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.fourthGray,
+			color: colorScheme === 'light' ? Colors.fifthGray : Colors.fourthGray,
 			fontFamily: 'SatoshiRegular',
 		},
 
 		notebookParent: {
-			color:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.fourthGray,
+			color: colorScheme === 'light' ? Colors.fifthGray : Colors.fourthGray,
 			fontSize: 14,
 			zIndex: 999,
 			marginHorizontal: 8,
@@ -249,8 +237,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		},
 
 		lastEdited: {
-			color:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.fourthGray,
+			color: colorScheme === 'light' ? Colors.fifthGray : Colors.fourthGray,
 			marginLeft: 'auto',
 			fontFamily: 'SatoshiRegular',
 		},

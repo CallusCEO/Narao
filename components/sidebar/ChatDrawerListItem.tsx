@@ -1,13 +1,7 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import { useContext } from 'react';
-import {
-	Dimensions,
-	StyleSheet,
-	Text,
-	TouchableNativeFeedback,
-	View,
-} from 'react-native';
+import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
@@ -42,9 +36,7 @@ const ChatDrawerListItem = ({ name, id, tags }: Props) => {
 			<View style={styles.chatContainer}>
 				<TouchableNativeFeedback
 					background={TouchableNativeFeedback.Ripple(
-						colorScheme === 'light'
-							? Colors.thirdGray
-							: Colors.secondGray,
+						colorScheme === 'light' ? Colors.thirdGray : Colors.secondGray,
 						false
 					)}
 					// onPress={() => setIsOpen(!isOpen)}
@@ -53,11 +45,7 @@ const ChatDrawerListItem = ({ name, id, tags }: Props) => {
 						<MaterialCommunityIcons
 							name='asterisk'
 							size={20}
-							color={
-								colorScheme === 'light'
-									? Colors.redDistilled
-									: Colors.red
-							}
+							color={colorScheme === 'light' ? Colors.redDistilled : Colors.red}
 						/>
 						<Text style={[styles.textS, styles.title]}>
 							{handleTextLength(name, 25)}
@@ -84,8 +72,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 
 		chatContainer: {
 			width: '100%',
-			backgroundColor:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.thirdGray,
 			borderRadius: 50,
 			overflow: 'hidden',
 			height: 32,
@@ -104,10 +91,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		title: {
 			marginLeft: 8,
 			fontFamily: 'SatoshiMedium',
-			color:
-				colorScheme === 'light'
-					? Colors.dark.primary
-					: Colors.light.primary,
+			color: colorScheme === 'light' ? Colors.dark.primary : Colors.light.primary,
 		},
 	});
 }
