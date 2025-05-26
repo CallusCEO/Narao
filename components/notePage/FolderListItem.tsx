@@ -121,7 +121,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 				colorScheme === 'light' ? Colors.light.primary : undefined,
 			borderRadius: 20,
 			borderColor:
-				colorScheme === 'light' ? Colors.thirdGray : Colors.firstGray,
+				colorScheme === 'light' ? Colors.fifthGray : Colors.firstGray,
 			borderWidth: 1,
 			borderStyle: 'solid',
 			overflow: 'hidden',

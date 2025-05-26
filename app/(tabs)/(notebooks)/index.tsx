@@ -30,10 +30,18 @@ export default function NotebookPage() {
 	const { colorScheme } = useContext(ColorSchemeContext);
 	const styles = createStyles(colorScheme, width);
 	const bottomSheetRef = useRef<BottomSheet>(null);
-	const [targetIdNotebook, setTargetIdNotebook] = useState<number | undefined>(undefined);
-	const [targetIdFolder, setTargetIdFolder] = useState<number | undefined>(undefined);
-	const [targetIdNote, setTargetIdNote] = useState<number | undefined>(undefined);
-	const [target, setTarget] = useState<'notebook' | 'folder' | 'note'>('notebook');
+	const [targetIdNotebook, setTargetIdNotebook] = useState<
+		number | undefined
+	>(undefined);
+	const [targetIdFolder, setTargetIdFolder] = useState<number | undefined>(
+		undefined
+	);
+	const [targetIdNote, setTargetIdNote] = useState<number | undefined>(
+		undefined
+	);
+	const [target, setTarget] = useState<'notebook' | 'folder' | 'note'>(
+		'notebook'
+	);
 
 	// Recursive renderer types
 	type TargetSetter = (id?: number) => void;
@@ -76,10 +84,14 @@ export default function NotebookPage() {
 							content={content}
 							maxTextLength={maxTextLength}
 						>
-							{renderTree(content, Math.round(maxTextLength / 1.5), {
-								...ctx,
-								parentFolderId: id,
-							})}
+							{renderTree(
+								content,
+								Math.round(maxTextLength / 1.5),
+								{
+									...ctx,
+									parentFolderId: id,
+								}
+							)}
 						</FolderListItem>
 					</TouchableWithoutFeedback>
 				);
@@ -160,12 +172,15 @@ export default function NotebookPage() {
 					title={
 						targetIdFolder !== undefined
 							? targetIdNote !== undefined
-								? data[targetIdNotebook ?? 0]?.content?.[targetIdFolder ?? 0]
-										?.folder?.content?.[targetIdNote ?? 0]?.note?.name ||
-								  'Error not found'
-								: data[targetIdNotebook ?? 0]?.content?.[targetIdFolder ?? 0]
-										?.folder?.name || 'Error not found'
-							: data[targetIdNotebook ?? 0].name || 'Error not found'
+								? data[targetIdNotebook ?? 0]?.content?.[
+										targetIdFolder ?? 0
+								  ]?.folder?.content?.[targetIdNote ?? 0]?.note
+										?.name || 'Error not found'
+								: data[targetIdNotebook ?? 0]?.content?.[
+										targetIdFolder ?? 0
+								  ]?.folder?.name || 'Error not found'
+							: data[targetIdNotebook ?? 0].name ||
+							  'Error not found'
 					}
 					/*@ts-ignore */
 					iconName={
@@ -173,14 +188,16 @@ export default function NotebookPage() {
 							? targetIdNote !== undefined
 								? 'text'
 								: 'folder'
-							: data[targetIdNotebook ?? 0].iconName || 'error-outline'
+							: data[targetIdNotebook ?? 0].iconName ||
+							  'error-outline'
 					}
 					iconColor={
 						targetIdFolder !== undefined
 							? colorScheme === 'light'
 								? Colors.light.secondary
 								: Colors.dark.secondary
-							: data[targetIdNotebook ?? 0].iconColor || Colors.red
+							: data[targetIdNotebook ?? 0].iconColor ||
+							  Colors.red
 					}
 					target={target}
 				/>
@@ -210,7 +227,10 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 
 		container: {
 			flex: 1,
-			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
+			backgroundColor:
+				colorScheme === 'light'
+					? Colors.light.primary
+					: Colors.dark.primary,
 			paddingTop: 40,
 		},
 
@@ -222,20 +242,22 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		},
 
 		title: {
-			color: colorScheme === 'light' ? Colors.fourthGray : Colors.thirdGray,
+			color:
+				colorScheme === 'light' ? Colors.fourthGray : Colors.thirdGray,
 			fontSize: 16,
 			marginVertical: 4,
-			marginLeft: 20,
+			marginLeft: '5%',
 			fontFamily: 'SatoshiMedium',
 		},
 
 		notebooksScrollerContainer: {
 			height: 'auto',
-			maxHeight: '45%',
-			borderColor: colorScheme === 'light' ? Colors.secondGray : Colors.firstGray,
+			maxHeight: width > 450 ? '60%' : '45%',
+			borderColor:
+				colorScheme === 'light' ? Colors.fifthGray : Colors.firstGray,
 			borderWidth: 1,
 			overflow: 'hidden',
-			borderRadius: 20,
+			borderRadius: 10,
 			width: '100%',
 		},
 	});

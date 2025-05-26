@@ -58,7 +58,10 @@ const CreateNote = () => {
 	return (
 		<View style={styles.container}>
 			<TouchableNativeFeedback
-				background={TouchableNativeFeedback.Ripple(Colors.secondGray, false)}
+				background={TouchableNativeFeedback.Ripple(
+					Colors.secondGray,
+					false
+				)}
 			>
 				<View style={styles.innerContainer}>
 					<Animated.View
@@ -84,7 +87,9 @@ const CreateNote = () => {
 						name='edit'
 						size={24}
 						color={
-							colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary
+							colorScheme === 'light'
+								? Colors.light.secondary
+								: Colors.dark.secondary
 						}
 					/>
 				</View>
@@ -101,10 +106,15 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			marginHorizontal: 'auto',
 			marginTop: 16,
 			width: '80%',
+			maxWidth: 324,
 			height: 48,
-			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
+			backgroundColor:
+				colorScheme === 'light'
+					? Colors.light.primary
+					: Colors.firstGray,
 			borderRadius: 30,
-			borderColor: colorScheme === 'light' ? Colors.secondGray : Colors.firstGray,
+			borderColor:
+				colorScheme === 'light' ? Colors.secondGray : Colors.firstGray,
 			borderWidth: 1,
 			overflow: 'hidden',
 		},
@@ -123,7 +133,10 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			fontFamily: 'SatoshiMedium',
 			fontSize: 18,
 			marginRight: 12,
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+			color:
+				colorScheme === 'light'
+					? Colors.light.secondary
+					: Colors.dark.secondary,
 		},
 	});
 }

@@ -1,12 +1,22 @@
 import { useFonts } from 'expo-font';
 import React, { useContext } from 'react';
-import { StyleSheet, TouchableNativeFeedback, View } from 'react-native';
+import {
+	Dimensions,
+	StyleSheet,
+	Text,
+	TouchableNativeFeedback,
+	View,
+} from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
-import { LinearGradient } from 'expo-linear-gradient';
-import { TextInput } from 'react-native-gesture-handler';
+import {
+	AntDesign,
+	FontAwesome5,
+	FontAwesome6,
+	MaterialCommunityIcons,
+} from '@expo/vector-icons';
 
 const SearchContent = () => {
 	// Load the font
@@ -17,24 +27,127 @@ const SearchContent = () => {
 		SatoshiBlack: require('@/assets/fonts/Satoshi-Black.otf'),
 	});
 	const { colorScheme } = useContext(ColorSchemeContext);
-	const styles = createStyles(colorScheme); // Assuming 'light' for demonstration
+	const width = Dimensions.get('window').width;
+	const styles = createStyles(colorScheme, width);
 
 	return (
-		<View style={styles.container}>
-			<LinearGradient
+		/* <LinearGradient
 				colors={[
 					'transparent',
-					colorScheme === 'light' ? Colors.sixthGray : Colors.dark.primary,
+					colorScheme === 'light'
+						? Colors.sixthGray
+						: Colors.secondGray,
 				]}
 				start={{ x: 0, y: 0 }} // left
 				end={{ x: 0, y: 1 }} // right
 				style={styles.fade}
-			/>
-			<View style={styles.innerContainer}>
+			/> */
+		<View style={styles.container}>
+			<View style={styles.topContainer}>
 				<View style={styles.searchContainer}>
-					<TextInput>Hello</TextInput>
-					<TouchableNativeFeedback>
-						<View></View>
+					<TouchableNativeFeedback
+						background={TouchableNativeFeedback.Ripple(
+							colorScheme === 'light'
+								? Colors.fifthGray
+								: Colors.secondGray,
+							false
+						)}
+					>
+						<View style={styles.buttonSearch}>
+							<AntDesign
+								name='search1'
+								size={32}
+								color={
+									colorScheme === 'light'
+										? Colors.blueDistilled
+										: Colors.blueDistilled
+								}
+							/>
+							<Text style={styles.buttonText}>Search</Text>
+						</View>
+					</TouchableNativeFeedback>
+				</View>
+				<View style={styles.noteContainer}>
+					<TouchableNativeFeedback
+						background={TouchableNativeFeedback.Ripple(
+							colorScheme === 'light'
+								? Colors.fifthGray
+								: Colors.secondGray,
+							false
+						)}
+					>
+						<View style={styles.buttonNote}>
+							<FontAwesome5
+								name='edit'
+								size={24}
+								color={
+									colorScheme === 'light'
+										? Colors.light.secondary
+										: Colors.dark.secondary
+								}
+							/>
+						</View>
+					</TouchableNativeFeedback>
+				</View>
+			</View>
+
+			<View style={styles.bottomContainer}>
+				<View style={styles.swipeContainer}>
+					<TouchableNativeFeedback
+						background={TouchableNativeFeedback.Ripple(
+							colorScheme === 'light'
+								? Colors.fifthGray
+								: Colors.secondGray,
+							false
+						)}
+					>
+						<View style={styles.buttonNote}>
+							<FontAwesome6
+								name='images'
+								size={24}
+								color={
+									colorScheme === 'light'
+										? Colors.light.secondary
+										: Colors.dark.secondary
+								}
+							/>
+							<Text
+								style={[
+									styles.buttonText,
+									{
+										color:
+											colorScheme === 'light'
+												? Colors.light.secondary
+												: Colors.dark.secondary,
+									},
+								]}
+							>
+								View
+							</Text>
+						</View>
+					</TouchableNativeFeedback>
+				</View>
+				<View style={styles.sortContainer}>
+					<TouchableNativeFeedback
+						background={TouchableNativeFeedback.Ripple(
+							colorScheme === 'light'
+								? Colors.fifthGray
+								: Colors.secondGray,
+							false
+						)}
+					>
+						<View style={styles.buttonSearch}>
+							<MaterialCommunityIcons
+								name='sort-alphabetical-ascending'
+								size={32}
+								color={
+									colorScheme === 'light'
+										? Colors.blueDistilled
+										: Colors.blueDistilled
+								}
+							/>
+							<Text style={styles.buttonText}>Auto-Sort</Text>
+						</View>
 					</TouchableNativeFeedback>
 				</View>
 			</View>
@@ -44,42 +157,130 @@ const SearchContent = () => {
 
 type ColorScheme = 'light' | 'dark' | undefined | null;
 
-function createStyles(colorScheme: ColorScheme) {
+function createStyles(colorScheme: ColorScheme, width: number) {
 	return StyleSheet.create({
 		container: {
 			width: '100%',
-			height: 164,
-			marginTop: 'auto',
-			position: 'relative',
-		},
-
-		innerContainer: {
-			width: '100%',
-			height: 164,
-			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.secondGray,
+			height: width > 450 ? 212 : 188,
 			marginTop: 'auto',
 			paddingVertical: 16,
 			paddingHorizontal: 12,
-			borderTopColor: colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
+			borderTopColor:
+				colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 			borderTopWidth: 1,
+			display: 'flex',
+			flexDirection: 'column',
+			gap: 12,
 		},
 
-		fade: {
-			position: 'absolute',
-			top: -50,
+		// fade: {
+		// 	position: 'absolute',
+		// 	top: -20,
+		// 	width: '100%',
+		// 	height: 20,
+		// },
+
+		topContainer: {
 			width: '100%',
-			height: 50,
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+		},
+
+		bottomContainer: {
+			width: '100%',
+			height: '50%',
+			display: 'flex',
+			flexDirection: 'row',
+			justifyContent: 'space-between',
 		},
 
 		searchContainer: {
-			width: '100%',
 			height: 48,
+			width: '65%',
 			borderRadius: 30,
-			backgroundColor: colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
+			borderWidth: 1,
+			borderColor:
+				colorScheme === 'light'
+					? Colors.blueDistilled
+					: Colors.blueDistilled,
+			backgroundColor:
+				colorScheme === 'light'
+					? Colors.light.primary
+					: Colors.firstGray,
+			overflow: 'hidden',
+		},
+
+		noteContainer: {
+			height: 48,
+			width: '30%',
+			borderRadius: 30,
+			borderWidth: 1,
+			borderColor:
+				colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+			backgroundColor:
+				colorScheme === 'light'
+					? Colors.light.primary
+					: Colors.firstGray,
+			overflow: 'hidden',
+		},
+
+		sortContainer: {
+			height: 48,
+			width: '55%',
+			borderRadius: 30,
+			borderWidth: 1,
+			borderColor:
+				colorScheme === 'light'
+					? Colors.blueDistilled
+					: Colors.blueDistilled,
+			backgroundColor:
+				colorScheme === 'light'
+					? Colors.light.primary
+					: Colors.firstGray,
+			overflow: 'hidden',
+		},
+
+		swipeContainer: {
+			height: 48,
+			width: '40%',
+			borderRadius: 30,
+			borderWidth: 1,
+			borderColor:
+				colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+			backgroundColor:
+				colorScheme === 'light'
+					? Colors.light.primary
+					: Colors.firstGray,
+			overflow: 'hidden',
+		},
+
+		buttonSearch: {
+			width: '100%',
+			height: '100%',
 			display: 'flex',
 			flexDirection: 'row',
 			alignItems: 'center',
-			paddingHorizontal: 8,
+			justifyContent: 'center',
+		},
+
+		buttonNote: {
+			width: '100%',
+			height: '100%',
+			display: 'flex',
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyContent: 'center',
+		},
+
+		buttonText: {
+			fontFamily: 'SatoshiBold',
+			fontSize: 16,
+			color:
+				colorScheme === 'light'
+					? Colors.blueDistilled
+					: Colors.blueDistilled,
+			marginLeft: 8,
 		},
 	});
 }

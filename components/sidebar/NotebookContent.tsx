@@ -1,6 +1,12 @@
 import { useFonts } from 'expo-font';
 import { useContext } from 'react';
-import { StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
+import {
+	Dimensions,
+	StyleSheet,
+	Text,
+	TouchableNativeFeedback,
+	View,
+} from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
@@ -29,8 +35,11 @@ const NotebookContent = ({ notebookId }: Props) => {
 	});
 	const { colorScheme } = useContext(ColorSchemeContext);
 	const { isNotebookOpen, setNotebookOpen } = useContext(NotebookOpenContext);
-	const { isChatDrawerOpen, setChatDrawerOpen } = useContext(ChatDrawerOpenContext);
-	const styles = createStyles(colorScheme); // Assuming 'light' for demonstration
+	const { isChatDrawerOpen, setChatDrawerOpen } = useContext(
+		ChatDrawerOpenContext
+	);
+	const width = Dimensions.get('window').width;
+	const styles = createStyles(colorScheme, width);
 
 	// functions :
 
@@ -49,7 +58,10 @@ const NotebookContent = ({ notebookId }: Props) => {
 						maxTextLength={maxTextLength}
 					>
 						{/* recurse into this folder’s content */}
-						{renderContent(Math.round(maxTextLength / 1.8), content)}
+						{renderContent(
+							Math.round(maxTextLength / 1.8),
+							content
+						)}
 					</FolderDrawerListItem>
 				);
 			}
@@ -74,10 +86,14 @@ const NotebookContent = ({ notebookId }: Props) => {
 	};
 
 	return (
-		<View style={[styles.container, { height: isNotebookOpen ? 'auto' : 30 }]}>
+		<View
+			style={[styles.container, { height: isNotebookOpen ? 'auto' : 30 }]}
+		>
 			<TouchableNativeFeedback
 				background={TouchableNativeFeedback.Ripple(
-					colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+					colorScheme === 'light'
+						? Colors.fifthGray
+						: Colors.thirdGray,
 					false
 				)}
 				onPress={() => {
@@ -89,10 +105,16 @@ const NotebookContent = ({ notebookId }: Props) => {
 					<MaterialIcons
 						name='keyboard-arrow-down'
 						color={
-							colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary
+							colorScheme === 'light'
+								? Colors.light.secondary
+								: Colors.dark.secondary
 						}
 						size={28}
-						style={{ transform: [{ rotate: isNotebookOpen ? '0deg' : '-90deg' }] }}
+						style={{
+							transform: [
+								{ rotate: isNotebookOpen ? '0deg' : '-90deg' },
+							],
+						}}
 					/>
 					<Text style={styles.text}>Notes</Text>
 				</View>
@@ -109,18 +131,20 @@ const NotebookContent = ({ notebookId }: Props) => {
 
 type ColorScheme = 'light' | 'dark' | undefined | null;
 
-function createStyles(colorScheme: ColorScheme) {
+function createStyles(colorScheme: ColorScheme, width: number) {
 	return StyleSheet.create({
 		container: {
-			maxHeight: '60%',
+			maxHeight: width > 450 ? '80%' : '70%',
 			display: 'flex',
 			width: '100%',
-			backgroundColor: colorScheme === 'light' ? 'transparent' : Colors.secondGray,
+			backgroundColor:
+				colorScheme === 'light' ? 'transparent' : Colors.secondGray,
 			marginTop: 12,
 			borderRadius: 10,
 			overflow: 'hidden',
 			borderWidth: colorScheme === 'light' ? 1 : 0,
-			borderColor: colorScheme === 'light' ? Colors.secondGray : 'transparent',
+			borderColor:
+				colorScheme === 'light' ? Colors.secondGray : 'transparent',
 		},
 
 		dropdown: {
@@ -134,21 +158,27 @@ function createStyles(colorScheme: ColorScheme) {
 		innerContainer: {
 			paddingVertical: 8,
 			paddingHorizontal: 12,
-			backgroundColor: colorScheme === 'light' ? 'transparent' : Colors.secondGray,
+			backgroundColor:
+				colorScheme === 'light' ? 'transparent' : Colors.secondGray,
 		},
 
 		text: {
 			fontFamily: 'SatoshiMedium',
 			fontSize: 14,
 			marginRight: 8,
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+			color:
+				colorScheme === 'light'
+					? Colors.light.secondary
+					: Colors.dark.secondary,
 		},
 
 		rule: {
 			flex: 1,
 			height: 1,
 			backgroundColor:
-				colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+				colorScheme === 'light'
+					? Colors.light.secondary
+					: Colors.dark.secondary,
 		},
 	});
 }
