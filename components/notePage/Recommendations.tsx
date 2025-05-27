@@ -77,7 +77,8 @@ const Recommendations: () => ReactNode = () => {
 				showsHorizontalScrollIndicator={false}
 				contentContainerStyle={{
 					flexDirection: 'row',
-					paddingHorizontal: '4%',
+					paddingHorizontal: '5%',
+					gap: 16,
 				}}
 			>
 				{dataHistory.map((note) => (
@@ -206,7 +207,6 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			overflow: 'hidden',
 			borderWidth: colorScheme === 'light' ? 1 : 0,
 			borderColor: colorScheme === 'light' ? Colors.thirdGray : undefined,
-			marginHorizontal: 8,
 		},
 
 		boxInnerContainer: {

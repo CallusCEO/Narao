@@ -8,7 +8,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheetComponent from '@/components/general/bottomPage/BottomSheetComponent';
 import BottomSheetContentNarabook from '@/components/general/bottomPage/BottomSheetContentNarabook';
 import PageHeader from '@/components/general/PageHeader';
-import CreateNote from '@/components/notePage/CreateNote';
+import ButtonOptions from '@/components/notePage/ButtonsOptions';
 import FolderListItem from '@/components/notePage/FolderListItem';
 import NotebookListItem from '@/components/notePage/NotebookListItem';
 import NoteListItem from '@/components/notePage/NoteListItem';
@@ -128,6 +128,7 @@ export default function NotebookPage() {
 	return (
 		<GestureHandlerRootView style={styles.container}>
 			<PageHeader title='NaraBook' />
+			<ButtonOptions />
 			<Recommendations />
 			<Text style={styles.title}>Your notebooks</Text>
 			<View style={styles.notebooksContainer}>
@@ -165,7 +166,7 @@ export default function NotebookPage() {
 						))}
 					</ScrollView>
 				</View>
-				<CreateNote />
+				{/* <CreateNote /> */}
 			</View>
 			<BottomSheetComponent ref={bottomSheetRef}>
 				<BottomSheetContentNarabook
@@ -252,13 +253,15 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 
 		notebooksScrollerContainer: {
 			height: 'auto',
-			maxHeight: width > 450 ? '60%' : '45%',
+			maxHeight: width > 450 ? '65%' : '45%',
 			borderColor:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.firstGray,
+				colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 			borderWidth: 1,
 			overflow: 'hidden',
 			borderRadius: 10,
 			width: '100%',
+			backgroundColor:
+				colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
 		},
 	});
 }

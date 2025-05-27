@@ -10,17 +10,20 @@ import Colors from '@/constants/Colors';
 import { ChatDrawerOpenProvider } from '@/context/ChatDrawerOpenContext';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { NotebookOpenProvider } from '@/context/NotebookOpenContext';
+import { TimerProvider } from '@/context/TimerContext';
 
 export default function RootLayout() {
 	return (
 		<ColorSchemeProvider>
 			<SafeAreaProvider>
 				<ChatDrawerOpenProvider>
-					<NotebookOpenProvider>
-						<GestureHandlerRootView style={{ flex: 1 }}>
-							<RootLayoutNav />
-						</GestureHandlerRootView>
-					</NotebookOpenProvider>
+					<TimerProvider>
+						<NotebookOpenProvider>
+							<GestureHandlerRootView style={{ flex: 1 }}>
+								<RootLayoutNav />
+							</GestureHandlerRootView>
+						</NotebookOpenProvider>
+					</TimerProvider>
 				</ChatDrawerOpenProvider>
 			</SafeAreaProvider>
 		</ColorSchemeProvider>
@@ -35,7 +38,9 @@ function RootLayoutNav() {
 			screenOptions={{
 				drawerStyle: {
 					backgroundColor:
-						colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
+						colorScheme === 'light'
+							? Colors.light.primary
+							: Colors.dark.primary,
 				},
 				headerShown: false,
 				swipeEdgeWidth: 100,

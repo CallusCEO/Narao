@@ -7,7 +7,6 @@ import Colors from '@/constants/Colors';
 import ChatContent from './ChatContent';
 import NotebookContent from './NotebookContent';
 import NotebookTitle from './NotebookTitle';
-import SearchContent from './SearchContent';
 
 const DrawerContent = () => {
 	const { colorScheme } = useContext(ColorSchemeContext);
@@ -22,9 +21,9 @@ const DrawerContent = () => {
 				<ChatContent id={0} />
 			</View>
 
-			<View style={styles.secondContainer}>
+			{/* <View style={styles.secondContainer}>
 				<SearchContent />
-			</View>
+			</View> */}
 		</>
 	);
 };

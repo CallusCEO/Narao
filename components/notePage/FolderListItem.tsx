@@ -103,12 +103,6 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		textM: {
 			fontSize: 18,
 		},
-		textXL: {
-			fontSize: 20,
-		},
-		textXXL: {
-			fontSize: 22,
-		},
 
 		container: {
 			width: '100%',
@@ -117,15 +111,13 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 
 		folderContainer: {
 			width: '100%',
-			backgroundColor:
-				colorScheme === 'light' ? Colors.light.primary : undefined,
 			borderRadius: 20,
 			borderColor:
 				colorScheme === 'light' ? Colors.fifthGray : Colors.firstGray,
 			borderWidth: 1,
 			borderStyle: 'solid',
 			overflow: 'hidden',
-			height: 42,
+			height: 32,
 			display: 'flex',
 			flexDirection: 'row',
 			alignContent: 'center',

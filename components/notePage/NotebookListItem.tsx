@@ -111,7 +111,7 @@ function createStyles(colorScheme: ColorScheme, width: number, id: number) {
 		},
 
 		container: {
-			width: width > 450 ? '95%' : '100%',
+			width: '100%',
 			overflow: 'hidden',
 		},
 
@@ -120,11 +120,11 @@ function createStyles(colorScheme: ColorScheme, width: number, id: number) {
 			borderBottomColor:
 				data[data.length - 1].id !== id && colorScheme === 'light'
 					? Colors.fifthGray
-					: Colors.firstGray,
+					: Colors.secondGray,
 			borderBottomWidth: data[data.length - 1].id !== id ? 1 : undefined,
 			borderStyle: data[data.length - 1].id !== id ? 'solid' : undefined,
 			overflow: 'hidden',
-			height: 54,
+			height: 42,
 		},
 
 		contentContainer: {
