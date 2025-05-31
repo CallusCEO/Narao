@@ -1,20 +1,30 @@
+import { Entypo, Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { forwardRef, useContext, useEffect, useRef, useState } from 'react';
 import {
+	Animated,
 	Dimensions,
+	Easing,
 	StyleSheet,
 	Text,
 	TouchableNativeFeedback,
+	TouchableOpacity,
 	View,
 } from 'react-native';
+import { Circle, Svg } from 'react-native-svg';
 
 // custom imports
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { TimerContext } from '@/context/TimerContext';
-import { Ionicons } from '@expo/vector-icons';
+import BottomSheet from '@gorhom/bottom-sheet';
+import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 
-const Timer = () => {
+interface Props {
+	ref: BottomSheet;
+}
+
+const Timer = forwardRef<BottomSheetMethods, {}>((props, ref) => {
 	// Load the font
 	const [fontsLoaded] = useFonts({
 		SatoshiRegular: require('@/assets/fonts/Satoshi-Regular.otf'),
@@ -39,6 +49,16 @@ const Timer = () => {
 		setMode,
 	} = useContext(TimerContext);
 	const [tick, setTick] = useState(0);
+	const [initialTime, setInitialTime] = useState(0);
+
+	// functions
+
+	const handlePress = () => {
+		if (ref && typeof ref !== 'function') {
+			ref.current?.snapToIndex(0);
+		}
+		setIsRunning(false);
+	};
 
 	// Internal time state for stopwatch if no time prop is passed
 	const [localTime, setLocalTime] = useState(time);
@@ -56,10 +76,7 @@ const Timer = () => {
 					setTime
 						? setTime((prev: number) => prev + 1)
 						: setLocalTime((prev: number) => prev + 1);
-				} else if (
-					(mode === 'pomodoro' || mode === 'countdown') &&
-					time > 0
-				) {
+				} else if ((mode === 'pomodoro' || mode === 'countdown') && time > 0) {
 					setTime?.((prev) => {
 						if (prev <= 1) {
 							clearInterval(interval);
@@ -109,45 +126,141 @@ const Timer = () => {
 		displayTime = formatTime(time);
 	}
 
+	// animation
+	const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+	const radius = 124;
+	const strokeWidth = 5;
+	const circumference = 2 * Math.PI * radius;
+
+	// Animated value for the stroke
+	const progress = useRef(new Animated.Value(0)).current;
+
+	// Interpolated strokeDashoffset
+	const strokeDashoffset = progress.interpolate({
+		inputRange: [0, 1],
+		outputRange: [circumference, 0],
+	});
+
+	useEffect(() => {
+		if (mode === 'countdown' || (mode === 'pomodoro' && isRunning)) {
+			// percentage left between 0 and 1
+			const percent = time / initialTime;
+			Animated.timing(progress, {
+				toValue: percent,
+				duration: 500, // for smoothing; shorter than your tick
+				easing: Easing.out(Easing.cubic),
+				useNativeDriver: true,
+			}).start();
+		}
+	}, [time, isRunning, mode]);
+
 	return (
 		<View style={styles.container}>
-			<Text style={styles.timerText}>{displayTime}</Text>
+			<Svg
+				width={radius * 2 + strokeWidth}
+				height={radius * 2 + strokeWidth}
+				style={[
+					styles.timerClock,
+					{ display: mode === 'countdown' || mode === 'pomodoro' ? undefined : 'none' },
+				]}
+			>
+				<Circle
+					stroke={Colors.secondGray} // track color
+					cx={radius + strokeWidth / 2}
+					cy={radius + strokeWidth / 2}
+					r={radius}
+					strokeWidth={strokeWidth * 1}
+					fill={colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary}
+				/>
+				<AnimatedCircle
+					stroke={Colors.blueDistilled} // progress color
+					cx={radius + strokeWidth / 2}
+					cy={radius + strokeWidth / 2}
+					r={radius}
+					strokeWidth={strokeWidth}
+					strokeDasharray={`${circumference}, ${circumference}`}
+					strokeDashoffset={strokeDashoffset}
+					strokeLinecap='round'
+					rotation='-90'
+					origin={`${radius + strokeWidth / 2}, ${radius + strokeWidth / 2}`}
+				/>
+				<Circle
+					cx={radius + strokeWidth / 2}
+					cy={radius + strokeWidth / 2}
+					r={radius - strokeWidth / 2} // slightly smaller to fit inside
+					fill={colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary}
+				/>
+			</Svg>
+
+			<Text
+				style={[
+					styles.timerText,
+					{
+						fontSize:
+							displayTime.length > 5
+								? width > 450
+									? 64
+									: 42
+								: width > 450
+								? 80
+								: 64,
+					},
+				]}
+			>
+				{displayTime}
+			</Text>
+
+			<TouchableOpacity
+				activeOpacity={0.5}
+				style={styles.textButtonContainer}
+				onPress={() => handlePress()}
+			>
+				<Text style={styles.buttonText}>Set time</Text>
+			</TouchableOpacity>
+
 			<View style={styles.buttonsContainer}>
 				<View style={styles.buttonContainer}>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light'
-								? Colors.fifthGray
-								: Colors.secondGray,
+							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 							false
 						)}
+						onPress={() => {
+							if (!isRunning && (mode === 'countdown' || mode === 'pomodoro')) {
+								setInitialTime(time); // capture starting point when timer starts
+							}
+							setIsRunning(!isRunning);
+						}}
 					>
 						<View style={styles.button}>
-							<Ionicons
-								name='play'
+							<Entypo
+								name={'controller-stop'}
 								size={32}
 								color={
 									colorScheme === 'light'
-										? Colors.blueDistilled
-										: Colors.blueDistilled
+										? Colors.redDistilled
+										: Colors.redDistilled
 								}
 							/>
-							{/* <Text style={styles.buttonText}>Start</Text> */}
 						</View>
 					</TouchableNativeFeedback>
 				</View>
 				<View style={styles.buttonContainer}>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light'
-								? Colors.fifthGray
-								: Colors.secondGray,
+							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 							false
 						)}
+						onPress={() => {
+							if (!isRunning && (mode === 'countdown' || mode === 'pomodoro')) {
+								setInitialTime(time); // capture starting point when timer starts
+							}
+							setIsRunning(!isRunning);
+						}}
 					>
 						<View style={styles.button}>
 							<Ionicons
-								name='pause'
+								name={isRunning ? 'pause' : 'play'}
 								size={32}
 								color={
 									colorScheme === 'light'
@@ -155,14 +268,13 @@ const Timer = () => {
 										: Colors.blueDistilled
 								}
 							/>
-							{/* <Text style={styles.buttonText}>Start</Text> */}
 						</View>
 					</TouchableNativeFeedback>
 				</View>
 			</View>
 		</View>
 	);
-};
+});
 
 type ColorScheme = 'light' | 'dark' | undefined | null;
 
@@ -180,10 +292,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 
 		timerText: {
 			fontFamily: 'SatoshiBlack',
-			color:
-				colorScheme === 'light'
-					? Colors.light.secondary
-					: Colors.dark.secondary,
+			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
 			fontSize: width > 450 ? 80 : 64,
 			marginHorizontal: 'auto',
 		},
@@ -193,15 +302,14 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			display: 'flex',
 			justifyContent: 'center',
 			alignItems: 'center',
-			marginTop: 32,
+			marginTop: 112,
 			gap: 16,
 		},
 
 		buttonContainer: {
 			overflow: 'hidden',
 			borderWidth: 1,
-			borderColor:
-				colorScheme === 'light' ? Colors.fourthGray : Colors.secondGray,
+			borderColor: colorScheme === 'light' ? Colors.fourthGray : Colors.secondGray,
 			borderRadius: 30,
 		},
 
@@ -213,20 +321,27 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			paddingHorizontal: width > 450 ? 52 : 32,
 			paddingVertical: 8,
 			borderRadius: 30,
-			backgroundColor:
-				colorScheme === 'light'
-					? Colors.light.secondary
-					: Colors.firstGray,
+			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
 		},
 
 		buttonText: {
 			fontFamily: 'SatoshiMedium',
-			color:
-				colorScheme === 'light'
-					? Colors.blueDistilled
-					: Colors.blueDistilled,
+			color: colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
 			fontSize: width > 450 ? 24 : 18,
-			marginLeft: 8,
+		},
+
+		timerClock: {
+			position: 'absolute',
+			top: 0,
+			left: '50%',
+			transform: [{ translateX: '-50%' }, { translateY: '-30%' }],
+		},
+
+		textButtonContainer: {
+			marginHorizontal: 'auto',
+			// backgroundColor: '#fff',
+			height: 32,
+			paddingHorizontal: 24,
 		},
 	});
 }

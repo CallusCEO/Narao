@@ -1,11 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native';
 import { useFonts } from 'expo-font';
+import { StyleSheet } from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
+import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { useContext } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 
 export default function AiPage() {
 	// Load the font

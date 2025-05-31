@@ -14,12 +14,7 @@ import {
 // custom imports
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
-import {
-	AntDesign,
-	FontAwesome6,
-	MaterialCommunityIcons,
-	MaterialIcons,
-} from '@expo/vector-icons';
+import { AntDesign, FontAwesome6, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 
 // sample data import
@@ -37,41 +32,8 @@ const ButtonOptions: () => ReactNode = () => {
 	const { colorScheme } = useContext(ColorSchemeContext);
 	const styles = createStyles(colorScheme, width);
 
-	// functions
-	const calculateDarkLightText = (color: `#${string}`) => {
-		const symbols = {
-			'0': 0,
-			'1': 1,
-			'2': 2,
-			'3': 3,
-			'4': 4,
-			'5': 5,
-			'6': 6,
-			'7': 7,
-			'8': 8,
-			'9': 9,
-			a: 10,
-			b: 11,
-			c: 12,
-			d: 13,
-			e: 14,
-			f: 15,
-		};
-
-		const rawColor = color.trim().slice(1, 6);
-		const colorAsList = rawColor.split('');
-
-		let score = 0;
-		const colorCalculated = colorAsList.forEach((character: string) => {
-			score += symbols[character as keyof typeof symbols];
-		});
-
-		// multiply score by 3 if there were only 3 characters :
-		score = rawColor.length === 3 ? score * 2 : score;
-
-		return score > 45 ? Colors.dark.primary : Colors.light.primary;
-	};
 	if (!fontsLoaded) return null;
+
 	return (
 		<View style={styles.container}>
 			<ScrollView
@@ -87,9 +49,7 @@ const ButtonOptions: () => ReactNode = () => {
 				<View style={styles.buttonContainer}>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light'
-								? Colors.fifthGray
-								: Colors.secondGray,
+							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 							false
 						)}
 					>
@@ -110,9 +70,7 @@ const ButtonOptions: () => ReactNode = () => {
 				<View style={styles.buttonContainer}>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light'
-								? Colors.fifthGray
-								: Colors.secondGray,
+							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 							false
 						)}
 					>
@@ -133,9 +91,7 @@ const ButtonOptions: () => ReactNode = () => {
 				<View style={styles.buttonContainer}>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light'
-								? Colors.fifthGray
-								: Colors.secondGray,
+							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 							false
 						)}
 					>
@@ -156,9 +112,7 @@ const ButtonOptions: () => ReactNode = () => {
 				<View style={styles.buttonContainer}>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light'
-								? Colors.fifthGray
-								: Colors.secondGray,
+							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 							false
 						)}
 					>
@@ -180,9 +134,7 @@ const ButtonOptions: () => ReactNode = () => {
 			<LinearGradient
 				colors={[
 					'transparent',
-					colorScheme === 'light'
-						? Colors.light.primary
-						: Colors.dark.primary,
+					colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 				]}
 				start={{ x: 1, y: 0 }} // left
 				end={{ x: 0, y: 0 }} // right
@@ -191,9 +143,7 @@ const ButtonOptions: () => ReactNode = () => {
 			<LinearGradient
 				colors={[
 					'transparent',
-					colorScheme === 'light'
-						? Colors.light.primary
-						: Colors.dark.primary,
+					colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 				]}
 				start={{ x: 0, y: 0 }} // left
 				end={{ x: 1, y: 0 }} // right
@@ -209,7 +159,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 	return StyleSheet.create({
 		container: {
 			marginTop: 16,
-			height: 42,
+			height: 36,
 			width: '100%',
 			display: 'flex',
 			flexDirection: 'column',
@@ -233,20 +183,14 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		buttonText: {
 			fontFamily: 'SatoshiMedium',
 			fontSize: 16,
-			color:
-				colorScheme === 'light'
-					? Colors.light.secondary
-					: Colors.dark.secondary,
+			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
 			marginLeft: 8,
 		},
 
 		buttonTextSpecial: {
 			fontFamily: 'SatoshiMedium',
 			fontSize: 16,
-			color:
-				colorScheme === 'light'
-					? Colors.blueDistilled
-					: Colors.blueDistilled,
+			color: colorScheme === 'light' ? Colors.blueDistilled : Colors.blueDistilled,
 			marginLeft: 8,
 		},
 
@@ -254,12 +198,8 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			height: 36,
 			borderRadius: 30,
 			borderWidth: 1,
-			borderColor:
-				colorScheme === 'light'
-					? Colors.blueDistilled
-					: Colors.blueDistilled,
-			backgroundColor:
-				colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
+			borderColor: colorScheme === 'light' ? Colors.blueDistilled : Colors.blueDistilled,
+			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
 			overflow: 'hidden',
 		},
 
@@ -267,10 +207,8 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			height: 36,
 			borderRadius: 30,
 			borderWidth: 1,
-			borderColor:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
-			backgroundColor:
-				colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
+			borderColor: colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
+			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
 			overflow: 'hidden',
 		},
 

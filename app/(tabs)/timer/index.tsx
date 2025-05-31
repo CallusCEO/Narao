@@ -1,15 +1,18 @@
 import { useFonts } from 'expo-font';
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // custom imports
+import BottomSheetComponent from '@/components/general/bottomPage/BottomSheetComponent';
+import BottomSheetContentTimer from '@/components/general/bottomPage/BottomSheetContentTimer';
 import PageHeader from '@/components/general/PageHeader';
 import ModeOptions from '@/components/timer/ModeOptions';
 import Timer from '@/components/timer/Timer';
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { TimerContext } from '@/context/TimerContext';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 export default function TimerPage() {
 	// Load the font
@@ -22,6 +25,7 @@ export default function TimerPage() {
 	const width = Dimensions.get('window').width;
 	const { colorScheme } = useContext(ColorSchemeContext);
 	const styles = createStyles(colorScheme, width);
+	const bottomSheetRef = useRef<BottomSheet | null>(null);
 
 	// states
 	const {
@@ -41,7 +45,10 @@ export default function TimerPage() {
 		<GestureHandlerRootView style={styles.container}>
 			<PageHeader title='Timer' />
 			<ModeOptions />
-			<Timer />
+			<Timer ref={bottomSheetRef} />
+			<BottomSheetComponent ref={bottomSheetRef}>
+				<BottomSheetContentTimer />
+			</BottomSheetComponent>
 		</GestureHandlerRootView>
 	);
 }
@@ -51,10 +58,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 	return StyleSheet.create({
 		container: {
 			flex: 1,
-			backgroundColor:
-				colorScheme === 'light'
-					? Colors.light.primary
-					: Colors.dark.primary,
+			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 			paddingTop: 40,
 		},
 	});
