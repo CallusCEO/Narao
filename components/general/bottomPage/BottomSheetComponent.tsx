@@ -9,6 +9,7 @@ import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 
 type Props = {
 	children?: ReactNode;
+	contentPanningGestureOn?: boolean;
 };
 
 type Ref = BottomSheet;
@@ -53,7 +54,7 @@ const BottomSheetComponent = forwardRef<Ref, Props>((props, ref) => {
 					colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
 				width: 64,
 			}}
-			enableContentPanningGesture={false}
+			enableContentPanningGesture={props.contentPanningGestureOn}
 		>
 			<BottomSheetView style={styles.container}>{props.children}</BottomSheetView>
 		</BottomSheet>

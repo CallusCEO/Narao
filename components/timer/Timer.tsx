@@ -17,12 +17,7 @@ import { Circle, Svg } from 'react-native-svg';
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { TimerContext } from '@/context/TimerContext';
-import BottomSheet from '@gorhom/bottom-sheet';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
-
-interface Props {
-	ref: BottomSheet;
-}
 
 const Timer = forwardRef<BottomSheetMethods, {}>((props, ref) => {
 	// Load the font
@@ -47,9 +42,10 @@ const Timer = forwardRef<BottomSheetMethods, {}>((props, ref) => {
 		setPauseTimeNumber,
 		mode,
 		setMode,
+		initialTime,
+		setInitialTime,
 	} = useContext(TimerContext);
 	const [tick, setTick] = useState(0);
-	const [initialTime, setInitialTime] = useState(0);
 
 	// functions
 
@@ -226,10 +222,10 @@ const Timer = forwardRef<BottomSheetMethods, {}>((props, ref) => {
 							false
 						)}
 						onPress={() => {
-							if (!isRunning && (mode === 'countdown' || mode === 'pomodoro')) {
-								setInitialTime(time); // capture starting point when timer starts
+							setIsRunning(false);
+							if (mode === 'countdown' || mode === 'pomodoro') {
+								setTime(initialTime);
 							}
-							setIsRunning(!isRunning);
 						}}
 					>
 						<View style={styles.button}>
@@ -253,7 +249,7 @@ const Timer = forwardRef<BottomSheetMethods, {}>((props, ref) => {
 						)}
 						onPress={() => {
 							if (!isRunning && (mode === 'countdown' || mode === 'pomodoro')) {
-								setInitialTime(time); // capture starting point when timer starts
+								setTime(initialTime); // capture starting point when timer starts
 							}
 							setIsRunning(!isRunning);
 						}}

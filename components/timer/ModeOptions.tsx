@@ -43,6 +43,7 @@ const ModeOptions: () => ReactNode = () => {
 		setPauseTimeNumber,
 		mode,
 		setMode,
+		setInitialTime,
 	} = useContext(TimerContext);
 
 	if (!fontsLoaded) return null;
@@ -67,6 +68,7 @@ const ModeOptions: () => ReactNode = () => {
 						)}
 						onPress={() => {
 							setMode('countdown');
+							setInitialTime(60);
 							setTime(60);
 							setIsRunning(false);
 						}}
@@ -93,6 +95,7 @@ const ModeOptions: () => ReactNode = () => {
 						)}
 						onPress={() => {
 							setMode('pomodoro');
+							setInitialTime(60 * 30);
 							setTime(60 * 30);
 							setIsRunning(false);
 							setPauseTime(300);
@@ -121,7 +124,8 @@ const ModeOptions: () => ReactNode = () => {
 						)}
 						onPress={() => {
 							setMode('stopwatch');
-							setTime(30);
+							setInitialTime(0);
+							setTime(0);
 							setIsRunning(false);
 						}}
 					>

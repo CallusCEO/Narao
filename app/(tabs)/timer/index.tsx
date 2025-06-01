@@ -46,8 +46,8 @@ export default function TimerPage() {
 			<PageHeader title='Timer' />
 			<ModeOptions />
 			<Timer ref={bottomSheetRef} />
-			<BottomSheetComponent ref={bottomSheetRef}>
-				<BottomSheetContentTimer />
+			<BottomSheetComponent ref={bottomSheetRef} contentPanningGestureOn={false}>
+				<BottomSheetContentTimer bottomSheetRef={bottomSheetRef} />
 			</BottomSheetComponent>
 		</GestureHandlerRootView>
 	);
