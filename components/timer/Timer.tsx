@@ -1,6 +1,14 @@
 import { Entypo, Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
-import React, { forwardRef, useContext, useEffect, useRef, useState } from 'react';
+import React, {
+	Dispatch,
+	forwardRef,
+	SetStateAction,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
+} from 'react';
 import {
 	Animated,
 	Dimensions,
@@ -19,7 +27,13 @@ import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { TimerContext } from '@/context/TimerContext';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 
-const Timer = forwardRef<BottomSheetMethods, {}>((props, ref) => {
+type TimerMode = 'pomodoro' | 'countdown' | 'stopwatch' | 'current';
+
+type Props = {
+	setOpenIntervals: Dispatch<SetStateAction<boolean>>;
+};
+
+const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 	// Load the font
 	const [fontsLoaded] = useFonts({
 		SatoshiRegular: require('@/assets/fonts/Satoshi-Regular.otf'),
@@ -30,7 +44,7 @@ const Timer = forwardRef<BottomSheetMethods, {}>((props, ref) => {
 
 	const width = Dimensions.get('window').width;
 	const { colorScheme } = useContext(ColorSchemeContext);
-	const styles = createStyles(colorScheme, width);
+
 	const {
 		isRunning,
 		setIsRunning,
@@ -46,13 +60,25 @@ const Timer = forwardRef<BottomSheetMethods, {}>((props, ref) => {
 		setInitialTime,
 	} = useContext(TimerContext);
 	const [tick, setTick] = useState(0);
+	const styles = createStyles(colorScheme, width, mode);
 
 	// functions
 
-	const handlePress = () => {
+	const handleSetTimePress = () => {
+		props.setOpenIntervals(false);
 		if (ref && typeof ref !== 'function') {
-			ref.current?.snapToIndex(0);
+			width > 450 ? ref.current?.snapToIndex(0) : ref.current?.snapToIndex(1);
 		}
+
+		setIsRunning(false);
+	};
+
+	const handleIntervalsPress = () => {
+		props.setOpenIntervals(true);
+		if (ref && typeof ref !== 'function') {
+			width > 450 ? ref.current?.snapToIndex(0) : ref.current?.snapToIndex(1);
+		}
+
 		setIsRunning(false);
 	};
 
@@ -124,8 +150,8 @@ const Timer = forwardRef<BottomSheetMethods, {}>((props, ref) => {
 
 	// animation
 	const AnimatedCircle = Animated.createAnimatedComponent(Circle);
-	const radius = 124;
-	const strokeWidth = 5;
+	const radius = width > 450 ? 180 : 124;
+	const strokeWidth = 10;
 	const circumference = 2 * Math.PI * radius;
 
 	// Animated value for the stroke
@@ -169,21 +195,23 @@ const Timer = forwardRef<BottomSheetMethods, {}>((props, ref) => {
 					fill={colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary}
 				/>
 				<AnimatedCircle
-					stroke={Colors.blueDistilled} // progress color
+					stroke={
+						colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary
+					} // progress color
 					cx={radius + strokeWidth / 2}
 					cy={radius + strokeWidth / 2}
 					r={radius}
 					strokeWidth={strokeWidth}
 					strokeDasharray={`${circumference}, ${circumference}`}
 					strokeDashoffset={strokeDashoffset}
-					strokeLinecap='round'
+					strokeLinecap='butt'
 					rotation='-90'
 					origin={`${radius + strokeWidth / 2}, ${radius + strokeWidth / 2}`}
 				/>
 				<Circle
 					cx={radius + strokeWidth / 2}
 					cy={radius + strokeWidth / 2}
-					r={radius - strokeWidth / 2} // slightly smaller to fit inside
+					r={radius - strokeWidth / 2 + 6} // slightly smaller to fit inside
 					fill={colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary}
 				/>
 			</Svg>
@@ -193,7 +221,15 @@ const Timer = forwardRef<BottomSheetMethods, {}>((props, ref) => {
 					styles.timerText,
 					{
 						fontSize:
-							displayTime.length > 5
+							mode === 'current'
+								? displayTime.length > 5
+									? width > 450
+										? 80
+										: 64
+									: width > 450
+									? 80
+									: 64
+								: displayTime.length > 5
 								? width > 450
 									? 64
 									: 42
@@ -206,10 +242,27 @@ const Timer = forwardRef<BottomSheetMethods, {}>((props, ref) => {
 				{displayTime}
 			</Text>
 
+			{mode === 'pomodoro' && (
+				<TouchableOpacity
+					style={styles.intervalsContainer}
+					activeOpacity={0.5}
+					onPress={() => handleIntervalsPress()}
+				>
+					<Text style={styles.intervalsTextStart}>Intervals of </Text>
+					<Text style={styles.intervalsTextMiddle}>{pauseTime}</Text>
+					<Text style={styles.intervalsTextEnd}> sec</Text>
+
+					<Entypo
+						name='cycle'
+						size={24}
+						color={colorScheme === 'light' ? Colors.light.secondary : Colors.fourthGray}
+					></Entypo>
+				</TouchableOpacity>
+			)}
 			<TouchableOpacity
 				activeOpacity={0.5}
 				style={styles.textButtonContainer}
-				onPress={() => handlePress()}
+				onPress={() => handleSetTimePress()}
 			>
 				<Text style={styles.buttonText}>Set time</Text>
 			</TouchableOpacity>
@@ -234,14 +287,14 @@ const Timer = forwardRef<BottomSheetMethods, {}>((props, ref) => {
 								size={32}
 								color={
 									colorScheme === 'light'
-										? Colors.redDistilled
-										: Colors.redDistilled
+										? Colors.light.secondary
+										: Colors.dark.secondary
 								}
 							/>
 						</View>
 					</TouchableNativeFeedback>
 				</View>
-				<View style={styles.buttonContainer}>
+				<View style={styles.pauseContainer}>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
 							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
@@ -254,14 +307,40 @@ const Timer = forwardRef<BottomSheetMethods, {}>((props, ref) => {
 							setIsRunning(!isRunning);
 						}}
 					>
-						<View style={styles.button}>
+						<View style={styles.pause}>
 							<Ionicons
 								name={isRunning ? 'pause' : 'play'}
+								size={52}
+								color={
+									colorScheme === 'light'
+										? Colors.light.primary
+										: Colors.dark.primary
+								}
+							/>
+						</View>
+					</TouchableNativeFeedback>
+				</View>
+				<View style={styles.buttonContainer}>
+					<TouchableNativeFeedback
+						background={TouchableNativeFeedback.Ripple(
+							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
+							false
+						)}
+						onPress={() => {
+							setIsRunning(false);
+							if (mode === 'countdown' || mode === 'pomodoro') {
+								setTime(initialTime);
+							}
+						}}
+					>
+						<View style={styles.button}>
+							<Ionicons
+								name={'reload-outline'}
 								size={32}
 								color={
 									colorScheme === 'light'
-										? Colors.blueDistilled
-										: Colors.blueDistilled
+										? Colors.light.secondary
+										: Colors.dark.secondary
 								}
 							/>
 						</View>
@@ -274,11 +353,11 @@ const Timer = forwardRef<BottomSheetMethods, {}>((props, ref) => {
 
 type ColorScheme = 'light' | 'dark' | undefined | null;
 
-function createStyles(colorScheme: ColorScheme, width: number) {
+function createStyles(colorScheme: ColorScheme, width: number, mode: TimerMode) {
 	return StyleSheet.create({
 		container: {
 			marginTop: '35%',
-			height: 200,
+			flex: 1,
 			width: '90%',
 			display: 'flex',
 			flexDirection: 'column',
@@ -298,15 +377,13 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			display: 'flex',
 			justifyContent: 'center',
 			alignItems: 'center',
-			marginTop: 112,
+			marginTop: mode === 'pomodoro' ? (width > 450 ? 165 : 87) : width > 450 ? 212 : 132,
 			gap: 16,
 		},
 
 		buttonContainer: {
 			overflow: 'hidden',
-			borderWidth: 1,
-			borderColor: colorScheme === 'light' ? Colors.fourthGray : Colors.secondGray,
-			borderRadius: 30,
+			borderRadius: '50%',
 		},
 
 		button: {
@@ -314,10 +391,24 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			flexDirection: 'row',
 			alignItems: 'center',
 			justifyContent: 'center',
-			paddingHorizontal: width > 450 ? 52 : 32,
-			paddingVertical: 8,
-			borderRadius: 30,
-			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
+			padding: 16,
+		},
+
+		pauseContainer: {
+			overflow: 'hidden',
+			borderRadius: '50%',
+			borderWidth: 1,
+			borderColor: colorScheme === 'light' ? Colors.fourthGray : Colors.secondGray,
+		},
+
+		pause: {
+			display: 'flex',
+			flexDirection: 'row',
+			alignItems: 'center',
+			justifyContent: 'center',
+			padding: 16,
+			backgroundColor:
+				colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
 		},
 
 		buttonText: {
@@ -335,9 +426,41 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 
 		textButtonContainer: {
 			marginHorizontal: 'auto',
-			// backgroundColor: '#fff',
 			height: 32,
 			paddingHorizontal: 24,
+		},
+
+		intervalsContainer: {
+			marginHorizontal: 'auto',
+			paddingHorizontal: 24,
+			display: 'flex',
+			flexDirection: 'row',
+			alignItems: 'center',
+			marginBottom: 12,
+			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
+			borderRadius: 10,
+		},
+
+		intervalsTextStart: {
+			fontFamily: 'SatoshiBold',
+			color: colorScheme === 'light' ? Colors.fifthGray : Colors.fourthGray,
+			fontSize: width > 450 ? 20 : 18,
+			marginBottom: 4,
+		},
+
+		intervalsTextMiddle: {
+			fontFamily: 'SatoshiBold',
+			color: colorScheme === 'light' ? Colors.fifthGray : Colors.blueDistilled,
+			fontSize: width > 450 ? 20 : 18,
+			marginBottom: 4,
+		},
+
+		intervalsTextEnd: {
+			fontFamily: 'SatoshiBold',
+			color: colorScheme === 'light' ? Colors.fifthGray : Colors.fourthGray,
+			fontSize: width > 450 ? 20 : 18,
+			marginRight: 8,
+			marginBottom: 4,
 		},
 	});
 }

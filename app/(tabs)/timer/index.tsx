@@ -1,5 +1,5 @@
 import { useFonts } from 'expo-font';
-import { useContext, useRef } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -41,13 +41,18 @@ export default function TimerPage() {
 		setMode,
 	} = useContext(TimerContext);
 
+	const [openIntervals, setOpenIntervals] = useState(false);
+
 	return (
 		<GestureHandlerRootView style={styles.container}>
 			<PageHeader title='Timer' />
 			<ModeOptions />
-			<Timer ref={bottomSheetRef} />
+			<Timer ref={bottomSheetRef} setOpenIntervals={setOpenIntervals} />
 			<BottomSheetComponent ref={bottomSheetRef} contentPanningGestureOn={false}>
-				<BottomSheetContentTimer bottomSheetRef={bottomSheetRef} />
+				<BottomSheetContentTimer
+					bottomSheetRef={bottomSheetRef}
+					openIntervals={openIntervals}
+				/>
 			</BottomSheetComponent>
 		</GestureHandlerRootView>
 	);
