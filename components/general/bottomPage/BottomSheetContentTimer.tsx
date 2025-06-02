@@ -6,7 +6,13 @@ import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import WheelPicker from '@quidone/react-native-wheel-picker';
 import { useFonts } from 'expo-font';
 import React, { useContext, useState } from 'react';
-import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
+import {
+	Dimensions,
+	StyleSheet,
+	Text,
+	TouchableNativeFeedback,
+	View,
+} from 'react-native';
 import Rule from '../Rule';
 
 type BottomSheetContentTimerProps = {
@@ -59,11 +65,15 @@ const BottomSheetContentTimer: React.FC<BottomSheetContentTimerProps> = ({
 		setMode,
 		initialTime,
 		setInitialTime,
+		setInitialTimePause,
+		initialTimePause,
 	} = useContext(TimerContext);
 
 	return (
 		<View>
-			<Text style={styles.title}>{openIntervals ? 'Set pause time' : 'Set run time'}</Text>
+			<Text style={styles.title}>
+				{openIntervals ? 'Set pause time' : 'Set run time'}
+			</Text>
 			<Rule />
 			<View style={styles.pickerContainer}>
 				<View
@@ -71,17 +81,23 @@ const BottomSheetContentTimer: React.FC<BottomSheetContentTimerProps> = ({
 						styles.wheelPickerWrapper,
 						{
 							backgroundColor:
-								colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
+								colorScheme === 'light'
+									? Colors.light.primary
+									: Colors.firstGray,
 						},
 					]}
 				>
 					<WheelPicker
 						value={selectedHours}
-						onValueChanged={({ item }) => setSelectedHours(item.value)}
+						onValueChanged={({ item }) =>
+							setSelectedHours(item.value)
+						}
 						data={hours}
 						itemHeight={48}
 						renderItem={(props) => (
-							<Text style={styles.wheelPickerText}>{props.index}</Text>
+							<Text style={styles.wheelPickerText}>
+								{props.index}
+							</Text>
 						)}
 						overlayItemStyle={styles.overlayItem}
 					/>
@@ -91,37 +107,39 @@ const BottomSheetContentTimer: React.FC<BottomSheetContentTimerProps> = ({
 						styles.wheelPickerWrapper,
 						{
 							backgroundColor:
-								colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
+								colorScheme === 'light'
+									? Colors.light.primary
+									: Colors.firstGray,
 						},
 					]}
 				>
 					<WheelPicker
 						value={selectedMinutes}
-						onValueChanged={({ item }) => setSelectedMinutes(item.value)}
+						onValueChanged={({ item }) =>
+							setSelectedMinutes(item.value)
+						}
 						data={minutes}
 						itemHeight={48}
 						renderItem={(props) => (
-							<Text style={styles.wheelPickerText}>{props.index}</Text>
+							<Text style={styles.wheelPickerText}>
+								{props.index}
+							</Text>
 						)}
 						overlayItemStyle={styles.overlayItem}
 					/>
 				</View>
-				<View
-					style={[
-						styles.wheelPickerWrapper,
-						{
-							backgroundColor:
-								colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
-						},
-					]}
-				>
+				<View style={[styles.wheelPickerWrapper]}>
 					<WheelPicker
 						value={selectedSeconds}
-						onValueChanged={({ item }) => setSelectedSeconds(item.value)}
+						onValueChanged={({ item }) =>
+							setSelectedSeconds(item.value)
+						}
 						data={seconds}
 						itemHeight={48}
 						renderItem={(props) => (
-							<Text style={styles.wheelPickerText}>{props.index}</Text>
+							<Text style={styles.wheelPickerText}>
+								{props.index}
+							</Text>
 						)}
 						overlayItemStyle={styles.overlayItem}
 					/>
@@ -130,7 +148,9 @@ const BottomSheetContentTimer: React.FC<BottomSheetContentTimerProps> = ({
 			<View style={styles.buttonContainer}>
 				<TouchableNativeFeedback
 					background={TouchableNativeFeedback.Ripple(
-						colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
+						colorScheme === 'light'
+							? Colors.fifthGray
+							: Colors.secondGray,
 						false
 					)}
 					onPress={() => {
@@ -140,18 +160,15 @@ const BottomSheetContentTimer: React.FC<BottomSheetContentTimerProps> = ({
 									parseInt(selectedMinutes) * 60 +
 									parseInt(selectedSeconds)
 							);
-							setTime(
-								parseInt(selectedHours) * 3600 +
-									parseInt(selectedMinutes) * 60 +
-									parseInt(selectedSeconds)
-							);
+							setTime(initialTime);
 							bottomSheetRef.current?.close();
 						} else {
-							setPauseTime(
+							setInitialTimePause(
 								parseInt(selectedHours) * 3600 +
 									parseInt(selectedMinutes) * 60 +
 									parseInt(selectedSeconds)
 							);
+							setPauseTime(initialTimePause);
 							bottomSheetRef.current?.close();
 						}
 					}}
@@ -180,7 +197,10 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 	return StyleSheet.create({
 		title: {
 			fontSize: 22,
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+			color:
+				colorScheme === 'light'
+					? Colors.light.secondary
+					: Colors.dark.secondary,
 			textAlign: 'center',
 			marginBottom: 12,
 			fontFamily: 'SatoshiBold',
@@ -201,7 +221,10 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			marginHorizontal: 'auto',
 			borderRadius: 30,
 			overflow: 'hidden',
-			borderColor: colorScheme === 'light' ? Colors.blueDistilled : Colors.thirdGray,
+			borderColor:
+				colorScheme === 'light'
+					? Colors.blueDistilled
+					: Colors.thirdGray,
 			borderWidth: 1,
 			marginTop: 32,
 		},
@@ -209,20 +232,27 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		button: {
 			display: 'flex',
 			flexDirection: 'row',
-			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
+			backgroundColor:
+				colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
 			paddingHorizontal: 64,
 			paddingVertical: 8,
 		},
 
 		buttonText: {
-			color: colorScheme === 'light' ? Colors.light.primary : Colors.dark.secondary,
+			color:
+				colorScheme === 'light'
+					? Colors.light.secondary
+					: Colors.dark.secondary,
 			fontFamily: 'SatoshiBold',
 			fontSize: 18,
 			marginRight: 8,
 		},
 
 		wheelPickerText: {
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+			color:
+				colorScheme === 'light'
+					? Colors.light.secondary
+					: Colors.dark.secondary,
 			fontSize: width > 450 ? 20 : 18,
 			marginHorizontal: 'auto',
 			marginTop: width > 450 ? 10 : 12,
@@ -230,8 +260,8 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		},
 
 		overlayItem: {
-			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.thirdGray,
-			elevation: 10,
+			backgroundColor:
+				colorScheme === 'light' ? Colors.fourthGray : Colors.thirdGray,
 		},
 	});
 }

@@ -1,4 +1,4 @@
-import { Entypo, Ionicons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import React, {
 	Dispatch,
@@ -15,7 +15,6 @@ import {
 	Easing,
 	StyleSheet,
 	Text,
-	TouchableNativeFeedback,
 	TouchableOpacity,
 	View,
 } from 'react-native';
@@ -25,6 +24,7 @@ import { Circle, Svg } from 'react-native-svg';
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { TimerContext } from '@/context/TimerContext';
+import formatTime from '@/utils/formatTime';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 
 type TimerMode = 'pomodoro' | 'countdown' | 'stopwatch' | 'current';
@@ -58,25 +58,38 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 		setMode,
 		initialTime,
 		setInitialTime,
+		setInitialTimePause,
+		initialTimePause,
 	} = useContext(TimerContext);
 	const [tick, setTick] = useState(0);
 	const styles = createStyles(colorScheme, width, mode);
+	const [isPause, setIsPause] = useState(false);
 
 	// functions
 
+	useEffect(() => {
+		setTime(initialTime);
+		setInitialTimePause(initialTimePause);
+		setPauseTime(initialTimePause);
+		setIsPause(false);
+	}, [initialTime, initialTimePause]);
+
 	const handleSetTimePress = () => {
 		props.setOpenIntervals(false);
-		if (ref && typeof ref !== 'function') {
-			width > 450 ? ref.current?.snapToIndex(0) : ref.current?.snapToIndex(1);
-		}
-
 		setIsRunning(false);
+		if (ref && typeof ref !== 'function') {
+			width > 450
+				? ref.current?.snapToIndex(0)
+				: ref.current?.snapToIndex(1);
+		}
 	};
 
 	const handleIntervalsPress = () => {
 		props.setOpenIntervals(true);
 		if (ref && typeof ref !== 'function') {
-			width > 450 ? ref.current?.snapToIndex(0) : ref.current?.snapToIndex(1);
+			width > 450
+				? ref.current?.snapToIndex(0)
+				: ref.current?.snapToIndex(1);
 		}
 
 		setIsRunning(false);
@@ -94,19 +107,39 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 			}, 1000);
 		} else if (isRunning) {
 			interval = setInterval(() => {
-				if (mode === 'stopwatch') {
-					setTime
-						? setTime((prev: number) => prev + 1)
-						: setLocalTime((prev: number) => prev + 1);
-				} else if ((mode === 'pomodoro' || mode === 'countdown') && time > 0) {
-					setTime?.((prev) => {
-						if (prev <= 1) {
-							clearInterval(interval);
-							setIsRunning?.(false);
-							return 0;
-						}
-						return prev - 1;
-					});
+				if (!isPause) {
+					if (mode === 'stopwatch') {
+						setTime
+							? setTime((prev: number) => prev + 1)
+							: setLocalTime((prev: number) => prev + 1);
+					} else if (
+						(mode === 'pomodoro' || mode === 'countdown') &&
+						time > 0
+					) {
+						setTime?.((prev) => {
+							if (prev <= 1) {
+								clearInterval(interval);
+								setIsRunning?.(false);
+								return 0;
+							}
+							return prev - 1;
+						});
+					}
+				} else {
+					if (mode === 'stopwatch') {
+						setPauseTime
+							? setPauseTime((prev: number) => prev + 1)
+							: setLocalTime((prev: number) => prev + 1);
+					} else if (mode === 'pomodoro' && time > 0) {
+						setPauseTime?.((prev) => {
+							if (prev <= 1) {
+								clearInterval(interval);
+								setIsRunning?.(false);
+								return 0;
+							}
+							return prev - 1;
+						});
+					}
 				}
 			}, 1000);
 		}
@@ -114,38 +147,42 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 		return () => clearInterval(interval);
 	}, [isRunning, mode]);
 
-	// Format time to HH:MM:SS
-	const formatTime = (t: number) => {
-		if (t >= 3600) {
-			const hours = Math.floor(t / 3600)
-				.toString()
-				.padStart(2, '0');
-			const minutes = Math.floor((t % 3600) / 60)
-				.toString()
-				.padStart(2, '0');
-			const seconds = (t % 60).toString().padStart(2, '0');
-			return `${hours}:${minutes}:${seconds}`;
-		} else {
-			const minutes = Math.floor(t / 60)
-				.toString()
-				.padStart(2, '0');
-			const seconds = (t % 60).toString().padStart(2, '0');
-			return `${minutes}:${seconds}`;
-		}
-	};
+	// Format time to HH:MM:S
 
 	let displayTime = '';
 
-	if (mode === 'current') {
-		const now = new Date();
-		displayTime = `${now.getHours().toString().padStart(2, '0')}:${now
-			.getMinutes()
-			.toString()
-			.padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-	} else if (mode === 'stopwatch') {
-		displayTime = formatTime(time !== undefined ? time : localTime);
+	if (isPause) {
+		if (mode === 'current') {
+			const now = new Date();
+			displayTime = `${now.getHours().toString().padStart(2, '0')}:${now
+				.getMinutes()
+				.toString()
+				.padStart(2, '0')}:${now
+				.getSeconds()
+				.toString()
+				.padStart(2, '0')}`;
+		} else if (mode === 'stopwatch') {
+			displayTime = formatTime(
+				pauseTime !== undefined ? pauseTime : localTime
+			);
+		} else {
+			displayTime = formatTime(pauseTime);
+		}
 	} else {
-		displayTime = formatTime(time);
+		if (mode === 'current') {
+			const now = new Date();
+			displayTime = `${now.getHours().toString().padStart(2, '0')}:${now
+				.getMinutes()
+				.toString()
+				.padStart(2, '0')}:${now
+				.getSeconds()
+				.toString()
+				.padStart(2, '0')}`;
+		} else if (mode === 'stopwatch') {
+			displayTime = formatTime(time !== undefined ? time : localTime);
+		} else {
+			displayTime = formatTime(time);
+		}
 	}
 
 	// animation
@@ -164,17 +201,47 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 	});
 
 	useEffect(() => {
-		if (mode === 'countdown' || (mode === 'pomodoro' && isRunning)) {
+		if (mode === 'countdown' || mode === 'pomodoro') {
 			// percentage left between 0 and 1
-			const percent = time / initialTime;
+			const percent = isPause
+				? pauseTime / initialTimePause
+				: time / initialTime;
+
 			Animated.timing(progress, {
 				toValue: percent,
 				duration: 500, // for smoothing; shorter than your tick
 				easing: Easing.out(Easing.cubic),
 				useNativeDriver: true,
 			}).start();
+			console.log(`init: ${initialTimePause} --- time: ${pauseTime}`);
 		}
-	}, [time, isRunning, mode]);
+	}, [time, isRunning, mode, pauseTime]);
+
+	useEffect(() => {
+		if (
+			!isRunning &&
+			time === 0 &&
+			pauseTimeNumber > 0 &&
+			mode === 'pomodoro'
+		) {
+			if (!isPause) {
+				// Finished work session, start pause
+				setTime(pauseTime);
+				setInitialTimePause(initialTimePause);
+				setIsRunning(true);
+				setIsPause(true);
+			} else {
+				// Finished pause session, start work again
+				setPauseTimeNumber((prev) => prev - 1);
+				setTime(initialTime);
+				setInitialTime(initialTime);
+				setIsRunning(true);
+				setIsPause(false);
+			}
+		} else if (!isRunning && time === 0 && pauseTimeNumber === 0) {
+			setIsPause(false);
+		}
+	}, [isRunning, time]);
 
 	return (
 		<View style={styles.container}>
@@ -183,20 +250,39 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 				height={radius * 2 + strokeWidth}
 				style={[
 					styles.timerClock,
-					{ display: mode === 'countdown' || mode === 'pomodoro' ? undefined : 'none' },
+					{
+						display:
+							mode === 'countdown' || mode === 'pomodoro'
+								? undefined
+								: 'none',
+					},
 				]}
 			>
 				<Circle
-					stroke={Colors.secondGray} // track color
+					stroke={
+						colorScheme === 'light'
+							? Colors.sixthGray
+							: Colors.thirdGray
+					} // track color
 					cx={radius + strokeWidth / 2}
 					cy={radius + strokeWidth / 2}
 					r={radius}
 					strokeWidth={strokeWidth * 1}
-					fill={colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary}
+					fill={
+						colorScheme === 'light'
+							? Colors.light.primary
+							: Colors.dark.primary
+					}
 				/>
 				<AnimatedCircle
 					stroke={
-						colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary
+						isPause
+							? colorScheme === 'light'
+								? Colors.blueDistilled
+								: Colors.blueDistilled
+							: colorScheme === 'light'
+							? Colors.light.secondary
+							: Colors.dark.secondary
 					} // progress color
 					cx={radius + strokeWidth / 2}
 					cy={radius + strokeWidth / 2}
@@ -206,13 +292,19 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 					strokeDashoffset={strokeDashoffset}
 					strokeLinecap='butt'
 					rotation='-90'
-					origin={`${radius + strokeWidth / 2}, ${radius + strokeWidth / 2}`}
+					origin={`${radius + strokeWidth / 2}, ${
+						radius + strokeWidth / 2
+					}`}
 				/>
 				<Circle
 					cx={radius + strokeWidth / 2}
 					cy={radius + strokeWidth / 2}
 					r={radius - strokeWidth / 2 + 6} // slightly smaller to fit inside
-					fill={colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary}
+					fill={
+						colorScheme === 'light'
+							? Colors.light.primary
+							: Colors.dark.primary
+					}
 				/>
 			</Svg>
 
@@ -249,111 +341,42 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 					onPress={() => handleIntervalsPress()}
 				>
 					<Text style={styles.intervalsTextStart}>Intervals of </Text>
-					<Text style={styles.intervalsTextMiddle}>{pauseTime}</Text>
+					<Text style={styles.intervalsTextMiddle}>
+						{initialTimePause}
+					</Text>
 					<Text style={styles.intervalsTextEnd}> sec</Text>
 
 					<Entypo
 						name='cycle'
 						size={24}
-						color={colorScheme === 'light' ? Colors.light.secondary : Colors.fourthGray}
+						color={
+							colorScheme === 'light'
+								? Colors.light.secondary
+								: Colors.fourthGray
+						}
 					></Entypo>
 				</TouchableOpacity>
 			)}
-			<TouchableOpacity
-				activeOpacity={0.5}
-				style={styles.textButtonContainer}
-				onPress={() => handleSetTimePress()}
-			>
-				<Text style={styles.buttonText}>Set time</Text>
-			</TouchableOpacity>
-
-			<View style={styles.buttonsContainer}>
-				<View style={styles.buttonContainer}>
-					<TouchableNativeFeedback
-						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
-							false
-						)}
-						onPress={() => {
-							setIsRunning(false);
-							if (mode === 'countdown' || mode === 'pomodoro') {
-								setTime(initialTime);
-							}
-						}}
-					>
-						<View style={styles.button}>
-							<Entypo
-								name={'controller-stop'}
-								size={32}
-								color={
-									colorScheme === 'light'
-										? Colors.light.secondary
-										: Colors.dark.secondary
-								}
-							/>
-						</View>
-					</TouchableNativeFeedback>
-				</View>
-				<View style={styles.pauseContainer}>
-					<TouchableNativeFeedback
-						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
-							false
-						)}
-						onPress={() => {
-							if (!isRunning && (mode === 'countdown' || mode === 'pomodoro')) {
-								setTime(initialTime); // capture starting point when timer starts
-							}
-							setIsRunning(!isRunning);
-						}}
-					>
-						<View style={styles.pause}>
-							<Ionicons
-								name={isRunning ? 'pause' : 'play'}
-								size={52}
-								color={
-									colorScheme === 'light'
-										? Colors.light.primary
-										: Colors.dark.primary
-								}
-							/>
-						</View>
-					</TouchableNativeFeedback>
-				</View>
-				<View style={styles.buttonContainer}>
-					<TouchableNativeFeedback
-						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
-							false
-						)}
-						onPress={() => {
-							setIsRunning(false);
-							if (mode === 'countdown' || mode === 'pomodoro') {
-								setTime(initialTime);
-							}
-						}}
-					>
-						<View style={styles.button}>
-							<Ionicons
-								name={'reload-outline'}
-								size={32}
-								color={
-									colorScheme === 'light'
-										? Colors.light.secondary
-										: Colors.dark.secondary
-								}
-							/>
-						</View>
-					</TouchableNativeFeedback>
-				</View>
-			</View>
+			{mode !== 'stopwatch' && (
+				<TouchableOpacity
+					activeOpacity={0.5}
+					style={styles.textButtonContainer}
+					onPress={() => handleSetTimePress()}
+				>
+					<Text style={styles.buttonText}>Set time</Text>
+				</TouchableOpacity>
+			)}
 		</View>
 	);
 });
 
 type ColorScheme = 'light' | 'dark' | undefined | null;
 
-function createStyles(colorScheme: ColorScheme, width: number, mode: TimerMode) {
+function createStyles(
+	colorScheme: ColorScheme,
+	width: number,
+	mode: TimerMode
+) {
 	return StyleSheet.create({
 		container: {
 			marginTop: '35%',
@@ -367,54 +390,21 @@ function createStyles(colorScheme: ColorScheme, width: number, mode: TimerMode) 
 
 		timerText: {
 			fontFamily: 'SatoshiBlack',
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+			color:
+				colorScheme === 'light'
+					? Colors.light.secondary
+					: Colors.dark.secondary,
 			fontSize: width > 450 ? 80 : 64,
 			marginHorizontal: 'auto',
-		},
-
-		buttonsContainer: {
-			flexDirection: 'row',
-			display: 'flex',
-			justifyContent: 'center',
-			alignItems: 'center',
-			marginTop: mode === 'pomodoro' ? (width > 450 ? 165 : 87) : width > 450 ? 212 : 132,
-			gap: 16,
-		},
-
-		buttonContainer: {
-			overflow: 'hidden',
-			borderRadius: '50%',
-		},
-
-		button: {
-			display: 'flex',
-			flexDirection: 'row',
-			alignItems: 'center',
-			justifyContent: 'center',
-			padding: 16,
-		},
-
-		pauseContainer: {
-			overflow: 'hidden',
-			borderRadius: '50%',
-			borderWidth: 1,
-			borderColor: colorScheme === 'light' ? Colors.fourthGray : Colors.secondGray,
-		},
-
-		pause: {
-			display: 'flex',
-			flexDirection: 'row',
-			alignItems: 'center',
-			justifyContent: 'center',
-			padding: 16,
-			backgroundColor:
-				colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+			marginTop: mode === 'pomodoro' ? -8 : 0,
 		},
 
 		buttonText: {
 			fontFamily: 'SatoshiMedium',
-			color: colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+			color:
+				colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
 			fontSize: width > 450 ? 24 : 18,
+			marginTop: mode === 'pomodoro' ? -8 : 0,
 		},
 
 		timerClock: {
@@ -432,34 +422,40 @@ function createStyles(colorScheme: ColorScheme, width: number, mode: TimerMode) 
 
 		intervalsContainer: {
 			marginHorizontal: 'auto',
-			paddingHorizontal: 24,
+			paddingHorizontal: width > 450 ? 24 : 12,
 			display: 'flex',
 			flexDirection: 'row',
 			alignItems: 'center',
 			marginBottom: 12,
-			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
+			backgroundColor:
+				colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
 			borderRadius: 10,
 		},
 
 		intervalsTextStart: {
 			fontFamily: 'SatoshiBold',
-			color: colorScheme === 'light' ? Colors.fifthGray : Colors.fourthGray,
+			color:
+				colorScheme === 'light' ? Colors.fifthGray : Colors.fourthGray,
 			fontSize: width > 450 ? 20 : 18,
 			marginBottom: 4,
 		},
 
 		intervalsTextMiddle: {
 			fontFamily: 'SatoshiBold',
-			color: colorScheme === 'light' ? Colors.fifthGray : Colors.blueDistilled,
+			color:
+				colorScheme === 'light'
+					? Colors.blueDistilled
+					: Colors.blueDistilled,
 			fontSize: width > 450 ? 20 : 18,
 			marginBottom: 4,
 		},
 
 		intervalsTextEnd: {
 			fontFamily: 'SatoshiBold',
-			color: colorScheme === 'light' ? Colors.fifthGray : Colors.fourthGray,
+			color:
+				colorScheme === 'light' ? Colors.fifthGray : Colors.fourthGray,
 			fontSize: width > 450 ? 20 : 18,
-			marginRight: 8,
+			marginRight: width > 450 ? 8 : 4,
 			marginBottom: 4,
 		},
 	});

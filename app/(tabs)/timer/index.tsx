@@ -7,7 +7,9 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheetComponent from '@/components/general/bottomPage/BottomSheetComponent';
 import BottomSheetContentTimer from '@/components/general/bottomPage/BottomSheetContentTimer';
 import PageHeader from '@/components/general/PageHeader';
+import ActionsBox from '@/components/timer/ActionsBox';
 import ModeOptions from '@/components/timer/ModeOptions';
+import SavedTimes from '@/components/timer/SavedTimes';
 import Timer from '@/components/timer/Timer';
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
@@ -48,7 +50,12 @@ export default function TimerPage() {
 			<PageHeader title='Timer' />
 			<ModeOptions />
 			<Timer ref={bottomSheetRef} setOpenIntervals={setOpenIntervals} />
-			<BottomSheetComponent ref={bottomSheetRef} contentPanningGestureOn={false}>
+			<SavedTimes />
+			<ActionsBox />
+			<BottomSheetComponent
+				ref={bottomSheetRef}
+				contentPanningGestureOn={false}
+			>
 				<BottomSheetContentTimer
 					bottomSheetRef={bottomSheetRef}
 					openIntervals={openIntervals}
@@ -63,7 +70,10 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 	return StyleSheet.create({
 		container: {
 			flex: 1,
-			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
+			backgroundColor:
+				colorScheme === 'light'
+					? Colors.light.primary
+					: Colors.dark.primary,
 			paddingTop: 40,
 		},
 	});

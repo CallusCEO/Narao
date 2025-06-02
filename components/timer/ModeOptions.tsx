@@ -15,7 +15,12 @@ import {
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { TimerContext } from '@/context/TimerContext';
-import { Entypo, Feather, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import {
+	Entypo,
+	Feather,
+	MaterialCommunityIcons,
+	MaterialIcons,
+} from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 
 // sample data import
@@ -60,10 +65,17 @@ const ModeOptions: () => ReactNode = () => {
 					gap: 8,
 				}}
 			>
-				<View style={[styles.buttonContainer, mode === 'countdown' && styles.buttonActive]}>
+				<View
+					style={[
+						styles.buttonContainer,
+						mode === 'countdown' && styles.buttonActive,
+					]}
+				>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
+							colorScheme === 'light'
+								? Colors.fifthGray
+								: Colors.secondGray,
 							false
 						)}
 						onPress={() => {
@@ -87,16 +99,23 @@ const ModeOptions: () => ReactNode = () => {
 						</View>
 					</TouchableNativeFeedback>
 				</View>
-				<View style={[styles.buttonContainer, mode === 'pomodoro' && styles.buttonActive]}>
+				<View
+					style={[
+						styles.buttonContainer,
+						mode === 'pomodoro' && styles.buttonActive,
+					]}
+				>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
+							colorScheme === 'light'
+								? Colors.fifthGray
+								: Colors.secondGray,
 							false
 						)}
 						onPress={() => {
 							setMode('pomodoro');
 							setInitialTime(60 * 30);
-							setTime(60 * 30);
+							setTime(0);
 							setIsRunning(false);
 							setPauseTime(300);
 							setPauseTimeNumber(3);
@@ -116,10 +135,17 @@ const ModeOptions: () => ReactNode = () => {
 						</View>
 					</TouchableNativeFeedback>
 				</View>
-				<View style={[styles.buttonContainer, mode === 'stopwatch' && styles.buttonActive]}>
+				<View
+					style={[
+						styles.buttonContainer,
+						mode === 'stopwatch' && styles.buttonActive,
+					]}
+				>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
+							colorScheme === 'light'
+								? Colors.fifthGray
+								: Colors.secondGray,
 							false
 						)}
 						onPress={() => {
@@ -143,10 +169,17 @@ const ModeOptions: () => ReactNode = () => {
 						</View>
 					</TouchableNativeFeedback>
 				</View>
-				<View style={[styles.buttonContainer, mode === 'current' && styles.buttonActive]}>
+				<View
+					style={[
+						styles.buttonContainer,
+						mode === 'current' && styles.buttonActive,
+					]}
+				>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
+							colorScheme === 'light'
+								? Colors.fifthGray
+								: Colors.secondGray,
 							false
 						)}
 						onPress={() => {
@@ -172,7 +205,9 @@ const ModeOptions: () => ReactNode = () => {
 			<LinearGradient
 				colors={[
 					'transparent',
-					colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
+					colorScheme === 'light'
+						? Colors.light.primary
+						: Colors.dark.primary,
 				]}
 				start={{ x: 1, y: 0 }} // left
 				end={{ x: 0, y: 0 }} // right
@@ -181,7 +216,9 @@ const ModeOptions: () => ReactNode = () => {
 			<LinearGradient
 				colors={[
 					'transparent',
-					colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
+					colorScheme === 'light'
+						? Colors.light.primary
+						: Colors.dark.primary,
 				]}
 				start={{ x: 0, y: 0 }} // left
 				end={{ x: 1, y: 0 }} // right
@@ -221,29 +258,16 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		buttonText: {
 			fontFamily: 'SatoshiMedium',
 			fontSize: 16,
-			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+			color:
+				colorScheme === 'light'
+					? Colors.light.secondary
+					: Colors.dark.secondary,
 			marginLeft: 8,
-		},
-
-		buttonTextSpecial: {
-			fontFamily: 'SatoshiMedium',
-			fontSize: 16,
-			color: colorScheme === 'light' ? Colors.blueDistilled : Colors.blueDistilled,
-			marginLeft: 8,
-		},
-
-		buttonContainerSpecial: {
-			height: 36,
-			borderRadius: 30,
-			borderWidth: 1,
-			borderColor: colorScheme === 'light' ? Colors.blueDistilled : Colors.blueDistilled,
-			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
-			overflow: 'hidden',
 		},
 
 		buttonActive: {
-			backgroundColor: colorScheme === 'light' ? Colors.blueDistilled : Colors.firstGray,
-			borderColor: colorScheme === 'light' ? Colors.thirdGray : Colors.blueDistilled,
+			borderColor:
+				colorScheme === 'light' ? Colors.blue : Colors.blueDistilled,
 			borderWidth: 1,
 		},
 
@@ -251,8 +275,10 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			height: 36,
 			borderRadius: 30,
 			borderWidth: 1,
-			borderColor: colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
-			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
+			borderColor:
+				colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
+			backgroundColor:
+				colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
 			overflow: 'hidden',
 		},
 
