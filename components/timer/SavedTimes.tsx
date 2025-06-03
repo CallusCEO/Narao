@@ -2,11 +2,18 @@ import Colors from '@/constants/Colors';
 import TimerPresets from '@/constants/TimerPresets';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { TimerContext } from '@/context/TimerContext';
+import { FontAwesome6 } from '@expo/vector-icons';
 import { TouchableWithoutFeedback } from '@gorhom/bottom-sheet';
 import { useFonts } from 'expo-font';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useContext, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
+import {
+	Dimensions,
+	ScrollView,
+	StyleSheet,
+	TouchableNativeFeedback,
+	View,
+} from 'react-native';
 import SavedTimesBox from './SavedTimeBox';
 
 const SavedTimes = () => {
@@ -37,6 +44,11 @@ const SavedTimes = () => {
 	const styles = createStyles(colorScheme, width, mode);
 	const [selectedTitle, setSelectedTitle] = useState('');
 
+	// function:
+	const handleAddPress = () => {
+		return;
+	};
+
 	return (
 		<View style={styles.container}>
 			<ScrollView
@@ -49,6 +61,29 @@ const SavedTimes = () => {
 					gap: 16,
 				}}
 			>
+				<View style={[styles.boxAddContainer]}>
+					<TouchableNativeFeedback
+						background={TouchableNativeFeedback.Ripple(
+							colorScheme === 'light'
+								? Colors.fifthGray
+								: Colors.secondGray,
+							false
+						)}
+						onPress={() => handleAddPress()}
+					>
+						<View style={[styles.boxAddInnerContainer]}>
+							<FontAwesome6
+								name='add'
+								size={24}
+								color={
+									colorScheme === 'light'
+										? Colors.fifthGray
+										: Colors.thirdGray
+								}
+							/>
+						</View>
+					</TouchableNativeFeedback>
+				</View>
 				{TimerPresets.map((item) => (
 					<TouchableWithoutFeedback
 						onPress={() => setSelectedTitle(item.title)}
@@ -118,8 +153,26 @@ function createStyles(
 		fadeLeft: {
 			position: 'absolute',
 			left: 0,
-			width: width > 450 ? 40 : 20,
+			width: width > 450 ? 20 : 10,
 			height: 80,
+		},
+
+		boxAddContainer: {
+			backgroundColor:
+				colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
+			borderRadius: 20,
+			overflow: 'hidden',
+			borderColor:
+				colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+			borderWidth: 1,
+		},
+
+		boxAddInnerContainer: {
+			paddingVertical: width > 450 ? 12 : 8,
+			paddingHorizontal: width > 450 ? 32 : 24,
+			display: 'flex',
+			alignItems: 'center',
+			justifyContent: 'center',
 		},
 	});
 }

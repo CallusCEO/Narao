@@ -51,7 +51,7 @@ export default function TimerPage() {
 			<ModeOptions />
 			<Timer ref={bottomSheetRef} setOpenIntervals={setOpenIntervals} />
 			<SavedTimes />
-			<ActionsBox />
+			{mode !== 'current' && <ActionsBox />}
 			<BottomSheetComponent
 				ref={bottomSheetRef}
 				contentPanningGestureOn={false}

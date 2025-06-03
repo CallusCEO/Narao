@@ -24,7 +24,7 @@ import { Circle, Svg } from 'react-native-svg';
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { TimerContext } from '@/context/TimerContext';
-import formatTime from '@/utils/formatTime';
+import { formatTime, formatTimeEN } from '@/utils/formatTime';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 
 type TimerMode = 'pomodoro' | 'countdown' | 'stopwatch' | 'current';
@@ -60,10 +60,12 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 		setInitialTime,
 		setInitialTimePause,
 		initialTimePause,
+		isPaused,
+		setIsPaused,
 	} = useContext(TimerContext);
 	const [tick, setTick] = useState(0);
 	const styles = createStyles(colorScheme, width, mode);
-	const [isPause, setIsPause] = useState(false);
+	const [isEN, setIsEN] = useState(false);
 
 	// functions
 
@@ -71,7 +73,7 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 		setTime(initialTime);
 		setInitialTimePause(initialTimePause);
 		setPauseTime(initialTimePause);
-		setIsPause(false);
+		setIsPaused(false);
 	}, [initialTime, initialTimePause]);
 
 	const handleSetTimePress = () => {
@@ -95,6 +97,10 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 		setIsRunning(false);
 	};
 
+	const handleCurrentTimePress = () => {
+		return setIsEN(!isEN);
+	};
+
 	// Internal time state for stopwatch if no time prop is passed
 	const [localTime, setLocalTime] = useState(time);
 
@@ -107,7 +113,7 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 			}, 1000);
 		} else if (isRunning) {
 			interval = setInterval(() => {
-				if (!isPause) {
+				if (!isPaused) {
 					if (mode === 'stopwatch') {
 						setTime
 							? setTime((prev: number) => prev + 1)
@@ -130,7 +136,7 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 						setPauseTime
 							? setPauseTime((prev: number) => prev + 1)
 							: setLocalTime((prev: number) => prev + 1);
-					} else if (mode === 'pomodoro' && time > 0) {
+					} else if (mode === 'pomodoro' && pauseTime > 0) {
 						setPauseTime?.((prev) => {
 							if (prev <= 1) {
 								clearInterval(interval);
@@ -151,16 +157,17 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 
 	let displayTime = '';
 
-	if (isPause) {
+	if (isPaused) {
 		if (mode === 'current') {
 			const now = new Date();
-			displayTime = `${now.getHours().toString().padStart(2, '0')}:${now
-				.getMinutes()
-				.toString()
-				.padStart(2, '0')}:${now
-				.getSeconds()
-				.toString()
-				.padStart(2, '0')}`;
+			const totalSeconds =
+				now.getHours() * 3600 +
+				now.getMinutes() * 60 +
+				now.getSeconds();
+			// Use formatTimeEN to get the desired AM/PM format
+			displayTime = isEN
+				? formatTimeEN(totalSeconds)
+				: formatTime(totalSeconds);
 		} else if (mode === 'stopwatch') {
 			displayTime = formatTime(
 				pauseTime !== undefined ? pauseTime : localTime
@@ -171,13 +178,14 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 	} else {
 		if (mode === 'current') {
 			const now = new Date();
-			displayTime = `${now.getHours().toString().padStart(2, '0')}:${now
-				.getMinutes()
-				.toString()
-				.padStart(2, '0')}:${now
-				.getSeconds()
-				.toString()
-				.padStart(2, '0')}`;
+			const totalSeconds =
+				now.getHours() * 3600 +
+				now.getMinutes() * 60 +
+				now.getSeconds();
+			// Use formatTimeEN to get the desired AM/PM format
+			displayTime = isEN
+				? formatTimeEN(totalSeconds)
+				: formatTime(totalSeconds);
 		} else if (mode === 'stopwatch') {
 			displayTime = formatTime(time !== undefined ? time : localTime);
 		} else {
@@ -203,7 +211,7 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 	useEffect(() => {
 		if (mode === 'countdown' || mode === 'pomodoro') {
 			// percentage left between 0 and 1
-			const percent = isPause
+			const percent = isPaused
 				? pauseTime / initialTimePause
 				: time / initialTime;
 
@@ -213,9 +221,8 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 				easing: Easing.out(Easing.cubic),
 				useNativeDriver: true,
 			}).start();
-			console.log(`init: ${initialTimePause} --- time: ${pauseTime}`);
 		}
-	}, [time, isRunning, mode, pauseTime]);
+	}, [time, isRunning, mode, pauseTime, pauseTime]);
 
 	useEffect(() => {
 		if (
@@ -224,24 +231,24 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 			pauseTimeNumber > 0 &&
 			mode === 'pomodoro'
 		) {
-			if (!isPause) {
+			if (!isPaused) {
 				// Finished work session, start pause
-				setTime(pauseTime);
+				setPauseTime(initialTimePause);
 				setInitialTimePause(initialTimePause);
 				setIsRunning(true);
-				setIsPause(true);
+				setIsPaused(true);
 			} else {
 				// Finished pause session, start work again
 				setPauseTimeNumber((prev) => prev - 1);
 				setTime(initialTime);
 				setInitialTime(initialTime);
+				setIsPaused(false);
 				setIsRunning(true);
-				setIsPause(false);
 			}
 		} else if (!isRunning && time === 0 && pauseTimeNumber === 0) {
-			setIsPause(false);
+			setIsPaused(false);
 		}
-	}, [isRunning, time]);
+	}, [isRunning, time, pauseTime]);
 
 	return (
 		<View style={styles.container}>
@@ -276,7 +283,7 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 				/>
 				<AnimatedCircle
 					stroke={
-						isPause
+						isPaused
 							? colorScheme === 'light'
 								? Colors.blueDistilled
 								: Colors.blueDistilled
@@ -308,31 +315,40 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 				/>
 			</Svg>
 
-			<Text
-				style={[
-					styles.timerText,
-					{
-						fontSize:
-							mode === 'current'
-								? displayTime.length > 5
-									? width > 450
+			<TouchableOpacity
+				onPress={() =>
+					mode !== 'current'
+						? handleSetTimePress()
+						: handleCurrentTimePress()
+				}
+				activeOpacity={0.6}
+			>
+				<Text
+					style={[
+						styles.timerText,
+						{
+							fontSize:
+								mode === 'current'
+									? displayTime.length > 5
+										? width > 450
+											? 80
+											: 64
+										: width > 450
 										? 80
 										: 64
+									: displayTime.length > 5
+									? width > 450
+										? 64
+										: 42
 									: width > 450
 									? 80
-									: 64
-								: displayTime.length > 5
-								? width > 450
-									? 64
-									: 42
-								: width > 450
-								? 80
-								: 64,
-					},
-				]}
-			>
-				{displayTime}
-			</Text>
+									: 64,
+						},
+					]}
+				>
+					{displayTime}
+				</Text>
+			</TouchableOpacity>
 
 			{mode === 'pomodoro' && (
 				<TouchableOpacity
@@ -357,7 +373,7 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 					></Entypo>
 				</TouchableOpacity>
 			)}
-			{mode !== 'stopwatch' && (
+			{mode !== 'stopwatch' && mode !== 'current' && (
 				<TouchableOpacity
 					activeOpacity={0.5}
 					style={styles.textButtonContainer}
@@ -397,6 +413,7 @@ function createStyles(
 			fontSize: width > 450 ? 80 : 64,
 			marginHorizontal: 'auto',
 			marginTop: mode === 'pomodoro' ? -8 : 0,
+			textAlign: 'center',
 		},
 
 		buttonText: {

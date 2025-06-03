@@ -1,10 +1,11 @@
-import { Entypo, Feather, Ionicons } from '@expo/vector-icons';
+import { Entypo, Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
+	Animated,
 	Dimensions,
+	Easing,
 	StyleSheet,
-	Text,
 	TouchableOpacity,
 	View,
 } from 'react-native';
@@ -14,7 +15,7 @@ import { Line, Svg } from 'react-native-svg';
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { TimerContext } from '@/context/TimerContext';
-import formatTime from '@/utils/formatTime';
+import { formatTime } from '@/utils/formatTime';
 
 type TimerMode = 'pomodoro' | 'countdown' | 'stopwatch' | 'current';
 
@@ -42,36 +43,102 @@ const ActionsBox = () => {
 		setMode,
 		initialTime,
 		setInitialTime,
+		isPaused,
+		setIsPaused,
+		initialTimePause,
+		setInitialTimePause,
+		initialPauseTimeNumber,
+		setInitialPauseTimeNumber,
 	} = useContext(TimerContext);
 	const styles = createStyles(colorScheme, width, mode);
 
-	// functions
-
+	// display time logic
 	const [localTime, setLocalTime] = useState(time);
 
 	let displayTime = '';
 
-	if (mode === 'current') {
-		const now = new Date();
-		displayTime = `${now.getHours().toString().padStart(2, '0')}:${now
-			.getMinutes()
-			.toString()
-			.padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-	} else if (mode === 'stopwatch') {
-		displayTime = formatTime(time !== undefined ? time : localTime);
+	if (isPaused) {
+		if (mode === 'current') {
+			const now = new Date();
+			displayTime = `${now.getHours().toString().padStart(2, '0')}:${now
+				.getMinutes()
+				.toString()
+				.padStart(2, '0')}:${now
+				.getSeconds()
+				.toString()
+				.padStart(2, '0')}`;
+		} else if (mode === 'stopwatch') {
+			displayTime = formatTime(
+				pauseTime !== undefined ? pauseTime : localTime
+			);
+		} else {
+			displayTime = formatTime(pauseTime);
+		}
 	} else {
-		displayTime = formatTime(time);
+		if (mode === 'current') {
+			const now = new Date();
+			displayTime = `${now.getHours().toString().padStart(2, '0')}:${now
+				.getMinutes()
+				.toString()
+				.padStart(2, '0')}:${now
+				.getSeconds()
+				.toString()
+				.padStart(2, '0')}`;
+		} else if (mode === 'stopwatch') {
+			displayTime = formatTime(time !== undefined ? time : localTime);
+		} else {
+			displayTime = formatTime(time);
+		}
 	}
 
-	useEffect(() => {
-		displayTime = formatTime(time);
-	}, [time]);
+	// animation
 
-	// Internal time state for stopwatch if no time prop is passed
+	const AnimatedLine = Animated.createAnimatedComponent(Line);
+	const animatedLineWidth = useRef(new Animated.Value(0)).current;
+
+	useEffect(() => {
+		console.log(time);
+		let targetWidthPercentage = 0;
+		if (mode === 'stopwatch' || mode === 'current') {
+			// For stopwatch and current, the line might not be a progress bar.
+			// Assuming 0 for now, adjust if it means something else.
+			targetWidthPercentage = 0;
+		} else if (initialTime > 0) {
+			// Prevent division by zero
+			targetWidthPercentage = isPaused
+				? (pauseTime / initialTimePause) * 100
+				: (time / initialTime) * 100;
+		}
+
+		targetWidthPercentage = Math.max(
+			0,
+			Math.min(100, targetWidthPercentage)
+		);
+
+		Animated.timing(animatedLineWidth, {
+			toValue: targetWidthPercentage, // The target value for the animation
+			easing: Easing.linear,
+			duration: 500, // How long the animation should take (in ms)
+			useNativeDriver: false, // SVG properties often require this to be false
+		}).start();
+	}, [
+		time,
+		pauseTime,
+		isPaused,
+		initialTime,
+		initialTimePause,
+		mode,
+		animatedLineWidth,
+	]);
+
+	const animatedX1 = animatedLineWidth.interpolate({
+		inputRange: [0, 100],
+		outputRange: ['0%', '100%'], // This maps 0 to '0%' and 100 to '100%'
+	});
 
 	return (
 		<View style={styles.container}>
-			<Feather
+			{/* <Feather
 				style={{ marginRight: 8 }}
 				name='clock'
 				size={width > 450 ? 32 : 24}
@@ -81,7 +148,7 @@ const ActionsBox = () => {
 						: Colors.dark.secondary
 				}
 			/>
-			<Text style={styles.timerText}>{displayTime}</Text>
+			<Text style={styles.timerText}>{displayTime}</Text> */}
 			<View style={styles.buttonsContainer}>
 				<View style={styles.buttonContainer}>
 					<TouchableOpacity
@@ -90,6 +157,13 @@ const ActionsBox = () => {
 							setIsRunning(false);
 							if (mode === 'countdown' || mode === 'pomodoro') {
 								setTime(initialTime);
+								setPauseTime(initialTimePause);
+								setPauseTimeNumber(initialPauseTimeNumber);
+								setIsPaused(false);
+								console.log(
+									'Resetting to initial pause number:',
+									initialPauseTimeNumber
+								);
 							}
 						}}
 					>
@@ -110,7 +184,12 @@ const ActionsBox = () => {
 					<TouchableOpacity
 						activeOpacity={0.7}
 						onPress={() => {
-							if (time !== 0 || mode === 'stopwatch') {
+							if (
+								time !== 0 ||
+								pauseTime !== 0 ||
+								mode === 'stopwatch' ||
+								mode === 'current'
+							) {
 								setIsRunning(!isRunning);
 							}
 						}}
@@ -131,17 +210,36 @@ const ActionsBox = () => {
 			</View>
 			<Svg style={styles.lineContainer} width='100%' height='2'>
 				<Line
-					x1={`${(time / initialTime) * 100}%`}
+					x1='100%'
 					y1='0'
 					x2='0'
 					y2='0'
 					stroke={
 						colorScheme === 'light'
+							? Colors.fifthGray
+							: Colors.secondGray
+					}
+					strokeWidth={5}
+					strokeLinecap='butt'
+				/>
+			</Svg>
+			<Svg style={styles.lineContainer} width='100%' height='2'>
+				<AnimatedLine
+					x1={animatedX1}
+					y1='0'
+					x2='0'
+					y2='0'
+					stroke={
+						isPaused
+							? colorScheme === 'light'
+								? Colors.blueDistilled
+								: Colors.blueDistilled
+							: colorScheme === 'light'
 							? Colors.light.secondary
 							: Colors.dark.secondary
 					}
-					strokeWidth={3}
-					strokeLinecap='round'
+					strokeWidth={5}
+					strokeLinecap='butt'
 				/>
 			</Svg>
 		</View>

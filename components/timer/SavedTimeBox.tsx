@@ -1,7 +1,7 @@
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { TimerContext } from '@/context/TimerContext';
-import formatTime from '@/utils/formatTime';
+import { formatTime } from '@/utils/formatTime';
 import handleTextLength from '@/utils/handleTextLength';
 import {
 	Entypo,
@@ -54,6 +54,8 @@ const SavedTimesBox = ({
 		initialTime,
 		setInitialTime,
 		setInitialTimePause,
+		initialPauseTimeNumber,
+		setInitialPauseTimeNumber,
 	} = useContext(TimerContext);
 
 	const width = Dimensions.get('window').width;
@@ -69,6 +71,8 @@ const SavedTimesBox = ({
 		setInitialTimePause(pauseTime || 0);
 		setPauseTimeNumber(numberPause || 0);
 		setMode(mode);
+		setInitialPauseTimeNumber(numberPause || 0);
+		setIsRunning(false);
 	};
 
 	return (
@@ -105,7 +109,7 @@ const SavedTimesBox = ({
 
 					<Text style={styles.timeTextBox}>{formatTime(time)}</Text>
 
-					{pauseTime && (
+					{/* {pauseTime && (
 						<>
 							<View style={styles.rule}></View>
 
@@ -125,7 +129,7 @@ const SavedTimesBox = ({
 								}`}
 							</Text>
 						</>
-					)}
+					)} */}
 
 					<View style={styles.icon}>
 						{mode === 'pomodoro' && (

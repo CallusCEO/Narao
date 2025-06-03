@@ -13,12 +13,16 @@ interface TimerContextType {
 	setPauseTime: React.Dispatch<React.SetStateAction<number>>;
 	pauseTimeNumber: number;
 	setPauseTimeNumber: React.Dispatch<React.SetStateAction<number>>;
+	initialPauseTimeNumber: number;
+	setInitialPauseTimeNumber: React.Dispatch<React.SetStateAction<number>>;
 	mode: TimerMode;
 	setMode: React.Dispatch<React.SetStateAction<TimerMode>>;
 	setInitialTime: React.Dispatch<React.SetStateAction<number>>;
 	initialTime: number;
 	setInitialTimePause: React.Dispatch<React.SetStateAction<number>>;
 	initialTimePause: number;
+	isPaused: boolean;
+	setIsPaused: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 // Create context with default values (no-op functions)
@@ -37,6 +41,10 @@ export const TimerContext = createContext<TimerContextType>({
 	setInitialTime: () => {},
 	initialTimePause: 0,
 	setInitialTimePause: () => {},
+	isPaused: false,
+	setIsPaused: () => {},
+	initialPauseTimeNumber: 0,
+	setInitialPauseTimeNumber: () => {},
 });
 
 // Provider component
@@ -48,6 +56,8 @@ export const TimerProvider = ({ children }: { children: ReactNode }) => {
 	const [mode, setMode] = useState<TimerMode>('countdown');
 	const [initialTime, setInitialTime] = useState(0);
 	const [initialTimePause, setInitialTimePause] = useState(300);
+	const [isPaused, setIsPaused] = useState(false);
+	const [initialPauseTimeNumber, setInitialPauseTimeNumber] = useState(0);
 
 	return (
 		<TimerContext.Provider
@@ -66,6 +76,10 @@ export const TimerProvider = ({ children }: { children: ReactNode }) => {
 				setInitialTime,
 				initialTimePause,
 				setInitialTimePause,
+				isPaused,
+				setIsPaused,
+				initialPauseTimeNumber,
+				setInitialPauseTimeNumber,
 			}}
 		>
 			{children}

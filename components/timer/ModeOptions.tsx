@@ -48,7 +48,10 @@ const ModeOptions: () => ReactNode = () => {
 		setPauseTimeNumber,
 		mode,
 		setMode,
+		initialTime,
 		setInitialTime,
+		initialPauseTimeNumber,
+		setInitialPauseTimeNumber,
 	} = useContext(TimerContext);
 
 	if (!fontsLoaded) return null;
@@ -115,10 +118,11 @@ const ModeOptions: () => ReactNode = () => {
 						onPress={() => {
 							setMode('pomodoro');
 							setInitialTime(60 * 30);
-							setTime(0);
-							setIsRunning(false);
+							setTime(initialTime);
 							setPauseTime(300);
-							setPauseTimeNumber(3);
+							setInitialPauseTimeNumber(3);
+							setPauseTimeNumber(initialPauseTimeNumber);
+							setIsRunning(false);
 						}}
 					>
 						<View style={styles.button}>
