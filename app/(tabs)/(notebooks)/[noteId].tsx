@@ -1,21 +1,13 @@
-import {
-	StyleSheet,
-	Text,
-	View,
-	TouchableNativeFeedback,
-	ScrollView,
-	TextInput,
-} from 'react-native';
 import { useFonts } from 'expo-font';
-import { MaterialIcons } from '@expo/vector-icons';
+import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 // custom imports
-import Colors from '@/constants/Colors';
-import { useContext } from 'react';
-import { ColorSchemeContext } from '@/context/ColorSchemeContext';
-import TitleContainer from '@/components/notePage/TitleContainer';
 import Rule from '@/components/general/Rule';
+import TitleContainer from '@/components/notePage/TitleContainer';
+import Colors from '@/constants/Colors';
+import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { useLocalSearchParams } from 'expo-router';
+import { useContext } from 'react';
 
 export default function NotePage() {
 	// Load the font
@@ -105,6 +97,7 @@ function createStyles(colorScheme: ColorScheme) {
 			flex: 1,
 			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 			paddingTop: 40,
+			paddingBottom: 88,
 		},
 		topContainer: {
 			paddingHorizontal: 16,

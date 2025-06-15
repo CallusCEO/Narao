@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native';
 import { useFonts } from 'expo-font';
+import { StyleSheet, Text, View } from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
@@ -38,6 +38,7 @@ function createStyles() {
 		},
 		container: {
 			backgroundColor: Colors.light.primary,
+			paddingBottom: 88,
 		},
 	});
 }

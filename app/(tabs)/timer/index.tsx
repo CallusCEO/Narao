@@ -75,6 +75,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			flex: 1,
 			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 			paddingTop: 40,
+			paddingBottom: 118,
 		},
 	});
 }

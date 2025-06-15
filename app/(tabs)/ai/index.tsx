@@ -31,6 +31,7 @@ function createStyles(colorScheme: ColorScheme) {
 		},
 		container: {
 			flex: 1,
+			paddingBottom: 88,
 			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 		},
 	});

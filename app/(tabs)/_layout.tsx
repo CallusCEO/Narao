@@ -1,10 +1,9 @@
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useContext } from 'react';
 
 // custom imports
-import Colors from '@/constants/Colors';
+import TabBar from '@/components/tabbar/TabBar';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 
 export default function TabLayout() {
@@ -13,27 +12,12 @@ export default function TabLayout() {
 	return (
 		<>
 			<StatusBar style={colorScheme === 'light' ? 'dark' : 'light'} />
-			<Tabs
-				screenOptions={{
-					headerShown: false,
-					tabBarStyle: {
-						backgroundColor:
-							colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
-						elevation: 0,
-						height: 108,
-					},
-					tabBarActiveTintColor: Colors.blue,
-				}}
-				backBehavior='history'
-			>
+
+			<Tabs tabBar={(props) => <TabBar {...props} />} screenOptions={{ headerShown: false }}>
 				<Tabs.Screen
 					name='(notebooks)'
 					options={{
 						title: 'NaraBook',
-						popToTopOnBlur: true,
-						tabBarIcon: ({ color, size }) => (
-							<MaterialCommunityIcons size={size} name='notebook' color={color} />
-						),
 					}}
 				/>
 
@@ -41,14 +25,6 @@ export default function TabLayout() {
 					name='timer'
 					options={{
 						title: 'Timer',
-						popToTopOnBlur: true,
-						tabBarIcon: ({ color, size, focused }) => (
-							<MaterialCommunityIcons
-								size={size}
-								name={focused ? 'timer-sand-complete' : 'timer-sand'}
-								color={color}
-							/>
-						),
 					}}
 				/>
 
@@ -56,14 +32,6 @@ export default function TabLayout() {
 					name='calendar'
 					options={{
 						title: 'Calendar',
-						popToTopOnBlur: true,
-						tabBarIcon: ({ color, size, focused }) => (
-							<MaterialCommunityIcons
-								size={size}
-								name={focused ? 'calendar-multiple' : 'calendar'}
-								color={color}
-							/>
-						),
 					}}
 				/>
 
@@ -71,10 +39,6 @@ export default function TabLayout() {
 					name='ai'
 					options={{
 						title: 'Llucas',
-						popToTopOnBlur: true,
-						tabBarIcon: ({ color, size }) => (
-							<Ionicons size={size} name='sparkles-sharp' color={color} />
-						),
 					}}
 				/>
 			</Tabs>

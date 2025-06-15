@@ -116,12 +116,12 @@ export default function NotebookPage() {
 	return (
 		<GestureHandlerRootView style={styles.container}>
 			<PageHeader title='NaraBook' />
-			<ButtonOptions />
-			<Recommendations />
-			<Text style={styles.title}>Your notebooks</Text>
-			<View style={styles.notebooksContainer}>
-				<View style={styles.notebooksScrollerContainer}>
-					<ScrollView showsVerticalScrollIndicator={false}>
+			<ScrollView showsVerticalScrollIndicator={false}>
+				<ButtonOptions />
+				<Recommendations />
+				<Text style={styles.title}>Your notebooks</Text>
+				<View style={styles.notebooksContainer}>
+					<View style={styles.notebooksScrollerContainer}>
 						{data.map((notebook) => (
 							<TouchableWithoutFeedback
 								key={notebook.id}
@@ -152,10 +152,10 @@ export default function NotebookPage() {
 								</NotebookListItem>
 							</TouchableWithoutFeedback>
 						))}
-					</ScrollView>
+					</View>
+					{/* <CreateNote /> */}
 				</View>
-				{/* <CreateNote /> */}
-			</View>
+			</ScrollView>
 			<BottomSheetComponent ref={bottomSheetRef}>
 				<BottomSheetContentNarabook
 					title={
@@ -213,6 +213,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			flex: 1,
 			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 			paddingTop: 40,
+			paddingBottom: 88,
 		},
 
 		notebooksContainer: {
@@ -232,13 +233,14 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 
 		notebooksScrollerContainer: {
 			height: 'auto',
-			maxHeight: width > 450 ? '60%' : '45%',
+			// maxHeight: width > 450 ? '60%' : '45%',
 			borderColor: colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 			borderWidth: 1,
 			overflow: 'hidden',
 			borderRadius: 10,
 			width: '100%',
 			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
+			marginBottom: 32,
 		},
 	});
 }

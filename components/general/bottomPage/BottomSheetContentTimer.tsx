@@ -30,7 +30,7 @@ const seconds = Array.from({ length: 60 }, (_, i) => {
 	return { label: value, value: value };
 });
 
-const pauses = Array.from({ length: 60 }, (_, i) => {
+const pauses = Array.from({ length: 100 }, (_, i) => {
 	const value = i.toString().padStart(2, '0');
 	return { label: value, value: value };
 });
@@ -50,7 +50,7 @@ const BottomSheetContentTimer: React.FC<BottomSheetContentTimerProps> = ({
 	const [selectedHours, setSelectedHours] = useState(hours[0].value);
 	const [selectedMinutes, setSelectedMinutes] = useState(minutes[0].value);
 	const [selectedSeconds, setSelectedSeconds] = useState(seconds[0].value);
-	const [selectedPauses, setSelectedPauses] = useState(seconds[0].value);
+	const [selectedPauses, setSelectedPauses] = useState(pauses[0].value);
 
 	const width = Dimensions.get('window').width;
 	const { colorScheme } = useContext(ColorSchemeContext);
@@ -147,7 +147,7 @@ const BottomSheetContentTimer: React.FC<BottomSheetContentTimerProps> = ({
 						<WheelPicker
 							value={selectedPauses}
 							onValueChanged={({ item }) => setSelectedPauses(item.value)}
-							data={seconds}
+							data={pauses}
 							itemHeight={48}
 							renderItem={(props) => (
 								<Text style={styles.wheelPickerText}>{props.index}</Text>
