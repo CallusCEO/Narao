@@ -50,8 +50,8 @@ export const TimerContext = createContext<TimerContextType>({
 // Provider component
 export const TimerProvider = ({ children }: { children: ReactNode }) => {
 	const [isRunning, setIsRunning] = useState(false);
-	const [time, setTime] = useState(60);
-	const [pauseTime, setPauseTime] = useState(0);
+	const [time, setTime] = useState(0);
+	const [pauseTime, setPauseTime] = useState(300);
 	const [pauseTimeNumber, setPauseTimeNumber] = useState(0);
 	const [mode, setMode] = useState<TimerMode>('countdown');
 	const [initialTime, setInitialTime] = useState(0);

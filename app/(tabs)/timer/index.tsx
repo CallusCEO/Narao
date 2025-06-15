@@ -44,21 +44,24 @@ export default function TimerPage() {
 	} = useContext(TimerContext);
 
 	const [openIntervals, setOpenIntervals] = useState(false);
+	const [openPauseNumber, setOpenPauseNumber] = useState(false);
 
 	return (
 		<GestureHandlerRootView style={styles.container}>
 			<PageHeader title='Timer' />
 			<ModeOptions />
-			<Timer ref={bottomSheetRef} setOpenIntervals={setOpenIntervals} />
-			<SavedTimes />
-			{mode !== 'current' && <ActionsBox />}
-			<BottomSheetComponent
+			<Timer
 				ref={bottomSheetRef}
-				contentPanningGestureOn={false}
-			>
+				setOpenIntervals={setOpenIntervals}
+				setOpenPauseNumber={setOpenPauseNumber}
+			/>
+			{mode !== 'current' && <ActionsBox />}
+			<SavedTimes />
+			<BottomSheetComponent ref={bottomSheetRef} contentPanningGestureOn={false}>
 				<BottomSheetContentTimer
 					bottomSheetRef={bottomSheetRef}
 					openIntervals={openIntervals}
+					openPauseNumber={openPauseNumber}
 				/>
 			</BottomSheetComponent>
 		</GestureHandlerRootView>
@@ -70,10 +73,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 	return StyleSheet.create({
 		container: {
 			flex: 1,
-			backgroundColor:
-				colorScheme === 'light'
-					? Colors.light.primary
-					: Colors.dark.primary,
+			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 			paddingTop: 40,
 		},
 	});

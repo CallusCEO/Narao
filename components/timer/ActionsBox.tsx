@@ -1,15 +1,8 @@
 import { Entypo, Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import {
-	Animated,
-	Dimensions,
-	Easing,
-	StyleSheet,
-	TouchableOpacity,
-	View,
-} from 'react-native';
-import { Line, Svg } from 'react-native-svg';
+import { Animated, Dimensions, Easing, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Line } from 'react-native-svg';
 
 // custom imports
 import Colors from '@/constants/Colors';
@@ -63,14 +56,9 @@ const ActionsBox = () => {
 			displayTime = `${now.getHours().toString().padStart(2, '0')}:${now
 				.getMinutes()
 				.toString()
-				.padStart(2, '0')}:${now
-				.getSeconds()
-				.toString()
-				.padStart(2, '0')}`;
+				.padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
 		} else if (mode === 'stopwatch') {
-			displayTime = formatTime(
-				pauseTime !== undefined ? pauseTime : localTime
-			);
+			displayTime = formatTime(pauseTime !== undefined ? pauseTime : localTime);
 		} else {
 			displayTime = formatTime(pauseTime);
 		}
@@ -80,10 +68,7 @@ const ActionsBox = () => {
 			displayTime = `${now.getHours().toString().padStart(2, '0')}:${now
 				.getMinutes()
 				.toString()
-				.padStart(2, '0')}:${now
-				.getSeconds()
-				.toString()
-				.padStart(2, '0')}`;
+				.padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
 		} else if (mode === 'stopwatch') {
 			displayTime = formatTime(time !== undefined ? time : localTime);
 		} else {
@@ -97,7 +82,6 @@ const ActionsBox = () => {
 	const animatedLineWidth = useRef(new Animated.Value(0)).current;
 
 	useEffect(() => {
-		console.log(time);
 		let targetWidthPercentage = 0;
 		if (mode === 'stopwatch' || mode === 'current') {
 			// For stopwatch and current, the line might not be a progress bar.
@@ -110,10 +94,7 @@ const ActionsBox = () => {
 				: (time / initialTime) * 100;
 		}
 
-		targetWidthPercentage = Math.max(
-			0,
-			Math.min(100, targetWidthPercentage)
-		);
+		targetWidthPercentage = Math.max(0, Math.min(100, targetWidthPercentage));
 
 		Animated.timing(animatedLineWidth, {
 			toValue: targetWidthPercentage, // The target value for the animation
@@ -121,15 +102,7 @@ const ActionsBox = () => {
 			duration: 500, // How long the animation should take (in ms)
 			useNativeDriver: false, // SVG properties often require this to be false
 		}).start();
-	}, [
-		time,
-		pauseTime,
-		isPaused,
-		initialTime,
-		initialTimePause,
-		mode,
-		animatedLineWidth,
-	]);
+	}, [time, pauseTime, isPaused, initialTime, initialTimePause, mode, animatedLineWidth]);
 
 	const animatedX1 = animatedLineWidth.interpolate({
 		inputRange: [0, 100],
@@ -138,17 +111,6 @@ const ActionsBox = () => {
 
 	return (
 		<View style={styles.container}>
-			{/* <Feather
-				style={{ marginRight: 8 }}
-				name='clock'
-				size={width > 450 ? 32 : 24}
-				color={
-					colorScheme === 'light'
-						? Colors.light.secondary
-						: Colors.dark.secondary
-				}
-			/>
-			<Text style={styles.timerText}>{displayTime}</Text> */}
 			<View style={styles.buttonsContainer}>
 				<View style={styles.buttonContainer}>
 					<TouchableOpacity
@@ -160,10 +122,6 @@ const ActionsBox = () => {
 								setPauseTime(initialTimePause);
 								setPauseTimeNumber(initialPauseTimeNumber);
 								setIsPaused(false);
-								console.log(
-									'Resetting to initial pause number:',
-									initialPauseTimeNumber
-								);
 							}
 						}}
 					>
@@ -180,15 +138,16 @@ const ActionsBox = () => {
 						</View>
 					</TouchableOpacity>
 				</View>
+				<View style={styles.rule}></View>
 				<View style={styles.buttonContainer}>
 					<TouchableOpacity
 						activeOpacity={0.7}
 						onPress={() => {
 							if (
-								time !== 0 ||
-								pauseTime !== 0 ||
-								mode === 'stopwatch' ||
-								mode === 'current'
+								(time !== 0 || mode === 'stopwatch') &&
+								(mode === 'countdown' ||
+									(mode === 'pomodoro' && pauseTime !== 0) ||
+									mode === 'stopwatch')
 							) {
 								setIsRunning(!isRunning);
 							}
@@ -208,17 +167,13 @@ const ActionsBox = () => {
 					</TouchableOpacity>
 				</View>
 			</View>
-			<Svg style={styles.lineContainer} width='100%' height='2'>
+			{/* <Svg style={styles.lineContainer} width='100%' height='2'>
 				<Line
 					x1='100%'
 					y1='0'
 					x2='0'
 					y2='0'
-					stroke={
-						colorScheme === 'light'
-							? Colors.fifthGray
-							: Colors.secondGray
-					}
+					stroke={colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray}
 					strokeWidth={5}
 					strokeLinecap='butt'
 				/>
@@ -241,23 +196,18 @@ const ActionsBox = () => {
 					strokeWidth={5}
 					strokeLinecap='butt'
 				/>
-			</Svg>
+			</Svg> */}
 		</View>
 	);
 };
 
 type ColorScheme = 'light' | 'dark' | undefined | null;
 
-function createStyles(
-	colorScheme: ColorScheme,
-	width: number,
-	mode: TimerMode
-) {
+function createStyles(colorScheme: ColorScheme, width: number, mode: TimerMode) {
 	return StyleSheet.create({
 		container: {
 			marginTop: 'auto',
 			height: width > 450 ? 80 : 56,
-			width: '95%',
 			display: 'flex',
 			flexDirection: 'row',
 			position: 'relative',
@@ -267,38 +217,32 @@ function createStyles(
 			paddingHorizontal: width > 450 ? 24 : 12,
 			paddingLeft: width > 450 ? 32 : 20,
 			paddingVertical: 4,
-			backgroundColor:
-				colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
-			borderRadius: 10,
-			marginBottom: 12,
+			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
+			borderRadius: 20,
+			marginBottom: width > 450 ? 64 : 32,
 			elevation: 2,
 
-			borderColor:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
-			borderWidth: 1,
+			// borderColor: colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+			// borderWidth: 1,
 		},
 
-		timerText: {
-			fontFamily: 'SatoshiMedium',
-			color:
-				colorScheme === 'light'
-					? Colors.light.secondary
-					: Colors.dark.secondary,
-			fontSize: width > 450 ? 32 : 24,
-		},
+		// timerText: {
+		// 	fontFamily: 'SatoshiMedium',
+		// 	color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
+		// 	fontSize: width > 450 ? 32 : 24,
+		// },
 
 		buttonsContainer: {
 			flexDirection: 'row',
 			display: 'flex',
 			justifyContent: 'center',
 			alignItems: 'center',
-			gap: width > 450 ? 8 : 2,
-			marginLeft: 'auto',
+			gap: width > 450 ? 24 : 16,
+			// marginLeft: 'auto',
 		},
 
 		buttonContainer: {
 			overflow: 'hidden',
-			borderRadius: '50%',
 		},
 
 		button: {
@@ -312,17 +256,22 @@ function createStyles(
 
 		buttonText: {
 			fontFamily: 'SatoshiMedium',
-			color:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+			color: colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
 			fontSize: width > 450 ? 24 : 18,
 			marginTop: mode === 'pomodoro' ? -8 : 0,
 		},
 
-		lineContainer: {
-			position: 'absolute',
-			bottom: 0,
-			marginLeft: width > 450 ? 28 : 16,
+		rule: {
+			width: 2,
+			height: 32,
+			backgroundColor: colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 		},
+
+		// lineContainer: {
+		// 	position: 'absolute',
+		// 	bottom: 0,
+		// 	marginLeft: width > 450 ? 28 : 16,
+		// },
 	});
 }
 

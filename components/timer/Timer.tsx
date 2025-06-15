@@ -26,11 +26,13 @@ import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { TimerContext } from '@/context/TimerContext';
 import { formatTime, formatTimeEN } from '@/utils/formatTime';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
+import RepetitionBox from './RepetitionBox';
 
 type TimerMode = 'pomodoro' | 'countdown' | 'stopwatch' | 'current';
 
 type Props = {
 	setOpenIntervals: Dispatch<SetStateAction<boolean>>;
+	setOpenPauseNumber: Dispatch<SetStateAction<boolean>>;
 };
 
 const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
@@ -78,20 +80,27 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 
 	const handleSetTimePress = () => {
 		props.setOpenIntervals(false);
+		props.setOpenPauseNumber(false);
 		setIsRunning(false);
 		if (ref && typeof ref !== 'function') {
-			width > 450
-				? ref.current?.snapToIndex(0)
-				: ref.current?.snapToIndex(1);
+			width > 450 ? ref.current?.snapToIndex(0) : ref.current?.snapToIndex(1);
+		}
+	};
+
+	const handleSetPauseNumberPress = () => {
+		props.setOpenIntervals(false);
+		props.setOpenPauseNumber(true);
+		setIsRunning(false);
+		if (ref && typeof ref !== 'function') {
+			width > 450 ? ref.current?.snapToIndex(0) : ref.current?.snapToIndex(1);
 		}
 	};
 
 	const handleIntervalsPress = () => {
 		props.setOpenIntervals(true);
+		props.setOpenPauseNumber(false);
 		if (ref && typeof ref !== 'function') {
-			width > 450
-				? ref.current?.snapToIndex(0)
-				: ref.current?.snapToIndex(1);
+			width > 450 ? ref.current?.snapToIndex(0) : ref.current?.snapToIndex(1);
 		}
 
 		setIsRunning(false);
@@ -118,10 +127,7 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 						setTime
 							? setTime((prev: number) => prev + 1)
 							: setLocalTime((prev: number) => prev + 1);
-					} else if (
-						(mode === 'pomodoro' || mode === 'countdown') &&
-						time > 0
-					) {
+					} else if ((mode === 'pomodoro' || mode === 'countdown') && time > 0) {
 						setTime?.((prev) => {
 							if (prev <= 1) {
 								clearInterval(interval);
@@ -160,32 +166,20 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 	if (isPaused) {
 		if (mode === 'current') {
 			const now = new Date();
-			const totalSeconds =
-				now.getHours() * 3600 +
-				now.getMinutes() * 60 +
-				now.getSeconds();
+			const totalSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
 			// Use formatTimeEN to get the desired AM/PM format
-			displayTime = isEN
-				? formatTimeEN(totalSeconds)
-				: formatTime(totalSeconds);
+			displayTime = isEN ? formatTimeEN(totalSeconds) : formatTime(totalSeconds);
 		} else if (mode === 'stopwatch') {
-			displayTime = formatTime(
-				pauseTime !== undefined ? pauseTime : localTime
-			);
+			displayTime = formatTime(pauseTime !== undefined ? pauseTime : localTime);
 		} else {
 			displayTime = formatTime(pauseTime);
 		}
 	} else {
 		if (mode === 'current') {
 			const now = new Date();
-			const totalSeconds =
-				now.getHours() * 3600 +
-				now.getMinutes() * 60 +
-				now.getSeconds();
+			const totalSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
 			// Use formatTimeEN to get the desired AM/PM format
-			displayTime = isEN
-				? formatTimeEN(totalSeconds)
-				: formatTime(totalSeconds);
+			displayTime = isEN ? formatTimeEN(totalSeconds) : formatTime(totalSeconds);
 		} else if (mode === 'stopwatch') {
 			displayTime = formatTime(time !== undefined ? time : localTime);
 		} else {
@@ -211,9 +205,7 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 	useEffect(() => {
 		if (mode === 'countdown' || mode === 'pomodoro') {
 			// percentage left between 0 and 1
-			const percent = isPaused
-				? pauseTime / initialTimePause
-				: time / initialTime;
+			const percent = isPaused ? pauseTime / initialTimePause : time / initialTime;
 
 			Animated.timing(progress, {
 				toValue: percent,
@@ -225,12 +217,7 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 	}, [time, isRunning, mode, pauseTime, pauseTime]);
 
 	useEffect(() => {
-		if (
-			!isRunning &&
-			time === 0 &&
-			pauseTimeNumber > 0 &&
-			mode === 'pomodoro'
-		) {
+		if (!isRunning && time === 0 && pauseTimeNumber > 0 && mode === 'pomodoro') {
 			if (!isPaused) {
 				// Finished work session, start pause
 				setPauseTime(initialTimePause);
@@ -258,28 +245,17 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 				style={[
 					styles.timerClock,
 					{
-						display:
-							mode === 'countdown' || mode === 'pomodoro'
-								? undefined
-								: 'none',
+						display: mode === 'countdown' || mode === 'pomodoro' ? undefined : 'none',
 					},
 				]}
 			>
 				<Circle
-					stroke={
-						colorScheme === 'light'
-							? Colors.sixthGray
-							: Colors.thirdGray
-					} // track color
+					stroke={colorScheme === 'light' ? Colors.sixthGray : Colors.thirdGray} // track color
 					cx={radius + strokeWidth / 2}
 					cy={radius + strokeWidth / 2}
 					r={radius}
 					strokeWidth={strokeWidth * 1}
-					fill={
-						colorScheme === 'light'
-							? Colors.light.primary
-							: Colors.dark.primary
-					}
+					fill={colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary}
 				/>
 				<AnimatedCircle
 					stroke={
@@ -299,56 +275,57 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 					strokeDashoffset={strokeDashoffset}
 					strokeLinecap='butt'
 					rotation='-90'
-					origin={`${radius + strokeWidth / 2}, ${
-						radius + strokeWidth / 2
-					}`}
+					origin={`${radius + strokeWidth / 2}, ${radius + strokeWidth / 2}`}
 				/>
 				<Circle
 					cx={radius + strokeWidth / 2}
 					cy={radius + strokeWidth / 2}
 					r={radius - strokeWidth / 2 + 6} // slightly smaller to fit inside
-					fill={
-						colorScheme === 'light'
-							? Colors.light.primary
-							: Colors.dark.primary
-					}
+					fill={colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary}
 				/>
 			</Svg>
 
-			<TouchableOpacity
-				onPress={() =>
-					mode !== 'current'
-						? handleSetTimePress()
-						: handleCurrentTimePress()
-				}
-				activeOpacity={0.6}
-			>
-				<Text
-					style={[
-						styles.timerText,
-						{
-							fontSize:
-								mode === 'current'
-									? displayTime.length > 5
-										? width > 450
+			<View style={styles.timerView}>
+				<TouchableOpacity
+					onPress={() =>
+						mode !== 'current' ? handleSetTimePress() : handleCurrentTimePress()
+					}
+					activeOpacity={0.6}
+				>
+					<Text
+						style={[
+							styles.timerText,
+							{
+								fontSize:
+									mode === 'current'
+										? displayTime.length > 5
+											? width > 450
+												? 80
+												: 64
+											: width > 450
 											? 80
 											: 64
+										: displayTime.length > 5
+										? width > 450
+											? 64
+											: 42
 										: width > 450
 										? 80
-										: 64
-									: displayTime.length > 5
-									? width > 450
-										? 64
-										: 42
-									: width > 450
-									? 80
-									: 64,
-						},
-					]}
+										: 64,
+							},
+						]}
+					>
+						{displayTime}
+					</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					activeOpacity={0.7}
+					style={{ position: 'absolute', right: 56 }}
+					onPress={handleSetPauseNumberPress}
 				>
-					{displayTime}
-				</Text>
-			</TouchableOpacity>
+					<RepetitionBox />
+				</TouchableOpacity>
+			</View>
 
 			{mode === 'pomodoro' && (
 				<TouchableOpacity
@@ -356,24 +333,18 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 					activeOpacity={0.5}
 					onPress={() => handleIntervalsPress()}
 				>
-					<Text style={styles.intervalsTextStart}>Intervals of </Text>
-					<Text style={styles.intervalsTextMiddle}>
-						{initialTimePause}
-					</Text>
+					{/* <Text style={styles.intervalsTextStart}>Intervals of </Text> */}
+					<Text style={styles.intervalsTextMiddle}>{initialTimePause}</Text>
 					<Text style={styles.intervalsTextEnd}> sec</Text>
 
 					<Entypo
 						name='cycle'
 						size={24}
-						color={
-							colorScheme === 'light'
-								? Colors.light.secondary
-								: Colors.fourthGray
-						}
+						color={colorScheme === 'light' ? Colors.fourthGray : Colors.fourthGray}
 					></Entypo>
 				</TouchableOpacity>
 			)}
-			{mode !== 'stopwatch' && mode !== 'current' && (
+			{/* {mode !== 'stopwatch' && mode !== 'current' && (
 				<TouchableOpacity
 					activeOpacity={0.5}
 					style={styles.textButtonContainer}
@@ -381,18 +352,14 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 				>
 					<Text style={styles.buttonText}>Set time</Text>
 				</TouchableOpacity>
-			)}
+			)} */}
 		</View>
 	);
 });
 
 type ColorScheme = 'light' | 'dark' | undefined | null;
 
-function createStyles(
-	colorScheme: ColorScheme,
-	width: number,
-	mode: TimerMode
-) {
+function createStyles(colorScheme: ColorScheme, width: number, mode: TimerMode) {
 	return StyleSheet.create({
 		container: {
 			marginTop: '35%',
@@ -406,10 +373,7 @@ function createStyles(
 
 		timerText: {
 			fontFamily: 'SatoshiBlack',
-			color:
-				colorScheme === 'light'
-					? Colors.light.secondary
-					: Colors.dark.secondary,
+			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
 			fontSize: width > 450 ? 80 : 64,
 			marginHorizontal: 'auto',
 			marginTop: mode === 'pomodoro' ? -8 : 0,
@@ -418,8 +382,7 @@ function createStyles(
 
 		buttonText: {
 			fontFamily: 'SatoshiMedium',
-			color:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+			color: colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
 			fontSize: width > 450 ? 24 : 18,
 			marginTop: mode === 'pomodoro' ? -8 : 0,
 		},
@@ -444,37 +407,33 @@ function createStyles(
 			flexDirection: 'row',
 			alignItems: 'center',
 			marginBottom: 12,
-			backgroundColor:
-				colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
+			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
 			borderRadius: 10,
 		},
 
 		intervalsTextStart: {
 			fontFamily: 'SatoshiBold',
-			color:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.fourthGray,
+			color: colorScheme === 'light' ? Colors.fifthGray : Colors.fourthGray,
 			fontSize: width > 450 ? 20 : 18,
 			marginBottom: 4,
 		},
 
 		intervalsTextMiddle: {
 			fontFamily: 'SatoshiBold',
-			color:
-				colorScheme === 'light'
-					? Colors.blueDistilled
-					: Colors.blueDistilled,
+			color: colorScheme === 'light' ? Colors.blueDistilled : Colors.blueDistilled,
 			fontSize: width > 450 ? 20 : 18,
 			marginBottom: 4,
 		},
 
 		intervalsTextEnd: {
 			fontFamily: 'SatoshiBold',
-			color:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.fourthGray,
+			color: colorScheme === 'light' ? Colors.fifthGray : Colors.fourthGray,
 			fontSize: width > 450 ? 20 : 18,
 			marginRight: width > 450 ? 8 : 4,
 			marginBottom: 4,
 		},
+
+		timerView: { position: 'relative' },
 	});
 }
 
