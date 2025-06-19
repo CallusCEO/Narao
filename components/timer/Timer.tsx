@@ -261,8 +261,8 @@ const Timer = forwardRef<BottomSheetMethods, Props>((props, ref) => {
 					stroke={
 						isPaused
 							? colorScheme === 'light'
-								? Colors.blueDistilled
-								: Colors.blueDistilled
+								? Colors.mainDistilled
+								: Colors.mainDistilled
 							: colorScheme === 'light'
 							? Colors.light.secondary
 							: Colors.dark.secondary
@@ -420,7 +420,7 @@ function createStyles(colorScheme: ColorScheme, width: number, mode: TimerMode) 
 
 		intervalsTextMiddle: {
 			fontFamily: 'SatoshiBold',
-			color: colorScheme === 'light' ? Colors.blueDistilled : Colors.blueDistilled,
+			color: colorScheme === 'light' ? Colors.mainDistilled : Colors.mainDistilled,
 			fontSize: width > 450 ? 20 : 18,
 			marginBottom: 4,
 		},

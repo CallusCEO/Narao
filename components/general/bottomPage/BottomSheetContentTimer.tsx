@@ -232,7 +232,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			marginHorizontal: 'auto',
 			borderRadius: 30,
 			overflow: 'hidden',
-			borderColor: colorScheme === 'light' ? Colors.blueDistilled : Colors.thirdGray,
+			borderColor: colorScheme === 'light' ? Colors.mainDistilled : Colors.thirdGray,
 			borderWidth: 1,
 			marginTop: 32,
 		},

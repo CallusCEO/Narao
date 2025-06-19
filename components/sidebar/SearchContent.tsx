@@ -1,22 +1,11 @@
 import { useFonts } from 'expo-font';
 import React, { useContext } from 'react';
-import {
-	Dimensions,
-	StyleSheet,
-	Text,
-	TouchableNativeFeedback,
-	View,
-} from 'react-native';
+import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 
 // custom imports
 import Colors from '@/constants/Colors';
 import { ColorSchemeContext } from '@/context/ColorSchemeContext';
-import {
-	AntDesign,
-	FontAwesome5,
-	FontAwesome6,
-	MaterialCommunityIcons,
-} from '@expo/vector-icons';
+import { AntDesign, FontAwesome5, FontAwesome6, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const SearchContent = () => {
 	// Load the font
@@ -47,9 +36,7 @@ const SearchContent = () => {
 				<View style={styles.searchContainer}>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light'
-								? Colors.fifthGray
-								: Colors.secondGray,
+							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 							false
 						)}
 					>
@@ -59,8 +46,8 @@ const SearchContent = () => {
 								size={32}
 								color={
 									colorScheme === 'light'
-										? Colors.blueDistilled
-										: Colors.blueDistilled
+										? Colors.mainDistilled
+										: Colors.mainDistilled
 								}
 							/>
 							<Text style={styles.buttonText}>Search</Text>
@@ -70,9 +57,7 @@ const SearchContent = () => {
 				<View style={styles.noteContainer}>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light'
-								? Colors.fifthGray
-								: Colors.secondGray,
+							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 							false
 						)}
 					>
@@ -95,9 +80,7 @@ const SearchContent = () => {
 				<View style={styles.swipeContainer}>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light'
-								? Colors.fifthGray
-								: Colors.secondGray,
+							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 							false
 						)}
 					>
@@ -130,9 +113,7 @@ const SearchContent = () => {
 				<View style={styles.sortContainer}>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light'
-								? Colors.fifthGray
-								: Colors.secondGray,
+							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 							false
 						)}
 					>
@@ -142,8 +123,8 @@ const SearchContent = () => {
 								size={32}
 								color={
 									colorScheme === 'light'
-										? Colors.blueDistilled
-										: Colors.blueDistilled
+										? Colors.mainDistilled
+										: Colors.mainDistilled
 								}
 							/>
 							<Text style={styles.buttonText}>Auto-Sort</Text>
@@ -165,8 +146,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			marginTop: 'auto',
 			paddingVertical: 16,
 			paddingHorizontal: 12,
-			borderTopColor:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
+			borderTopColor: colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 			borderTopWidth: 1,
 			display: 'flex',
 			flexDirection: 'column',
@@ -200,14 +180,8 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			width: '65%',
 			borderRadius: 30,
 			borderWidth: 1,
-			borderColor:
-				colorScheme === 'light'
-					? Colors.blueDistilled
-					: Colors.blueDistilled,
-			backgroundColor:
-				colorScheme === 'light'
-					? Colors.light.primary
-					: Colors.firstGray,
+			borderColor: colorScheme === 'light' ? Colors.mainDistilled : Colors.mainDistilled,
+			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
 			overflow: 'hidden',
 		},
 
@@ -216,12 +190,8 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			width: '30%',
 			borderRadius: 30,
 			borderWidth: 1,
-			borderColor:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
-			backgroundColor:
-				colorScheme === 'light'
-					? Colors.light.primary
-					: Colors.firstGray,
+			borderColor: colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
 			overflow: 'hidden',
 		},
 
@@ -230,14 +200,8 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			width: '55%',
 			borderRadius: 30,
 			borderWidth: 1,
-			borderColor:
-				colorScheme === 'light'
-					? Colors.blueDistilled
-					: Colors.blueDistilled,
-			backgroundColor:
-				colorScheme === 'light'
-					? Colors.light.primary
-					: Colors.firstGray,
+			borderColor: colorScheme === 'light' ? Colors.mainDistilled : Colors.mainDistilled,
+			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
 			overflow: 'hidden',
 		},
 
@@ -246,12 +210,8 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			width: '40%',
 			borderRadius: 30,
 			borderWidth: 1,
-			borderColor:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
-			backgroundColor:
-				colorScheme === 'light'
-					? Colors.light.primary
-					: Colors.firstGray,
+			borderColor: colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
 			overflow: 'hidden',
 		},
 
@@ -276,10 +236,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		buttonText: {
 			fontFamily: 'SatoshiBold',
 			fontSize: 16,
-			color:
-				colorScheme === 'light'
-					? Colors.blueDistilled
-					: Colors.blueDistilled,
+			color: colorScheme === 'light' ? Colors.mainDistilled : Colors.mainDistilled,
 			marginLeft: 8,
 		},
 	});

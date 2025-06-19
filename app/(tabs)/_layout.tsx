@@ -17,7 +17,7 @@ export default function TabLayout() {
 				<Tabs.Screen
 					name='(notebooks)'
 					options={{
-						title: 'NaraBook',
+						title: 'Narabook',
 					}}
 				/>
 

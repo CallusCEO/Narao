@@ -38,23 +38,16 @@ function createStyles(colorScheme: ColorScheme) {
 			flex: 1,
 			width: '100%',
 			height: '100%',
-			backgroundColor:
-				colorScheme === 'light'
-					? Colors.light.ternary
-					: Colors.firstGray,
+			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
 		},
 
 		secondContainer: {
 			width: '100%',
-			backgroundColor:
-				colorScheme === 'light'
-					? Colors.light.ternary
-					: Colors.firstGray,
+			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.firstGray,
 		},
 
 		title: {
-			color:
-				colorScheme === 'light' ? Colors.fourthGray : Colors.thirdGray,
+			color: colorScheme === 'light' ? Colors.fourthGray : Colors.thirdGray,
 			fontSize: 16,
 			marginTop: 8,
 			marginLeft: 4,

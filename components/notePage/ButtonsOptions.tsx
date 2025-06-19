@@ -190,7 +190,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 		buttonTextSpecial: {
 			fontFamily: 'SatoshiMedium',
 			fontSize: 16,
-			color: colorScheme === 'light' ? Colors.blueDistilled : Colors.blueDistilled,
+			color: colorScheme === 'light' ? Colors.mainDistilled : Colors.mainDistilled,
 			marginLeft: 8,
 		},
 
@@ -198,7 +198,7 @@ function createStyles(colorScheme: ColorScheme, width: number) {
 			height: 36,
 			borderRadius: 30,
 			borderWidth: 1,
-			borderColor: colorScheme === 'light' ? Colors.blueDistilled : Colors.blueDistilled,
+			borderColor: colorScheme === 'light' ? Colors.mainDistilled : Colors.mainDistilled,
 			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
 			overflow: 'hidden',
 		},

@@ -49,7 +49,7 @@ export default function TabBar({ state, descriptors, navigation }: BottomTabBarP
 						top: 4,
 						position: 'absolute',
 						backgroundColor:
-							colorScheme === 'light' ? Colors.blueDistilled : Colors.blueDistilled,
+							colorScheme === 'light' ? Colors.mainDistilled : Colors.mainDistilled,
 						borderRadius: 50,
 						marginHorizontal: 12,
 						height: dimensions.height - 40,
@@ -97,7 +97,7 @@ export default function TabBar({ state, descriptors, navigation }: BottomTabBarP
 						onLongPress={onLongPress}
 						isFocused={isFocused}
 						routeName={route.name}
-						color={isFocused ? Colors.blue : Colors.thirdGray}
+						color={isFocused ? Colors.main : Colors.thirdGray}
 						label={String(label)}
 					/>
 				);
@@ -120,7 +120,7 @@ const createStyles = (colorScheme: ColorScheme) =>
 			alignItems: 'center',
 			backgroundColor: colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 			paddingVertical: 20,
-			paddingBottom: 64,
+			paddingBottom: 72,
 			elevation: 25,
 			paddingHorizontal: 16,
 		},

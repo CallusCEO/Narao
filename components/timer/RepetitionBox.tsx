@@ -41,7 +41,7 @@ type ColorScheme = 'light' | 'dark' | undefined | null;
 function createStyles(colorScheme: ColorScheme, width: number, mode: TimerMode) {
 	return StyleSheet.create({
 		container: {
-			backgroundColor: colorScheme === 'light' ? Colors.red : Colors.red,
+			backgroundColor: colorScheme === 'light' ? Colors.main : Colors.mainDistilled,
 			display: mode === 'pomodoro' ? 'flex' : undefined,
 			flexDirection: 'row',
 			alignItems: 'center',

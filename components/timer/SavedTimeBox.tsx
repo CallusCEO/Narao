@@ -3,20 +3,10 @@ import { ColorSchemeContext } from '@/context/ColorSchemeContext';
 import { TimerContext } from '@/context/TimerContext';
 import { formatTime } from '@/utils/formatTime';
 import handleTextLength from '@/utils/handleTextLength';
-import {
-	Entypo,
-	MaterialCommunityIcons,
-	MaterialIcons,
-} from '@expo/vector-icons';
+import { Entypo, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import React, { useContext } from 'react';
-import {
-	Dimensions,
-	StyleSheet,
-	Text,
-	TouchableNativeFeedback,
-	View,
-} from 'react-native';
+import { Dimensions, StyleSheet, Text, TouchableNativeFeedback, View } from 'react-native';
 
 interface Props {
 	title: string;
@@ -27,14 +17,7 @@ interface Props {
 	isSelected: boolean;
 }
 
-const SavedTimesBox = ({
-	title,
-	time,
-	mode,
-	pauseTime,
-	numberPause,
-	isSelected,
-}: Props) => {
+const SavedTimesBox = ({ title, time, mode, pauseTime, numberPause, isSelected }: Props) => {
 	// Load the font
 	const [fontsLoaded] = useFonts({
 		SatoshiRegular: require('@/assets/fonts/Satoshi-Regular.otf'),
@@ -83,53 +66,27 @@ const SavedTimesBox = ({
 					borderColor:
 						colorScheme === 'light'
 							? isSelected
-								? Colors.blue
+								? Colors.main
 								: Colors.fifthGray
 							: isSelected
-							? Colors.blueDistilled
-							: Colors.thirdGray,
+							? Colors.mainDistilled
+							: Colors.secondGray,
 				},
 			]}
 		>
 			<TouchableNativeFeedback
 				background={TouchableNativeFeedback.Ripple(
-					colorScheme === 'light'
-						? Colors.fifthGray
-						: Colors.secondGray,
+					colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 					false
 				)}
 				onPress={() => handlePress()}
 			>
 				<View style={styles.boxInnerContainer}>
-					<Text style={styles.titleBox}>
-						{handleTextLength(title, 20)}
-					</Text>
+					<Text style={styles.titleBox}>{handleTextLength(title, 20)}</Text>
 
 					<View style={styles.rule}></View>
 
 					<Text style={styles.timeTextBox}>{formatTime(time)}</Text>
-
-					{/* {pauseTime && (
-						<>
-							<View style={styles.rule}></View>
-
-							<Text style={styles.timeTextBox}>
-								{`${formatTime(pauseTime)}`}
-							</Text>
-						</>
-					)}
-
-					{numberPause && (
-						<>
-							<View style={styles.rule}></View>
-
-							<Text style={styles.timeTextBox}>
-								{`${numberPause} ${
-									numberPause === 1 ? 'Pause' : 'Pauses'
-								}`}
-							</Text>
-						</>
-					)} */}
 
 					<View style={styles.icon}>
 						{mode === 'pomodoro' && (
@@ -137,9 +94,7 @@ const SavedTimesBox = ({
 								name='timer-sand'
 								size={64}
 								color={
-									colorScheme === 'light'
-										? Colors.fifthGray
-										: Colors.secondGray
+									colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray
 								}
 							/>
 						)}
@@ -148,9 +103,7 @@ const SavedTimesBox = ({
 								name='timer'
 								size={64}
 								color={
-									colorScheme === 'light'
-										? Colors.fifthGray
-										: Colors.secondGray
+									colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray
 								}
 							/>
 						)}
@@ -159,9 +112,7 @@ const SavedTimesBox = ({
 								name='stopwatch'
 								size={64}
 								color={
-									colorScheme === 'light'
-										? Colors.fifthGray
-										: Colors.secondGray
+									colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray
 								}
 							/>
 						)}
@@ -175,19 +126,13 @@ const SavedTimesBox = ({
 type TimerMode = 'pomodoro' | 'countdown' | 'stopwatch' | 'current';
 type ColorScheme = 'light' | 'dark' | undefined | null;
 
-function createStyles(
-	colorScheme: ColorScheme,
-	width: number,
-	mode: TimerMode
-) {
+function createStyles(colorScheme: ColorScheme, width: number, mode: TimerMode) {
 	return StyleSheet.create({
 		boxContainer: {
-			backgroundColor:
-				colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
+			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
 			borderRadius: 20,
 			overflow: 'hidden',
-			borderColor:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+			borderColor: colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 			borderWidth: 1,
 			position: 'relative',
 		},
@@ -203,18 +148,14 @@ function createStyles(
 		titleBox: {
 			fontFamily: 'SatoshiBold',
 			fontSize: 18,
-			color:
-				colorScheme === 'light'
-					? Colors.light.secondary
-					: Colors.dark.secondary,
+			color: colorScheme === 'light' ? Colors.light.secondary : Colors.dark.secondary,
 			zIndex: 999,
 		},
 
 		timeTextBox: {
 			fontFamily: 'SatoshiBold',
 			fontSize: 16,
-			color:
-				colorScheme === 'light' ? Colors.fourthGray : Colors.fourthGray,
+			color: colorScheme === 'light' ? Colors.fourthGray : Colors.fourthGray,
 			zIndex: 999,
 		},
 
@@ -230,8 +171,7 @@ function createStyles(
 			marginHorizontal: 16,
 			width: 2,
 			height: '100%',
-			backgroundColor:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
+			backgroundColor: colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 		},
 	});
 }

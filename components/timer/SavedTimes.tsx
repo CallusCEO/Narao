@@ -7,13 +7,7 @@ import { TouchableWithoutFeedback } from '@gorhom/bottom-sheet';
 import { useFonts } from 'expo-font';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useContext, useState } from 'react';
-import {
-	Dimensions,
-	ScrollView,
-	StyleSheet,
-	TouchableNativeFeedback,
-	View,
-} from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, TouchableNativeFeedback, View } from 'react-native';
 import SavedTimesBox from './SavedTimeBox';
 
 const SavedTimes = () => {
@@ -64,9 +58,7 @@ const SavedTimes = () => {
 				<View style={[styles.boxAddContainer]}>
 					<TouchableNativeFeedback
 						background={TouchableNativeFeedback.Ripple(
-							colorScheme === 'light'
-								? Colors.fifthGray
-								: Colors.secondGray,
+							colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 							false
 						)}
 						onPress={() => handleAddPress()}
@@ -76,9 +68,7 @@ const SavedTimes = () => {
 								name='add'
 								size={24}
 								color={
-									colorScheme === 'light'
-										? Colors.fifthGray
-										: Colors.thirdGray
+									colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray
 								}
 							/>
 						</View>
@@ -103,9 +93,7 @@ const SavedTimes = () => {
 			<LinearGradient
 				colors={[
 					'transparent',
-					colorScheme === 'light'
-						? Colors.light.primary
-						: Colors.dark.primary,
+					colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 				]}
 				start={{ x: 1, y: 0 }} // left
 				end={{ x: 0, y: 0 }} // right
@@ -114,9 +102,7 @@ const SavedTimes = () => {
 			<LinearGradient
 				colors={[
 					'transparent',
-					colorScheme === 'light'
-						? Colors.light.primary
-						: Colors.dark.primary,
+					colorScheme === 'light' ? Colors.light.primary : Colors.dark.primary,
 				]}
 				start={{ x: 0, y: 0 }} // left
 				end={{ x: 1, y: 0 }} // right
@@ -129,11 +115,7 @@ const SavedTimes = () => {
 type TimerMode = 'pomodoro' | 'countdown' | 'stopwatch' | 'current';
 type ColorScheme = 'light' | 'dark' | undefined | null;
 
-function createStyles(
-	colorScheme: ColorScheme,
-	width: number,
-	mode: TimerMode
-) {
+function createStyles(colorScheme: ColorScheme, width: number, mode: TimerMode) {
 	return StyleSheet.create({
 		container: {
 			// backgroundColor: colorScheme === 'light' ? '#f0f0f0' : '#1c1c1e', // Example colors, adjust as needed
@@ -158,12 +140,10 @@ function createStyles(
 		},
 
 		boxAddContainer: {
-			backgroundColor:
-				colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
+			backgroundColor: colorScheme === 'light' ? Colors.sixthGray : Colors.firstGray,
 			borderRadius: 20,
 			overflow: 'hidden',
-			borderColor:
-				colorScheme === 'light' ? Colors.fifthGray : Colors.thirdGray,
+			borderColor: colorScheme === 'light' ? Colors.fifthGray : Colors.secondGray,
 			borderWidth: 1,
 		},
 

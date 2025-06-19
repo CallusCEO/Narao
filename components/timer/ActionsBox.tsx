@@ -159,8 +159,8 @@ const ActionsBox = () => {
 								size={width > 450 ? 32 : 24}
 								color={
 									colorScheme === 'light'
-										? Colors.blueDistilled
-										: Colors.blueDistilled
+										? Colors.mainDistilled
+										: Colors.mainDistilled
 								}
 							/>
 						</View>
@@ -187,8 +187,8 @@ const ActionsBox = () => {
 					stroke={
 						isPaused
 							? colorScheme === 'light'
-								? Colors.blueDistilled
-								: Colors.blueDistilled
+								? Colors.mainDistilled
+								: Colors.mainDistilled
 							: colorScheme === 'light'
 							? Colors.light.secondary
 							: Colors.dark.secondary
