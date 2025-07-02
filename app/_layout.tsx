@@ -1,6 +1,7 @@
 import DrawerContent from '@/components/DrawerContent';
 import COLORS from '@/constants/COLORS';
 import { ColorSchemeProvider } from '@/context/colorSchemeContext';
+import { CurrentModelProvider } from '@/context/currentModelProvider';
 import { ScreenModeProvider } from '@/context/screenModeContext';
 import useColorScheme from '@/hooks/useColorScheme';
 import useMode from '@/hooks/useMode';
@@ -15,9 +16,11 @@ const Drawer = createDrawerNavigator();
 export default function Layout() {
 	return (
 		<ScreenModeProvider>
-			<ColorSchemeProvider>
-				<DrawerLayout />
-			</ColorSchemeProvider>
+			<CurrentModelProvider>
+				<ColorSchemeProvider>
+					<DrawerLayout />
+				</ColorSchemeProvider>
+			</CurrentModelProvider>
 		</ScreenModeProvider>
 	);
 }
@@ -44,7 +47,7 @@ function DrawerLayout() {
 				screenOptions={{
 					swipeEdgeWidth: 364,
 					drawerType: 'slide',
-					overlayColor: 'transparent',
+
 					drawerStyle: {
 						backgroundColor:
 							colorScheme === 'light' ? COLORS.light.primary : COLORS.dark.primary,

@@ -12,8 +12,11 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 const ListItemChat = ({ props }: { props: ChatType }) => {
 	const [fontsLoaded] = useFonts({
-		Montserrat: require('@/assets/fonts/Montserrat-VariableFont_wght.ttf'),
-		Atkinson: require('@/assets/fonts/AtkinsonHyperlegibleMono-VariableFont_wght.ttf'),
+		MontserratBold: require('@/assets/fonts/montserrat/Montserrat-Bold.ttf'),
+		MontserratLight: require('@/assets/fonts/montserrat/Montserrat-Light.ttf'),
+		MontserratMedium: require('@/assets/fonts/montserrat/Montserrat-Medium.ttf'),
+		MontserratRegular: require('@/assets/fonts/montserrat/Montserrat-Regular.ttf'),
+		MontserratSemiBold: require('@/assets/fonts/montserrat/Montserrat-SemiBold.ttf'),
 	});
 
 	// styles
@@ -66,7 +69,7 @@ function createStyles(colorScheme: ColorSchemeType) {
 	return StyleSheet.create({
 		container: {
 			height: 72,
-			borderRadius: 20,
+			borderRadius: 10,
 			overflow: 'hidden',
 			marginBottom: 8,
 		},
@@ -81,7 +84,7 @@ function createStyles(colorScheme: ColorSchemeType) {
 		},
 
 		text: {
-			fontFamily: FONTS.Montserrat,
+			fontFamily: FONTS.MontserratMedium,
 			fontSize: 16,
 			color: colorScheme === 'light' ? COLORS.light.secondary : COLORS.dark.secondary,
 			fontWeight: '600',
@@ -89,7 +92,7 @@ function createStyles(colorScheme: ColorSchemeType) {
 		},
 
 		date: {
-			fontFamily: FONTS.Montserrat,
+			fontFamily: FONTS.MontserratMedium,
 			fontSize: 12,
 			color: colorScheme === 'light' ? COLORS.light.mainColorDark : COLORS.dark.mainColorDark,
 			fontWeight: '600',

@@ -1,6 +1,6 @@
 const USER_INFO = {
-	name: 'Low-Devotion',
-	email: 'low-devotion@gmail.com',
+	name: 'Bruce Wayne',
+	email: 'brucewayne@gmail.com',
 	plan: 'free',
 };
 

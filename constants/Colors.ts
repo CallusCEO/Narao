@@ -2,7 +2,7 @@ const COLORS = {
 	light: {
 		primary: '#F5F5F5',
 		secondary: '#222222',
-		firstGray: '#cccccc',
+		firstGray: '#eeeeee',
 		secondGray: '#bbbbbb',
 		thirdGray: '#aaaaaa',
 		mainColor: '#40d372',

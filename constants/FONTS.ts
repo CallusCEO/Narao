@@ -1,8 +1,16 @@
 const FONTS = {
-	Montserrat: 'Montserrat',
+	MontserratBold: 'MontserratBold',
+	MontserratLight: 'MontserratLight',
+	MontserratMedium: 'MontserratMedium',
+	MontserratRegular: 'MontserratRegular',
+	MontserratSemiBold: 'MontserratSemiBold',
 
 	// Atkinson mono
-	Atkinson_Mono: 'Atkinson',
+	AtkinsonBold: 'AtkinsonBold',
+	AtkinsonLight: 'AtkinsonLight',
+	AtkinsonMedium: 'AtkinsonMedium',
+	AtkinsonRegular: 'AtkinsonRegular',
+	AtkinsonSemiBold: 'AtkinsonSemiBold',
 };
 
 export default FONTS;

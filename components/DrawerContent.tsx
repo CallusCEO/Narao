@@ -1,5 +1,6 @@
 import COLORS from '@/constants/COLORS';
 import FONTS from '@/constants/FONTS';
+import USER_INFO from '@/constants/USER_INFO';
 import useColorScheme from '@/hooks/useColorScheme';
 import useMode from '@/hooks/useMode';
 import { ColorSchemeType } from '@/types/colorSchemeType';
@@ -8,14 +9,17 @@ import { DrawerContentComponentProps } from '@react-navigation/drawer';
 import { useFonts } from 'expo-font';
 import { LinearGradient } from 'expo-linear-gradient';
 import React from 'react';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import ListChats from './ai/ListChats';
 
 const DrawerContent = ({ navigation }: DrawerContentComponentProps) => {
 	const { mode, setMode } = useMode();
 	const [fontsLoaded] = useFonts({
-		Montserrat: require('@/assets/fonts/Montserrat-VariableFont_wght.ttf'),
-		Atkinson: require('@/assets/fonts/AtkinsonHyperlegibleMono-VariableFont_wght.ttf'),
+		MontserratBold: require('@/assets/fonts/montserrat/Montserrat-Bold.ttf'),
+		MontserratLight: require('@/assets/fonts/montserrat/Montserrat-Light.ttf'),
+		MontserratMedium: require('@/assets/fonts/montserrat/Montserrat-Medium.ttf'),
+		MontserratRegular: require('@/assets/fonts/montserrat/Montserrat-Regular.ttf'),
+		MontserratSemiBold: require('@/assets/fonts/montserrat/Montserrat-SemiBold.ttf'),
 	});
 
 	// styles
@@ -67,8 +71,8 @@ const DrawerContent = ({ navigation }: DrawerContentComponentProps) => {
 							size={32}
 							color={
 								colorScheme === 'light'
-									? COLORS.light.thirdGray
-									: COLORS.dark.thirdGray
+									? COLORS.light.secondary
+									: COLORS.dark.secondary
 							}
 						/>
 					</Pressable>
@@ -83,6 +87,7 @@ const DrawerContent = ({ navigation }: DrawerContentComponentProps) => {
 								? COLORS.light.secondGray
 								: COLORS.dark.secondGray,
 					}}
+					style={styles.footerPressable}
 				>
 					<View style={styles.avatarContainer}>
 						{/* Gradient from red to blue */}
@@ -91,6 +96,18 @@ const DrawerContent = ({ navigation }: DrawerContentComponentProps) => {
 							end={{ x: 1, y: 0.5 }}
 							colors={[COLORS.light.mainColor, COLORS.dark.mainColorDark]}
 							style={StyleSheet.absoluteFillObject}
+						/>
+					</View>
+					<Text style={styles.footerText}>{USER_INFO.name}</Text>
+					<View style={styles.footerIconContainer}>
+						<Feather
+							name='settings'
+							size={24}
+							color={
+								colorScheme === 'light'
+									? COLORS.light.secondary
+									: COLORS.dark.secondary
+							}
 						/>
 					</View>
 				</Pressable>
@@ -103,7 +120,7 @@ function createStyles(colorScheme: ColorSchemeType) {
 	return StyleSheet.create({
 		container: {
 			paddingTop: 40,
-			paddingBottom: 64,
+			paddingBottom: 48,
 			flex: 1,
 			backgroundColor: colorScheme === 'light' ? COLORS.light.primary : COLORS.dark.primary,
 		},
@@ -111,10 +128,14 @@ function createStyles(colorScheme: ColorSchemeType) {
 		header: {
 			width: '100%',
 			paddingHorizontal: 8,
-			height: 48,
+			height: 56,
 			display: 'flex',
 			flexDirection: 'row',
 			gap: 8,
+			paddingBottom: 8,
+			borderBottomWidth: 1,
+			borderBottomColor:
+				colorScheme === 'light' ? COLORS.light.firstGray : COLORS.dark.firstGray,
 			// backgroundColor:
 			// 	colorScheme === 'light' ? COLORS.light.secondary : COLORS.dark.secondary,
 		},
@@ -132,7 +153,7 @@ function createStyles(colorScheme: ColorSchemeType) {
 		},
 
 		searchBoxText: {
-			fontFamily: FONTS.Montserrat,
+			fontFamily: FONTS.MontserratMedium,
 			fontSize: 14,
 			color: colorScheme === 'light' ? COLORS.light.secondary : COLORS.dark.secondary,
 			fontWeight: '700',
@@ -153,17 +174,43 @@ function createStyles(colorScheme: ColorSchemeType) {
 
 		footer: {
 			width: '100%',
-			height: 80,
+			height: 72,
 			flexDirection: 'row',
 			alignItems: 'center',
-			paddingHorizontal: 16,
+			// backgroundColor:
+			// 	colorScheme === 'light' ? COLORS.light.secondary : COLORS.dark.secondary,
 		},
 
 		avatarContainer: {
-			width: 48,
-			height: 48,
+			width: 40,
+			height: 40,
 			borderRadius: 24,
 			overflow: 'hidden',
+			justifyContent: 'center',
+			alignItems: 'center',
+		},
+
+		footerPressable: {
+			flex: 1,
+			height: 72,
+			flexDirection: 'row',
+			justifyContent: 'space-between',
+			alignItems: 'center',
+			paddingHorizontal: 16,
+			paddingRight: 24,
+		},
+
+		footerText: {
+			fontFamily: FONTS.MontserratBold,
+			fontSize: 14,
+			color: colorScheme === 'light' ? COLORS.light.secondary : COLORS.dark.secondary,
+			fontWeight: '600',
+			textAlign: 'left',
+			marginLeft: 16,
+		},
+
+		footerIconContainer: {
+			marginLeft: 'auto',
 			justifyContent: 'center',
 			alignItems: 'center',
 		},
