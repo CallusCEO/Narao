@@ -1,7 +1,7 @@
 export interface Message {
 	id: number;
 	text: string;
-	role: 'user' | 'ai';
+	role: 'user' | 'model';
 }
 
 export interface ChatType {
