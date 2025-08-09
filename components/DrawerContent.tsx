@@ -94,7 +94,14 @@ const DrawerContent = ({ navigation }: DrawerContentComponentProps) => {
 						<LinearGradient
 							start={{ x: 0.1, y: 0 }}
 							end={{ x: 1, y: 0.5 }}
-							colors={[COLORS.light.mainColor, COLORS.dark.mainColorDark]}
+							colors={[
+								colorScheme === 'light'
+									? COLORS.light.mainColor
+									: COLORS.dark.mainColor,
+								colorScheme === 'light'
+									? COLORS.light.mainColorDark
+									: COLORS.dark.mainColorDark,
+							]}
 							style={StyleSheet.absoluteFillObject}
 						/>
 					</View>

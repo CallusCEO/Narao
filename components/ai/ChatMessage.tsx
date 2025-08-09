@@ -7,7 +7,15 @@ import { Feather } from '@expo/vector-icons';
 // import Clipboard from '@react-native-clipboard/clipboard';
 import { useFonts } from 'expo-font';
 import React, { useRef, useState } from 'react';
-import { Modal, Pressable, StyleSheet, Text, ToastAndroid, TouchableWithoutFeedback, View } from 'react-native';
+import {
+	Modal,
+	Pressable,
+	StyleSheet,
+	Text,
+	ToastAndroid,
+	TouchableWithoutFeedback,
+	View,
+} from 'react-native';
 
 const ChatMessage = ({ props }: { props: Message }) => {
 	const [fontsLoaded] = useFonts({
@@ -27,7 +35,7 @@ const ChatMessage = ({ props }: { props: Message }) => {
 	const handleLongPress = () => {
 		if (messageRef.current) {
 			messageRef.current.measure((_x, _y, _width, _height, pageX, pageY) => {
-				setPopoverPosition({ x: pageX , y: pageY + _height });
+				setPopoverPosition({ x: pageX, y: pageY + _height });
 				setPopoverVisible(true);
 			});
 		}
@@ -65,10 +73,18 @@ const ChatMessage = ({ props }: { props: Message }) => {
 				</Pressable>
 			</View>
 
-			<Modal visible={popoverVisible} transparent animationType="fade">
+			<Modal visible={popoverVisible} transparent animationType='fade'>
 				<TouchableWithoutFeedback onPress={closePopover}>
 					<View style={styles.overlay}>
-						<View style={[styles.popover, { top: popoverPosition.y - 24, left: props.role === 'user' ? 164 : 24 }]}>
+						<View
+							style={[
+								styles.popover,
+								{
+									top: popoverPosition.y - 24,
+									left: props.role === 'user' ? 164 : 24,
+								},
+							]}
+						>
 							<Pressable
 								style={styles.popoverItem}
 								android_ripple={{
@@ -82,7 +98,15 @@ const ChatMessage = ({ props }: { props: Message }) => {
 									closePopover();
 								}}
 							>
-								<Feather name='copy' size={24} color={colorScheme === 'light' ? COLORS.light.mainColor : COLORS.dark.mainColor} />
+								<Feather
+									name='copy'
+									size={24}
+									color={
+										colorScheme === 'light'
+											? COLORS.light.mainColor
+											: COLORS.dark.mainColor
+									}
+								/>
 								<Text style={styles.popoverText}>Copy</Text>
 							</Pressable>
 							<Pressable
@@ -98,42 +122,68 @@ const ChatMessage = ({ props }: { props: Message }) => {
 									closePopover();
 								}}
 							>
-								<Feather name='mouse-pointer' size={24} color={colorScheme === 'light' ? COLORS.light.mainColor : COLORS.dark.mainColor} />
+								<Feather
+									name='mouse-pointer'
+									size={24}
+									color={
+										colorScheme === 'light'
+											? COLORS.light.mainColor
+											: COLORS.dark.mainColor
+									}
+								/>
 								<Text style={styles.popoverText}>Select text</Text>
 							</Pressable>
-							{props.role === 'user' ? 
-							<Pressable
-								style={styles.popoverItem}
-								android_ripple={{
-									color:
-										colorScheme === 'light'
-											? COLORS.light.mainColorDark
-											: COLORS.dark.mainColorDark,
-								}}
-								onPress={() => {
-									selectText(props.text);
-									closePopover();
-								}}
-							>
-								<Feather name='edit' size={24} color={colorScheme === 'light' ? COLORS.light.mainColor : COLORS.dark.mainColor} />
-								<Text style={styles.popoverText}>Edit</Text>
-							</Pressable> : 
-							<Pressable
-								style={styles.popoverItem}
-								android_ripple={{
-									color:
-										colorScheme === 'light'
-											? COLORS.light.mainColorDark
-											: COLORS.dark.mainColorDark,
-								}}
-								onPress={() => {
-									selectText(props.text);
-									closePopover();
-								}}
-							>
-								<Feather name='refresh-cw' size={24} color={colorScheme === 'light' ? COLORS.light.mainColor : COLORS.dark.mainColor} />
-								<Text style={styles.popoverText}>Generate again</Text>
-							</Pressable>}
+							{props.role === 'user' ? (
+								<Pressable
+									style={styles.popoverItem}
+									android_ripple={{
+										color:
+											colorScheme === 'light'
+												? COLORS.light.mainColorDark
+												: COLORS.dark.mainColorDark,
+									}}
+									onPress={() => {
+										selectText(props.text);
+										closePopover();
+									}}
+								>
+									<Feather
+										name='edit'
+										size={24}
+										color={
+											colorScheme === 'light'
+												? COLORS.light.mainColor
+												: COLORS.dark.mainColor
+										}
+									/>
+									<Text style={styles.popoverText}>Edit</Text>
+								</Pressable>
+							) : (
+								<Pressable
+									style={styles.popoverItem}
+									android_ripple={{
+										color:
+											colorScheme === 'light'
+												? COLORS.light.mainColorDark
+												: COLORS.dark.mainColorDark,
+									}}
+									onPress={() => {
+										selectText(props.text);
+										closePopover();
+									}}
+								>
+									<Feather
+										name='refresh-cw'
+										size={24}
+										color={
+											colorScheme === 'light'
+												? COLORS.light.mainColor
+												: COLORS.dark.mainColor
+										}
+									/>
+									<Text style={styles.popoverText}>Generate again</Text>
+								</Pressable>
+							)}
 						</View>
 					</View>
 				</TouchableWithoutFeedback>
@@ -177,7 +227,8 @@ function createStyles(colorScheme: ColorSchemeType) {
 		popover: {
 			overflow: 'hidden',
 			position: 'absolute',
-			backgroundColor: colorScheme === 'light' ? COLORS.light.firstGray : COLORS.dark.firstGray,
+			backgroundColor:
+				colorScheme === 'light' ? COLORS.light.firstGray : COLORS.dark.firstGray,
 			borderRadius: 10,
 			elevation: 5,
 			shadowColor: '#000',
@@ -185,6 +236,7 @@ function createStyles(colorScheme: ColorSchemeType) {
 			shadowOpacity: 0.3,
 			shadowRadius: 4,
 			minWidth: 164,
+			paddingVertical: 8,
 		},
 		popoverItem: {
 			paddingVertical: 8,

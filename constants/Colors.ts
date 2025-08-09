@@ -5,8 +5,8 @@ const COLORS = {
 		firstGray: '#eeeeee',
 		secondGray: '#bbbbbb',
 		thirdGray: '#aaaaaa',
-		mainColor: '#40d372',
-		mainColorDark: '#2a9e5e',
+		mainColor: '#000513', // then: #40d372
+		mainColorDark: '#d561a1', // then: #2a9e5e
 	},
 	dark: {
 		primary: '#222222',
@@ -14,8 +14,8 @@ const COLORS = {
 		firstGray: '#333333',
 		secondGray: '#444444',
 		thirdGray: '#555555',
-		mainColor: '#2a9e5e',
-		mainColorDark: '#1f7946',
+		mainColor: '#fffaec',
+		mainColorDark: '#ffffe3',
 	},
 };
 
